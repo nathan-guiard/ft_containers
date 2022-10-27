@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   equal.hpp                                          :+:      :+:    :+:   */
+/*   pairs.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/21 18:32:37 by nguiard           #+#    #+#             */
-/*   Updated: 2022/10/21 18:51:48 by nguiard          ###   ########.fr       */
+/*   Created: 2022/10/21 19:05:49 by nguiard           #+#    #+#             */
+/*   Updated: 2022/10/21 19:17:56 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_EQUAL_HPP
-#define	FT_EQUAL_HPP
+#ifndef FT_PAIRS_HPP
+#define FT_PAIRS_HPP
+
+#include <utility>
 
 #endif
