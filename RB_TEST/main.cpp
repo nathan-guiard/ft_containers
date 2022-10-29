@@ -33,7 +33,11 @@ int main()
 	t.add(25);
 	t.add(54);
 	t.add(42);
+	t.add(6);
+
+	t.print();
 	t.add(4);
+	// t.add(2);
 
 	t.print();
 }

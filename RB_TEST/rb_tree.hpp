@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/10/26 18:13:39 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/10/29 11:01:32 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ public:
 		real_print(ptr->right, space);
 		for (int i = 4; i < space; i++)
 			std::cout << " ";
-		std::cout << (ptr->color == black ? "\033[90m" : "\033[31m") << std::setw(4) << ptr->value << std::endl;
+		std::cout << (ptr->color == black ? "\033[90m" : "\033[31m") << std::setw(4) << ptr->value << "\033[0m" << std::endl;
 		real_print(ptr->left, space);
 	}
 	#endif
@@ -147,6 +147,7 @@ public:
 		}
 	}
 
+	// Solution -> recolor childs parent, GP and uncle
 	void	red_uncle(node<T> *parent)
 	{
 		parent->color *= -1;
@@ -154,6 +155,7 @@ public:
 		parent->borther()->color *= -1;
 	}
 
+	// Rotate parent in the opposite direction of child
 	void	black_triangle(node<T> *parent, node<T> *child)
 	{
 		if (parent->left == child)
@@ -162,14 +164,19 @@ public:
 			left_rotation(parent);
 	}
 
+	//	Rotate GP in opposite direction of child 
+	//	and recolor original parent and GP of child.
 	void	black_line(node<T> *parent, node<T> *child)
 	{
+		node<T>	*GP = parent->parent;
+
+		std::cout << "Black line Child = " << child->value << " parent = " << parent->value << std::endl;
 		if (parent->left == child)
-			right_rotation(parent->parent);
+			right_rotation(GP);
 		else
-			left_rotation(parent->parent);
+			left_rotation(GP);
 		parent->color *= -1;
-		child->borther()->color *= -1;
+		GP->color *= -1;
 	}
 
 	void	left_rotation(node<T> *GP)
@@ -178,13 +185,14 @@ public:
 		node<T>	*Z;
 		node<T>	*save;
 
+		std::cout << GP->value << "is the GP of LR" << std::endl;
 		if (!GP)
 			return;
 		save = GP->parent;
-		P = GP->left;
+		P = GP->right;
 		if (!P)
 			return;
-		Z = P->right;
+		Z = P->left;
 		if (!Z)
 			_add_simple_node(P, GP);
 		else
@@ -201,21 +209,38 @@ public:
 		node<T>	*Z;
 		node<T>	*save;
 
+		std::cout << GP->value << " is the GP of RR" << std::endl;
 		if (!GP)
 			return;
 		save = GP->parent;
-		P = GP->right;
+		P = GP->left;
 		if (!P)
 			return;
-		Z = P->left;
+		Z = P->right;
 		if (!Z)
+		{
 			_add_simple_node(P, GP);
+			std::cout << GP->value << " ajoute en child de " << P->value << std::endl;
+			std::cout << "GP left " << GP->left->value << " P right " << P->right->value << std::endl;
+			GP->left = 0;
+		}
 		else
 		{	
 			_add_simple_node(GP, Z);
+			std::cout << Z->value << " ajoute a gauche de " << GP->value << std::endl;
 			_add_simple_node(P, GP);
+			std::cout << GP->value << " ajoute a droite de " << P->value << std::endl;
 		}
-		_add_simple_node(save, P);
+		if (save)
+			_add_simple_node(save, P);
+		else
+		{
+			save = root->right;
+			root = P;
+			_add_simple_node(P->right, save);
+		}
+		std::cout << P->value << " ajoute en child de " << (save == 0 ? 0 : save->value) << std::endl;
+		getwchar();
 	}
 
 };
