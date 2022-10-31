@@ -29,15 +29,21 @@ int main()
 	tree<int>	t;
 
 	t.add(10);
-	t.add(50);
 	t.add(25);
-	t.add(54);
-	t.add(42);
+	t.add(50);
 	t.add(6);
+	t.add(7);
+	t.add(78);
+	t.add(42);
+	t.add(100);
+	t.add(12);
+	t.add(20);
+	t.add(24);
+	t.add(88);
+	t.add(26);
 
 	t.print();
-	t.add(4);
-	// t.add(2);
-
+	std::cout << "DELETING" << std::endl;
+	t.del(7);
 	t.print();
 }
