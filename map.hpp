@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 15:27:19 by nguiard           #+#    #+#             */
-/*   Updated: 2022/10/21 18:00:50 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/03 10:45:20 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ public:
 
 		bool	operator()(const value_type& x, const value_type& y) const
 		{
-			return comp(__x.first, __y.first);
+			return comp(x.first, y.first);
 		}
 
 	protected:
