@@ -6,7 +6,7 @@
 #    By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/14 11:00:15 by nguiard           #+#    #+#              #
-#    Updated: 2022/10/26 16:20:11 by nguiard          ###   ########.fr        #
+#    Updated: 2022/11/03 13:24:24 by nguiard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ OBJ = ${SRC:.cpp=.o}
 
 DEP = ${SRC:.cpp=.d}
 
-NAME = tree
+NAME = test
 
 FLAGS := -Wall -Werror -Wextra -std=c++98
 

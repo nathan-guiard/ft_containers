@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/01 12:32:43 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/03 14:11:09 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@
 #include <iostream>
 #include <unistd.h>
 #include <iomanip>
+#include <memory>
 
+namespace ft
+{
 enum	colors
 {
 	black = 1,
@@ -24,23 +27,25 @@ enum	colors
 };
 
 template <typename T>
+struct	node
+{
+	T		value;
+	node	*left;
+	node	*right;
+	node	*parent;
+	int		color;
+};
+
+
+template <typename T, class Alloc = std::allocator<node<T> > >
 class	tree
 {
 private:
-	// typedef struct node node;
-
-	typedef struct	node
-	{
-		T		value;
-		node	*left;
-		node	*right;
-		node	*parent;
-		int		color;
-	}	node;
+	typedef struct node<T> node;
 
 public:
 	tree() {
-		nd_null = new node; // change to allocator
+		nd_null = alloc.allocate(1); // change to allocator
 		nd_null->color = black;
 		nd_null->left = 0;
 		nd_null->right = 0;
@@ -53,13 +58,13 @@ public:
 	}
 	~tree() {
 		_delete_everything(root);
-		delete nd_null;
+		alloc.deallocate(nd_null, 1);
 	};
 
 	void	add(const T &val)
 	{
 		node	*p = root;
-		node	*nv = new node;
+		node	*nv = alloc.allocate(1);
 		nv->parent = 0;
 		nv->value = val;
 		nv->left = nd_null;
@@ -68,8 +73,7 @@ public:
 
 		if (search(val) != 0)
 		{
-			std::cerr << "Duplicate detected." << std::endl;
-			delete nv;
+			alloc.deallocate(nv, 1);
 			return;
 		}
 		size++;
@@ -99,7 +103,6 @@ public:
 		else
 			p->left = nv;
 
-		// std::cout << "added " << val << std::endl;
 		if (nv->parent->parent == 0)
 			return;
 		_add_fix(nv);
@@ -144,10 +147,11 @@ public:
 			y->left->parent = y;
 			y->color = to_del->color;			
 		}
-		delete to_del;	// change to allocator shit when it works
+		alloc.deallocate(to_del, 1);	// change to allocator shit when it works
+		size--;
 		if (og_color == black)
-			std::cout << "fix" << std::endl;
-			//_del_fix(to_fix);
+			_del_fix(to_fix);
+			// std::cout << "fix" << std::endl;
 	}
 
 	node	*search(const T &val) //needs to return iterators note: maybe not depending on the implementation of iterators in map and set
@@ -192,6 +196,7 @@ public:
 	node			*root;
 	node			*nd_null;
 	unsigned int	size;
+	Alloc			alloc;
 
 	node	*_min(node *tree)
 	{
@@ -337,26 +342,82 @@ public:
 		delete ptr; 
 	}
 
-	// void	_add_simple_node(node *p, node *n)
-	// {
-	// 	if (!p)
-	// 	{
-	// 		root = n;
-	// 		n->color = black;
-	// 	}
-	// 	else if (!n)
-	// 		return;
-	// 	else if (p->value > n->value)
-	// 	{
-	// 		p->left = n;
-	// 		n->parent = p;
-	// 	}
-	// 	else
-	// 	{
-	// 		p->right = n;
-	// 		n->parent = p;
-	// 	}
-	// }
-};
+	void	_del_fix(node *ptr)
+	{
+		node *s;
+		while (ptr != root && ptr->color == black)
+		{
+			if (ptr == ptr->parent->left)
+			{
+				s = ptr->parent->right;
+				if (s->color == red)
+				{
+					s->color = black;
+					ptr->parent->color = red;
+					_left_rotate(ptr->parent);
+					s = ptr->parent->right;
+				}
+
+				if (s->left->color == black && s->right->color == black)
+				{
+					s->color = red;
+					ptr = ptr->parent;
+				}
+				else
+				{
+					if (s->right->color == black)
+					{
+						s->left->color = black;
+						s->color = red;
+						_right_rotate(s);
+						s = ptr->parent->right;
+					}
+
+					s->color = ptr->parent->color;
+					ptr->parent->color = black;
+					s->right->color = black;
+					_left_rotate(ptr->parent);
+					ptr = root;
+				}
+			}
+			else
+			{
+				s = ptr->parent->left;
+				if (s->color == red)
+				{
+					s->color = black;
+					ptr->parent->color = red;
+					_right_rotate(ptr->parent);
+					s = ptr->parent->left;
+				}
+
+				if (s->right->color == black && s->right->color == black)
+				{
+					s->color = red;
+					ptr = ptr->parent;
+				}
+				else
+				{
+					if (s->left->color == black)
+					{
+						s->right->color = black;
+						s->color = red;
+						_left_rotate(s);
+						s = ptr->parent->left;
+					}
+
+					s->color = ptr->parent->color;
+					ptr->parent->color = black;
+					s->left->color = black;
+					_right_rotate(ptr->parent);
+					ptr = root;
+				}
+			}
+		}
+		ptr->color = black;
+	}
+}; // fin de la class tree
+
+} // fin du namespace ft
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/03 12:41:40 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/03 13:25:20 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include 	<functional> //a surement enlever
 #include	<memory>
 #include	<set>	//a enlever
+#include	"rb_tree.hpp"
 
 namespace ft
 {
@@ -82,7 +83,7 @@ public:
 								const SetIterator<Key> &y);
 
 	private:
-		//node	*curr;
+		node	*curr;
 	};
 
 	template <typename Key>
@@ -107,7 +108,7 @@ public:
 								const SetRIterator<Key> &y);
 
 	private:
-		//node	*curr;
+		node	*curr;
 	};
 
 	iterator		begin();	// retourne un `iterator` sur le debut
@@ -135,7 +136,7 @@ public:
 	iterator	erase(iterator pos);	// Enleve un element du container avec sa position grace a l'iterateur
 	size_type	erase(const Key &key);	// Enleve un element du container avec sa valeur
 
-	void	swap(set &other);	// 
+	void	swap(set &other);	// On verra
 
 	/*	Look up		*/
 	size_type		count(const Key &key)	const;
