@@ -6,7 +6,7 @@ using namespace std;
 
 struct Node
 {
-	int data;
+	int value;
 	Node *parent;
 	Node *left;
 	Node *right;
@@ -23,7 +23,7 @@ class RedBlackTree
 
 	void initializeNULLNode(NodePtr node, NodePtr parent)
 	{
-		node->data = 0;
+		node->value = 0;
 		node->parent = parent;
 		node->left = 0;
 		node->right = 0;
@@ -35,7 +35,7 @@ class RedBlackTree
 	{
 		if (node != TNULL)
 		{
-			cout << node->data << " ";
+			cout << node->value << " ";
 			preOrderHelper(node->left);
 			preOrderHelper(node->right);
 		}
@@ -47,7 +47,7 @@ class RedBlackTree
 		if (node != TNULL)
 		{
 			inOrderHelper(node->left);
-			cout << node->data << " ";
+			cout << node->value << " ";
 			inOrderHelper(node->right);
 		}
 	}
@@ -59,18 +59,18 @@ class RedBlackTree
 		{
 			postOrderHelper(node->left);
 			postOrderHelper(node->right);
-			cout << node->data << " ";
+			cout << node->value << " ";
 		}
 	}
 
 	NodePtr searchTreeHelper(NodePtr node, int key)
 	{
-		if (node == TNULL || key == node->data)
+		if (node == TNULL || key == node->value)
 		{
 			return node;
 		}
 
-		if (key < node->data)
+		if (key < node->value)
 		{
 			return searchTreeHelper(node->left, key);
 		}
@@ -153,7 +153,7 @@ class RedBlackTree
 		x->color = 0;
 	}
 
-	void rbTransplant(NodePtr u, NodePtr v)
+	void replace(NodePtr u, NodePtr v)
 	{
 		if (u->parent == 0)
 		{
@@ -176,12 +176,12 @@ class RedBlackTree
 		NodePtr x, y;
 		while (node != TNULL)
 		{
-			if (node->data == key)
+			if (node->value == key)
 			{
 				to_del = node;
 			}
 
-			if (node->data <= key)
+			if (node->value <= key)
 			{
 				node = node->right;
 			}
@@ -202,12 +202,12 @@ class RedBlackTree
 		if (to_del->left == TNULL)
 		{
 			x = to_del->right;
-			rbTransplant(to_del, to_del->right);
+			replace(to_del, to_del->right);
 		}
 		else if (to_del->right == TNULL)
 		{
 			x = to_del->left;
-			rbTransplant(to_del, to_del->left);
+			replace(to_del, to_del->left);
 		}
 		else
 		{
@@ -220,12 +220,12 @@ class RedBlackTree
 			}
 			else
 			{
-				rbTransplant(y, y->right);
+				replace(y, y->right);
 				y->right = to_del->right;
 				y->right->parent = y;
 			}
 
-			rbTransplant(to_del, y);
+			replace(to_del, y);
 			y->left = to_del->left;
 			y->left->parent = y;
 			y->color = to_del->color;
@@ -298,14 +298,13 @@ class RedBlackTree
 
 	void printHelper(NodePtr root, int indent)
 	{
-		if (!root || root->data == 0)
+		if (!root || root->value == 0)
 			return;
 		indent += 4;
 		printHelper(root->right, indent);
 		for (int i = 4; i < indent; i++)
 			std::cout << " ";
-		std::cout << (root->color == 0 ? "\033[90m" : "\033[31m") << std::setw(4) << root->data << "\033[0m" << std::endl;
-		// getwchar();
+		std::cout << (root->color == 0 ? "\033[90m" : "\033[31m") << std::setw(4) << root->value << "\033[0m" << std::endl;
 		printHelper(root->left, indent);
 	}
 
@@ -445,7 +444,7 @@ class RedBlackTree
 	{
 		NodePtr child = new Node;
 		child->parent = 0;
-		child->data = key;
+		child->value = key;
 		child->left = TNULL;
 		child->right = TNULL;
 		child->color = 1;
@@ -456,7 +455,7 @@ class RedBlackTree
 		while (x != TNULL)
 		{
 			parent = x;
-			if (child->data < x->data)
+			if (child->value < x->value)
 			{
 				x = x->left;
 			}
@@ -471,7 +470,7 @@ class RedBlackTree
 		{
 			root = child;
 		}
-		else if (child->data < parent->data)
+		else if (child->value < parent->value)
 		{
 			parent->left = child;
 		}
@@ -499,9 +498,9 @@ class RedBlackTree
 		return this->root;
 	}
 
-	void deleteNode(int data)
+	void deleteNode(int value)
 	{
-		deleteNodeHelper(this->root, data);
+		deleteNodeHelper(this->root, value);
 	}
 
 	void printTree()

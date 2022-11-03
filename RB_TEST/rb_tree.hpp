@@ -6,42 +6,65 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/10/31 09:24:17 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/01 12:32:43 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_HPP
 #define RB_TREE_HPP
 
-#include "node.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <iomanip>
+
+enum	colors
+{
+	black = 1,
+	red = -1,
+};
 
 template <typename T>
 class	tree
 {
 private:
+	// typedef struct node node;
+
+	typedef struct	node
+	{
+		T		value;
+		node	*left;
+		node	*right;
+		node	*parent;
+		int		color;
+	}	node;
 
 public:
 	tree() {
-		root = 0;
-		size = 0;
-	}
-	tree(const T &v) {
-		root = new node<T>(v);
+		nd_null = new node; // change to allocator
+		nd_null->color = black;
+		nd_null->left = 0;
+		nd_null->right = 0;
+		root = nd_null;
 		size = 0;
 	}
 	tree (const tree &copy){
 		root = copy.root; // NOT DEEP COPY, CHANGE WHEN ITERATION WORKS
 		size = copy.size;
 	}
-	~tree() {};
+	~tree() {
+		_delete_everything(root);
+		delete nd_null;
+	};
 
 	void	add(const T &val)
 	{
-		node<T>	*p = root;
-		node<T>	*nv = new node<T>(val);
+		node	*p = root;
+		node	*nv = new node;
+		nv->parent = 0;
+		nv->value = val;
+		nv->left = nd_null;
+		nv->right = nd_null;
+		nv->color = red;
 
 		if (search(val) != 0)
 		{
@@ -49,13 +72,14 @@ public:
 			delete nv;
 			return;
 		}
-		if (root)
+		size++;
+		if (root != nd_null)
 		{
 			while (1)
 			{
-				if (val > p->value && !p->right)
+				if (val > p->value && p->right == nd_null)
 					break;
-				if (val < p->value && !p->left)
+				if (val < p->value && p->left == nd_null)
 					break;
 				if (val > p->value)
 					p = p->right;
@@ -64,64 +88,76 @@ public:
 			}
 		}
 		else
+		{
 			root = nv;
-		_insert(p, nv);
-		size++;
+			nv->color = black;
+			return;
+		}
+		nv->parent = p;
+		if (nv->value > p->value)
+			p->right = nv;
+		else
+			p->left = nv;
+
+		// std::cout << "added " << val << std::endl;
+		if (nv->parent->parent == 0)
+			return;
+		_add_fix(nv);
 	}
 
 	void	del(const T &val)
 	{
-		node<T>		*to_del = search(val);
-		node<T>		*x;
-		node<T>		*y;
-		int			color;
+		node	*to_del = search(val);
+		node	*to_fix, *y;
+		int		og_color;
 
-		if (!val)
-		{
-			std::cerr << val << " not found." << std::endl;
+		if (!to_del)
 			return;
+
+		og_color = to_del->color;
+		y = to_del;
+		if (!to_del->left || to_del->left == nd_null)	// si on delete une node avec qu'un seul subtree
+		{												// alors on a que a delete la node et mettre l'unique
+			to_fix = to_del->right;							// subtree a la place
+			_replace(to_del, to_del->right);
 		}
-		color = to_del->color;
-		if (!to_del->left)
+		else if (!to_del->right || to_del->right == nd_null)
 		{
-			x = to_del->right;
-			_transplant(to_del, to_del->right);
-		}
-		else if (!to_del->right)
-		{
-			x = to_del->left;
-			_transplant(to_del, to_del->left);
+			to_fix = to_del->left;
+			_replace(to_del, to_del->left);
 		}
 		else
 		{
 			y = _min(to_del->right);
-			color = y->color;
-			x = y->right;
+			og_color = y->color;
+			to_fix = y->right;
 			if (y->parent == to_del)
-				x->parent = y;
+				to_fix->parent = y;
 			else
 			{
-				_transplant(y, y->right);
+				_replace(y, y->right);
 				y->right = to_del->right;
 				y->right->parent = y;
 			}
-			_transplant(to_del, y);
+			_replace(to_del, y);
 			y->left = to_del->left;
-			y->parent->left = y;
-			y->color = color;
+			y->left->parent = y;
+			y->color = to_del->color;			
 		}
-		if (color == black)
-			_del_fix(x);
+		delete to_del;	// change to allocator shit when it works
+		if (og_color == black)
+			std::cout << "fix" << std::endl;
+			//_del_fix(to_fix);
 	}
 
-	node<T>	*search(const T &val) //needs to return iterators
+	node	*search(const T &val) //needs to return iterators note: maybe not depending on the implementation of iterators in map and set
 	{
-		node<T>	*searching = root;
+		node	*searching = root;
 		if (root == 0)
 			return 0;
 		while (1)
 		{
-			if (!searching)
+			if (searching == nd_null)
 				return 0;
 			if (searching->value == val)
 				return searching;
@@ -138,136 +174,105 @@ public:
 		real_print(root, 0);
 	}
 
-	void	real_print(node<T> *ptr, int space)
+	void	real_print(node *ptr, int space)
 	{
-		if (!ptr)
+		if (!ptr || ptr == nd_null)
 			return;
 		space += 4;
 		real_print(ptr->right, space);
-		for (int i = 4; i < space; i++)
-			std::cout << " ";
-		std::cout << (ptr->color == black ? "\033[90m" : "\033[31m") << std::setw(4) << ptr->value << "\033[0m" << std::endl;
+		std::cout
+			<< (ptr->color == black ? "\033[90m" : "\033[31m") << std::setw(space)
+			<< ptr->value << "\033[0m" << std::endl;
 		// getwchar();
 		real_print(ptr->left, space);
 	}
 	#endif
 
 //private
-	node<T>			*root;
+	node			*root;
+	node			*nd_null;
 	unsigned int	size;
 
-	void	_del_fix(node<T> *x)
-	{
-		node<T> *s;
-		while (x != root && x->color == black)
-		{
-			if (x == x->parent->left)
-			{
-				s = x->parent->right;
-				if (s->color == red)
-				{
-					s->color = black;
-					x->parent->color = red;
-					left_rotate(x->parent);
-					s = x->parent->right;
-				}
-
-				if (s->left->color == black && s->right->color == black)
-				{
-					s->color = red;
-					x = x->parent;
-				}
-				else
-				{
-					if (s->right->color == black)
-					{
-						s->left->color = black;
-						s->color = red;
-						right_rotate(s);
-						s = x->parent->right;
-					}
-
-					s->color = x->parent->color;
-					x->parent->color = black;
-					s->right->color = black;
-					left_rotate(x->parent);
-					x = root;
-				}
-			}
-			else
-			{
-				s = x->parent->left;
-				if (s->color == red)
-				{
-					s->color = black;
-					x->parent->color = red;
-					right_rotate(x->parent);
-					s = x->parent->left;
-				}
-
-				if (s->right->color == black && s->right->color == black)
-				{
-					s->color = red;
-					x = x->parent;
-				}
-				else
-				{
-					if (s->left->color == black)
-					{
-						s->right->color = black;
-						s->color = red;
-						left_rotate(s);
-						s = x->parent->left;
-					}
-
-					s->color = x->parent->color;
-					x->parent->color = black;
-					s->left->color = black;
-					right_rotate(x->parent);
-					x = root;
-				}
-			}
-		}
-		x->color = black;
-	}
-
-	node<T>	*_min(node<T> *tree)
+	node	*_min(node *tree)
 	{
 		if (!tree)
 			return 0;
-		while (tree->left)
+		while (tree->left && tree->left != nd_null)
 			tree = tree->left;
 		return tree;
 	}
 
-	node<T>	*_max(node<T> *tree)
+	node	*_max(node *tree)
 	{
 		if (!tree)
 			return 0;
-		while (tree->right)
+		while (tree->right && tree->right != nd_null)
 			tree = tree->right;
 		return tree;
 	}
 
-	void	_insert(node<T> *parent, node<T> *child)
+	void	_left_rotate(node *x)
 	{
-		node<T> *u;
-		_add_simple_node(parent, child);
-		if (!child->parent)
+		node *y = x->right;
+		x->right = y->left;
+		if (y->left != nd_null)
 		{
-			std::cerr << "No parent of child " << child->value << std::endl;
-			return;
+			y->left->parent = x;
 		}
-		// std::cout << child->parent->parent << std::endl;
-		while (child->parent->color == red)
+		y->parent = x->parent;
+		if (x->parent == 0)
 		{
-			std::cout << "GP: " << child->parent->parent << std::endl;
+			this->root = y;
+		}
+		else if (x == x->parent->left)
+		{
+			x->parent->left = y;
+		}
+		else
+		{
+			x->parent->right = y;
+		}
+		y->left = x;
+		x->parent = y;
+	}
+
+	void _right_rotate(node *x)
+	{
+		node *y = x->left;
+		x->left = y->right;
+		if (y->right != nd_null)
+		{
+			y->right->parent = x;
+		}
+		y->parent = x->parent;
+		if (x->parent == 0)
+		{
+			this->root = y;
+		}
+		else if (x == x->parent->right)
+		{
+			x->parent->right = y;
+		}
+		else
+		{
+			x->parent->left = y;
+		}
+		y->right = x;
+		x->parent = y;
+	}
+
+	void	_add_fix(node *child)
+	{
+		node	*uncle;
+
+		while(child->parent->color == red)
+		{
 			if (child->parent == child->parent->parent->right)
 			{
-				u = child->parent->parent->left;
-				if (u && u->color == red)
+				uncle = child->parent->parent->left;
+				if (uncle->color == red)
 				{
-					u->color = black;
+					uncle->color = black;
 					child->parent->color = black;
 					child->parent->parent->color = red;
 					child = child->parent->parent;
@@ -277,20 +282,19 @@ public:
 					if (child == child->parent->left)
 					{
 						child = child->parent;
-						right_rotate(child);
+						_right_rotate(child);
 					}
 					child->parent->color = black;
 					child->parent->parent->color = red;
-					left_rotate(child->parent->parent);
+					_left_rotate(child->parent->parent);
 				}
 			}
 			else
 			{
-				u = child->parent->parent->right;
-
-				if (u && u->color == red)
+				uncle = child->parent->parent->right;
+				if (uncle->color == red)
 				{
-					u->color = black;
+					uncle->color = black;
 					child->parent->color = black;
 					child->parent->parent->color = red;
 					child = child->parent->parent;
@@ -300,141 +304,59 @@ public:
 					if (child == child->parent->right)
 					{
 						child = child->parent;
-						left_rotate(child);
+						_left_rotate(child);
 					}
 					child->parent->color = black;
 					child->parent->parent->color = red;
-					right_rotate(child->parent->parent);
+					_right_rotate(child->parent->parent);
 				}
 			}
 			if (child == root)
 				break;
-			if (child->parent->color == red)
-				child->color = black;
 		}
 		root->color = black;
 	}
 
-	void	_add_simple_node(node<T> *p, node<T> *n)
+	void	_replace(node *replaced, node *replacing)
 	{
-		if (!p)
-		{
-			root = n;
-			n->color = black;
-		}
-		else if (!n)
-			return;
-		else if (p->value > n->value)
-		{
-			p->left = n;
-			n->parent = p;
-		}
-		else
-		{
-			p->right = n;
-			n->parent = p;
-		}
-	}
-
-	void	_transplant(node<T> *orignal, node<T> *replacing)
-	{
-		if (orignal->parent == 0)
+		if (!replaced->parent)
 			root = replacing;
-		else if (orignal->parent->left == orignal)
-			orignal->parent->left = replacing;
+		else if (replaced == replaced->parent->left)
+			replaced->parent->left = replacing;
 		else
-			orignal->parent->right = replacing;
-		if (replacing)
-			replacing->parent = orignal->parent;
+			replaced->parent->right = replacing;
+		replacing->parent = replaced->parent;
 	}
 
-	// Solution -> recolor childs parent, GP and uncle
-	// void	red_uncle(node<T> *parent)
-	// {
-	// 	parent->color *= -1;
-	// 	parent->parent->color *= -1;
-	// 	parent->borther()->color *= -1;
-	// }
+	void	_delete_everything(node *ptr)
+	{
+		if (!ptr || ptr == nd_null)
+			return;
+		_delete_everything(ptr->left);
+		_delete_everything(ptr->right);
+		delete ptr; 
+	}
 
-	// // Rotate parent in the opposite direction of child
-	// void	black_triangle(node<T> *parent, node<T> *child)
+	// void	_add_simple_node(node *p, node *n)
 	// {
-	// 	if (parent->left == child)
-	// 		right_rotate(parent);
+	// 	if (!p)
+	// 	{
+	// 		root = n;
+	// 		n->color = black;
+	// 	}
+	// 	else if (!n)
+	// 		return;
+	// 	else if (p->value > n->value)
+	// 	{
+	// 		p->left = n;
+	// 		n->parent = p;
+	// 	}
 	// 	else
-	// 		left_rotate(parent);
+	// 	{
+	// 		p->right = n;
+	// 		n->parent = p;
+	// 	}
 	// }
-
-	// //	Rotate GP in opposite direction of child 
-	// //	and recolor original parent and GP of child.
-	// void	black_line(node<T> *parent, node<T> *child)
-	// {
-	// 	node<T>	*GP = parent->parent;
-
-	// 	std::cout << "Black line Child = " << child->value << " parent = " << parent->value << std::endl;
-	// 	if (parent->left == child)
-	// 		right_rotate(GP);
-	// 	else
-	// 		left_rotate(GP);
-	// 	parent->color *= -1;
-	// 	GP->color *= -1;
-	// }
-
-	void	left_rotate(node<T> *x)
-	{
-		node<T>	*y;
-	
-		y = x->right;
-		if (!y)
-			return ;
-		x->right = y->left;
-		if (y->left)
-			y->left->parent = x;
-		if (!x->parent)
-			root = y;
-		else
-			_add_simple_node(x->parent, y);
-		_add_simple_node(y, x);
-	}
-
-	void	right_rotate(node<T> *y)
-	{
-		node<T>	*x;
-	
-		x = y->right;
-		if (!x)
-			return ;
-		y->left = x->right;
-		if (x->right)
-			x->right->parent = y;
-		if (!y->parent)
-			root = x;
-		else
-			_add_simple_node(y->parent, x);
-		_add_simple_node(x, y);
-	}
-
-	void	left_right_rotate(node<T> *z)
-	{
-		node<T>	*x;
-
-		x = z->left;
-		if (!x)
-			return ;
-		left_rotate(x);
-		right_rotate(z);
-	}
-
-	void	right_left_rotate(node<T> *z)
-	{
-		node<T>	*y;
-
-		y = z->right;
-		if (!y)
-			return ;
-		right_rotate(y);
-		left_rotate(z);
-	}
 };
 
 #endif
