@@ -6,12 +6,14 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:58:42 by nguiard           #+#    #+#             */
-/*   Updated: 2022/10/21 18:16:59 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/04 13:03:31 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_ITERATOR_TRAITS_HPP
 #define FT_ITERATOR_TRAITS_HPP
+
+#include "iterator.hpp"
 
 namespace ft
 {

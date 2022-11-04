@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/03 13:25:20 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/04 13:48:20 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,49 @@
 #include	<memory>
 #include	<set>	//a enlever
 #include	"rb_tree.hpp"
+#include	"iterator_traits.hpp"
 
 namespace ft
 {
 
-template <
-	class Key,
-	class Compare = std::less<Key>,
-	class Allocator = std::allocator<Key> >
+template <class Key, class Compare = std::less<Key>, class Allocator = std::allocator<Key> >
 class set
 {
 public:
-	typedef	key_type				Key;
-	typedef	value_type				Key;
-	typedef	size_type				std::size_t;
-	typedef	difference_type			std::ptrdiff_t;
-	typedef	key_compare				Compare;
-	typedef	value_compare			Compare;
-	typedef	reference				value_type &;
-	typedef	const_reference 		const value_type &;
-	typedef	pointer					Allocator::pointer;
-	typedef	const_pointer			Allocator::const_pointer;
-	typedef	iterator				set::SetIterator;
-	typedef	const_iterator			const set::SetIterator;
-	typedef	reverse_iterator		set::SetRIterator;
-	typedef	const_reverse_iterator	const set::SetRIterator;
+	class SetIterator;
+	class SetRIterator;
+
+	typedef	Key									key_type;
+	typedef	Key									value_type;
+	typedef	std::size_t							size_type;
+	typedef	std::ptrdiff_t 						difference_type;
+	typedef	Compare 							key_compare;
+	typedef	Compare 							value_compare;
+	typedef	Allocator							allocator_type;
+	typedef	value_type &						reference;
+	typedef	const value_type &					const_reference;
+	typedef	typename Allocator::pointer			pointer;
+	typedef	typename Allocator::const_pointer	const_pointer;
+	typedef	set::SetIterator					iterator;
+	typedef	const set::SetIterator				const_iterator;
+	typedef	set::SetRIterator					reverse_iterator;
+	typedef	const set::SetRIterator				const_reverse_iterator;
 
 	/*	MEMBER FUNCTIONS			*/
 	/*	Constructors/Destructor		*/
-	set() {};
+	set() : _t() {};
+
 	explicit set(const Compare &comp,
-		const Allocator &alloc = Allocator());
+		const Allocator &alloc = Allocator()) : _t(comp, alloc) {} ;
 
 	template <class InputIt>
 	set(InputIt first, InputIt last,
 		const Compare &comp = Compare(),
-		const Allocator &alloc = Allocator());
+		const Allocator &alloc = Allocator()) : _t(comp, alloc)
+	{
+		for (; first != last; first++)
+			_t.add(*first);
+	};
 
 	~set() {};
 
@@ -61,64 +68,63 @@ public:
 	allocator_type	get_allocator()	const;
 
 	/*	Iterators	*/
-	template <typename Key>
-	class	SetIterator
+	class	SetIterator : public ft::iterator<std::bidirectional_iterator_tag, Key>
 	{
 	public:
 		SetIterator();
-		explicit	SetIterator()
+		// explicit	SetIterator();
 		~SetIterator();
 	
 		Key	&operator*()	const;
 		Key	*operator->()	const;
 
-		SetIterator<Key>	&operator++();
-		SetIterator<Key>	operator++(int);
-		SetIterator<Key>	&operator--();
-		SetIterator<Key>	operator--(int);
+		SetIterator	&operator++();
+		SetIterator	operator++(int);
+		SetIterator	&operator--();
+		SetIterator	operator--(int);
 	
-		friend bool	operator == (const SetIterator<Key> &x,
-								const SetIterator<Key> &y);
-		friend bool	operator != (const SetIterator<Key> &x,
-								const SetIterator<Key> &y);
+		// friend bool	operator == (const SetIterator &x,
+		// 						const SetIterator &y);
+		// friend bool	operator != (const SetIterator &x,
+		// 						const SetIterator &y);
 
 	private:
-		node	*curr;
+		Key	curr;
 	};
 
-	template <typename Key>
-	class	SetRIterator
+	// template <class Key>
+	class	SetRIterator : public ft::iterator<std::bidirectional_iterator_tag, Key>
 	{
 	public:
 		SetRIterator();
-		explicit	SetRIterator()
+		// explicit	SetRIterator();
 		~SetRIterator();
 	
 		Key	&operator*()	const;
 		Key	*operator->()	const;
 
-		SetRIterator<Key>	&operator++();
-		SetRIterator<Key>	operator++(int);
-		SetRIterator<Key>	&operator--();
-		SetRIterator<Key>	operator--(int);
+		SetRIterator	&operator++();
+		SetRIterator	operator++(int);
+		SetRIterator	&operator--();
+		SetRIterator	operator--(int);
 	
-		friend bool	operator == (const SetRIterator<Key> &x,
-								const SetRIterator<Key> &y);
-		friend bool	operator != (const SetRIterator<Key> &x,
-								const SetRIterator<Key> &y);
+		// friend bool	operator == (const SetRIterator &x,
+		// 						const SetRIterator &y);
+		// friend bool	operator != (const SetRIterator &x,
+		// 						const SetRIterator &y);
 
 	private:
-		node	*curr;
+		Key	curr;
 	};
 
-	iterator		begin();	// retourne un `iterator` sur le debut
-	const_iterator	begin();	// retourne un `const_iterator` sur le debut
-	iterator		end();		// retourne un `iterator` sur l'end
-	const_iterator	end();		// retourne un `const_iterator` sur l'end
-	iterator		rbegin();	// retourne un `reverse_iterator` sur le debut
-	const_iterator	rbegin();	// retourne un `reverse_const_iterator` sur le debut
-	iterator		rend();		// retourne un `reverse_iterator` sur l'end
-	const_iterator	rend();		// retourne un `reverse_const_iterator` sur l'end
+	iterator		begin();			// retourne un `iterator` sur le debut
+	const_iterator	begin()		const;	// retourne un `const_iterator` sur le debut
+	iterator		end();				// retourne un `iterator` sur l'end
+	const_iterator	end()		const;	// retourne un `const_iterator` sur l'end
+	iterator		rbegin();			// retourne un `reverse_iterator` sur le debut
+	const_iterator	rbegin()	const;	// retourne un `reverse_const_iterator` sur le debut
+	iterator		rend();				// retourne un `reverse_iterator` sur l'end
+	const_iterator	rend()		const;	// retourne un `reverse_const_iterator` sur l'end
 
 	/*	Capacity	*/
 	bool		empty()		const;	// Check si le container est vide
@@ -128,8 +134,7 @@ public:
 	/*	Modifiers	*/
 	void	clear();
 	std::pair<iterator, bool>	insert(const value_type* value);	// Efface tous les elements du container, comme si on appelais le constructeur par defaut
-
-	std::pair<iterator, bool> insert( const value_type& value );	// Ajoute une valeur au container avec la valeur en paramettres
+	std::pair<iterator, bool>	insert(const value_type& value);	// Ajoute une valeur au container avec la valeur en paramettres
 	template <class InputIt>
 	void	insert(InputIt first, InputIt last);	// Ajoute des valeurs au containers avec la range d'iterateurs
 
@@ -152,6 +157,12 @@ public:
 	/*	Observers	*/
 	key_compare	key_comp()	const;
 	value_compare	value_comp()	const;
+
+// A REMETTRE EN PRIVE PLUS TARD
+// private:
+	Compare								_comp;
+	Allocator							_alloc;
+	ft::tree<Key>	_t;
 };
 
 template <class Key, class Compare, class Alloc>

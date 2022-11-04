@@ -6,7 +6,7 @@
 #    By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/14 11:00:15 by nguiard           #+#    #+#              #
-#    Updated: 2022/11/03 13:24:24 by nguiard          ###   ########.fr        #
+#    Updated: 2022/11/04 14:23:59 by nguiard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ DEP = ${SRC:.cpp=.d}
 
 NAME = test
 
-FLAGS := -Wall -Werror -Wextra -std=c++98
+FLAGS := -Wall -Werror -Wextra -std=c++98 #-g3 -fsanitize=address
 
 .cpp.o:
 	${CC} ${FLAGS} -MMD -c $< -o ${<:.cpp=.o}

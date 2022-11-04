@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/03 14:11:09 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/04 14:26:56 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,53 +37,83 @@ struct	node
 };
 
 
-template <typename T, class Alloc = std::allocator<node<T> > >
+template <typename T, class Comp = std::less<T>, class Alloc = std::allocator<node<T> > >
 class	tree
 {
 private:
 	typedef struct node<T> node;
 
 public:
-	tree() {
-		nd_null = alloc.allocate(1); // change to allocator
-		nd_null->color = black;
-		nd_null->left = 0;
-		nd_null->right = 0;
-		root = nd_null;
-		size = 0;
+	tree()
+	{
+		_nd_null = _alloc.allocate(1); 
+		_nd_null->color = black;
+		_nd_null->left = 0;
+		_nd_null->right = 0;
+		_root = _nd_null;
+		_size = 0;
 	}
-	tree (const tree &copy){
-		root = copy.root; // NOT DEEP COPY, CHANGE WHEN ITERATION WORKS
-		size = copy.size;
+	explicit tree(const Comp &comp, const Alloc &alloc = Alloc())
+	{
+		_comp = comp;
+		_alloc = alloc;
+		_nd_null = _alloc.allocate(1); 
+		_nd_null->color = black;
+		_nd_null->left = 0;
+		_nd_null->right = 0;
+		_root = _nd_null;
+		_size = 0;
 	}
-	~tree() {
-		_delete_everything(root);
-		alloc.deallocate(nd_null, 1);
+	tree (const tree &copy)
+	{
+		_nd_null = _alloc.allocate(1); 
+		_nd_null->color = black;
+		_nd_null->left = 0;
+		_nd_null->right = 0;
+		_root = _nd_null;
+		_size = 0;
+		if (copy._root && copy._root != copy._nd_null)
+			_copy_helper(copy._root, copy._nd_null);
+	}
+	~tree()
+	{
+		_delete_everything(_root);
+		_alloc.deallocate(_nd_null, 1);
 	};
+
+	tree &operator = (const tree &copy)
+	{
+		_delete_everything(this->_root);
+		this->_root = this->_nd_null;
+		if (copy._root && copy._root != copy._nd_null)
+			_copy_helper(copy._root, copy._nd_null);
+
+		return *this;
+	}
 
 	void	add(const T &val)
 	{
-		node	*p = root;
-		node	*nv = alloc.allocate(1);
+		node	*p = _root;
+		node	*nv = _alloc.allocate(1);
 		nv->parent = 0;
 		nv->value = val;
-		nv->left = nd_null;
-		nv->right = nd_null;
+		nv->left = _nd_null;
+		nv->right = _nd_null;
 		nv->color = red;
 
 		if (search(val) != 0)
 		{
-			alloc.deallocate(nv, 1);
+			_alloc.deallocate(nv, 1);
 			return;
 		}
-		size++;
-		if (root != nd_null)
+		_size++;
+		if (_root != _nd_null)
 		{
 			while (1)
 			{
-				if (val > p->value && p->right == nd_null)
+				if (val > p->value && p->right == _nd_null)
 					break;
-				if (val < p->value && p->left == nd_null)
+				if (val < p->value && p->left == _nd_null)
 					break;
 				if (val > p->value)
 					p = p->right;
@@ -93,12 +123,12 @@ public:
 		}
 		else
 		{
-			root = nv;
+			_root = nv;
 			nv->color = black;
 			return;
 		}
 		nv->parent = p;
-		if (nv->value > p->value)
+		if (p->value < nv->value)
 			p->right = nv;
 		else
 			p->left = nv;
@@ -119,12 +149,12 @@ public:
 
 		og_color = to_del->color;
 		y = to_del;
-		if (!to_del->left || to_del->left == nd_null)	// si on delete une node avec qu'un seul subtree
+		if (!to_del->left || to_del->left == _nd_null)	// si on delete une node avec qu'un seul subtree
 		{												// alors on a que a delete la node et mettre l'unique
 			to_fix = to_del->right;							// subtree a la place
 			_replace(to_del, to_del->right);
 		}
-		else if (!to_del->right || to_del->right == nd_null)
+		else if (!to_del->right || to_del->right == _nd_null)
 		{
 			to_fix = to_del->left;
 			_replace(to_del, to_del->left);
@@ -147,8 +177,8 @@ public:
 			y->left->parent = y;
 			y->color = to_del->color;			
 		}
-		alloc.deallocate(to_del, 1);	// change to allocator shit when it works
-		size--;
+		_alloc.deallocate(to_del, 1);	// change to allocator shit when it works
+		_size--;
 		if (og_color == black)
 			_del_fix(to_fix);
 			// std::cout << "fix" << std::endl;
@@ -156,12 +186,12 @@ public:
 
 	node	*search(const T &val) //needs to return iterators note: maybe not depending on the implementation of iterators in map and set
 	{
-		node	*searching = root;
-		if (root == 0)
+		node	*searching = _root;
+		if (_root == 0)
 			return 0;
 		while (1)
 		{
-			if (searching == nd_null)
+			if (searching == _nd_null)
 				return 0;
 			if (searching->value == val)
 				return searching;
@@ -173,14 +203,14 @@ public:
 	}
 
 	#ifdef CAN_USE_PRINT
-	void	print()
+	void	print()	const
 	{
-		real_print(root, 0);
+		real_print(_root, 0);
 	}
 
-	void	real_print(node *ptr, int space)
+	void	real_print(node *ptr, int space)	const
 	{
-		if (!ptr || ptr == nd_null)
+		if (!ptr || ptr == _nd_null)
 			return;
 		space += 4;
 		real_print(ptr->right, space);
@@ -192,17 +222,12 @@ public:
 	}
 	#endif
 
-//private
-	node			*root;
-	node			*nd_null;
-	unsigned int	size;
-	Alloc			alloc;
-
+//private:
 	node	*_min(node *tree)
 	{
 		if (!tree)
 			return 0;
-		while (tree->left && tree->left != nd_null)
+		while (tree->left && tree->left != _nd_null)
 			tree = tree->left;
 		return tree;
 	}
@@ -211,7 +236,7 @@ public:
 	{
 		if (!tree)
 			return 0;
-		while (tree->right && tree->right != nd_null)
+		while (tree->right && tree->right != _nd_null)
 			tree = tree->right;
 		return tree;
 	}
@@ -220,14 +245,14 @@ public:
 	{
 		node *y = x->right;
 		x->right = y->left;
-		if (y->left != nd_null)
+		if (y->left != _nd_null)
 		{
 			y->left->parent = x;
 		}
 		y->parent = x->parent;
 		if (x->parent == 0)
 		{
-			this->root = y;
+			this->_root = y;
 		}
 		else if (x == x->parent->left)
 		{
@@ -245,14 +270,14 @@ public:
 	{
 		node *y = x->left;
 		x->left = y->right;
-		if (y->right != nd_null)
+		if (y->right != _nd_null)
 		{
 			y->right->parent = x;
 		}
 		y->parent = x->parent;
 		if (x->parent == 0)
 		{
-			this->root = y;
+			this->_root = y;
 		}
 		else if (x == x->parent->right)
 		{
@@ -316,16 +341,16 @@ public:
 					_right_rotate(child->parent->parent);
 				}
 			}
-			if (child == root)
+			if (child == _root)
 				break;
 		}
-		root->color = black;
+		_root->color = black;
 	}
 
 	void	_replace(node *replaced, node *replacing)
 	{
 		if (!replaced->parent)
-			root = replacing;
+			_root = replacing;
 		else if (replaced == replaced->parent->left)
 			replaced->parent->left = replacing;
 		else
@@ -335,7 +360,7 @@ public:
 
 	void	_delete_everything(node *ptr)
 	{
-		if (!ptr || ptr == nd_null)
+		if (!ptr || ptr == _nd_null)
 			return;
 		_delete_everything(ptr->left);
 		_delete_everything(ptr->right);
@@ -345,7 +370,7 @@ public:
 	void	_del_fix(node *ptr)
 	{
 		node *s;
-		while (ptr != root && ptr->color == black)
+		while (ptr != _root && ptr->color == black)
 		{
 			if (ptr == ptr->parent->left)
 			{
@@ -377,7 +402,7 @@ public:
 					ptr->parent->color = black;
 					s->right->color = black;
 					_left_rotate(ptr->parent);
-					ptr = root;
+					ptr = _root;
 				}
 			}
 			else
@@ -410,12 +435,27 @@ public:
 					ptr->parent->color = black;
 					s->left->color = black;
 					_right_rotate(ptr->parent);
-					ptr = root;
+					ptr = _root;
 				}
 			}
 		}
 		ptr->color = black;
 	}
+
+	void	_copy_helper(node *ptr, node *ptr_null)
+	{
+		if (!ptr || ptr == _nd_null || ptr == ptr_null)
+			return;
+		add(ptr->value);
+		_copy_helper(ptr->left, ptr_null);
+		_copy_helper(ptr->right, ptr_null);
+	}
+
+	node			*_root;
+	node			*_nd_null;
+	unsigned int	_size;
+	Comp			_comp;
+	Alloc			_alloc;
 }; // fin de la class tree
 
 } // fin du namespace ft
