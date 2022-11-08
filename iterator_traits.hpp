@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:58:42 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/04 13:03:31 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/04 18:22:35 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 
 #include "iterator.hpp"
 
-namespace ft
-{
+// namespace ft
+// {
 
-template<typename iterator>
-struct iterator_traits
-{
-	typedef typename iterator::iterator_category iterator_category;
-	typedef typename iterator::value_type        value_type;
-	typedef typename iterator::difference_type   difference_type;
-	typedef typename iterator::pointer           pointer;
-	typedef typename iterator::reference         reference;
-};
+// template<typename iterator>
+// struct iterator_traits
+// {
+// 	typedef typename iterator::iterator_category iterator_category;
+// 	typedef typename iterator::value_type        value_type;
+// 	typedef typename iterator::difference_type   difference_type;
+// 	typedef typename iterator::pointer           pointer;
+// 	typedef typename iterator::reference         reference;
+// };
 
-}
+// }
 
 #endif

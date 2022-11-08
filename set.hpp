@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/04 13:48:20 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/04 18:35:19 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,37 +63,65 @@ public:
 
 	~set() {};
 
-	set& operator = (const set &other);
+	set& operator = (const set &other)
+	{
+		this->_t = other._t;
+		this->_comp = other._comp;
+		this->_alloc = other._alloc;
+	
+		return *this;
+	};
 
-	allocator_type	get_allocator()	const;
+	allocator_type	get_allocator()	const
+	{
+		return _alloc;
+	};
 
 	/*	Iterators	*/
-	class	SetIterator : public ft::iterator<std::bidirectional_iterator_tag, Key>
+	struct	SetIterator : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
 	{
-	public:
-		SetIterator();
-		// explicit	SetIterator();
-		~SetIterator();
-	
-		Key	&operator*()	const;
-		Key	*operator->()	const;
+	public:	
+		reference operator*()	const
+		{
+			return curr->value;
+		};
+		pointer operator->()	const
+		{
+			return curr;
+		};
 
-		SetIterator	&operator++();
-		SetIterator	operator++(int);
+		SetIterator &operator++()
+		{
+			curr = _t.next(curr);
+
+			return *this;
+		};
+
+		SetIterator	operator++(int)
+		{
+			SetIterator tmp;
+			
+			tmp = *this;
+			++*this;
+			return tmp;
+		};
 		SetIterator	&operator--();
 		SetIterator	operator--(int);
 	
-		// friend bool	operator == (const SetIterator &x,
-		// 						const SetIterator &y);
-		// friend bool	operator != (const SetIterator &x,
-		// 						const SetIterator &y);
+		// bool	operator == (const SetIterator &x,
+							// const SetIterator &y);
 
 	private:
-		Key	curr;
+		node<Key>	*curr;
+		bool		_is_end;
 	};
+	
+	template <class SetIterator = ft::set<Key, Compare, Allocator>::iterator>
+	friend bool	operator != (const SetIterator &x,
+							const SetIterator &y);
 
 	// template <class Key>
-	class	SetRIterator : public ft::iterator<std::bidirectional_iterator_tag, Key>
+	class	SetRIterator : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
 	{
 	public:
 		SetRIterator();
@@ -160,8 +188,8 @@ public:
 
 // A REMETTRE EN PRIVE PLUS TARD
 // private:
-	Compare								_comp;
-	Allocator							_alloc;
+	Compare			_comp;
+	Allocator		_alloc;
 	ft::tree<Key>	_t;
 };
 

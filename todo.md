@@ -1,5 +1,5 @@
 # **Tree:**
-- [ ] operateur '=';
+- [x] operateur '=';
 
 # **Set:**
 
