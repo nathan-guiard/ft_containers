@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/08 11:37:18 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/08 12:50:40 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ public:
 		return *this;
 	}
 
-	void	add(const T &val)
+	bool	add(const T &val)
 	{
 		node	*p = _root;
 		node	*nv = _alloc.allocate(1);
@@ -104,7 +104,7 @@ public:
 		if (search(val) != 0)
 		{
 			_alloc.deallocate(nv, 1);
-			return;
+			return false;
 		}
 		_size++;
 		if (_root != _nd_null)
@@ -125,7 +125,7 @@ public:
 		{
 			_root = nv;
 			nv->color = black;
-			return;
+			return true;
 		}
 		nv->parent = p;
 		if (p->value < nv->value)
@@ -134,24 +134,25 @@ public:
 			p->left = nv;
 
 		if (nv->parent->parent == 0)
-			return;
+			return true;
 		_add_fix(nv);
+		return true;
 	}
 
-	void	del(const T &val)
+	bool	del(const T &val)
 	{
 		node	*to_del = search(val);
 		node	*to_fix, *y;
 		int		og_color;
 
 		if (!to_del)
-			return;
+			return false;
 
 		og_color = to_del->color;
 		y = to_del;
 		if (!to_del->left || to_del->left == _nd_null)	// si on delete une node avec qu'un seul subtree
 		{												// alors on a que a delete la node et mettre l'unique
-			to_fix = to_del->right;							// subtree a la place
+			to_fix = to_del->right;						// subtree a la place
 			_replace(to_del, to_del->right);
 		}
 		else if (!to_del->right || to_del->right == _nd_null)
@@ -177,11 +178,11 @@ public:
 			y->left->parent = y;
 			y->color = to_del->color;			
 		}
-		_alloc.deallocate(to_del, 1);	// change to allocator shit when it works
+		_alloc.deallocate(to_del, 1);
 		_size--;
 		if (og_color == black)
 			_del_fix(to_fix);
-			// std::cout << "fix" << std::endl;
+		return true;
 	}
 
 	node	*next(node *ptr)	const
