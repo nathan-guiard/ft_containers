@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/04 17:55:47 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/08 09:13:31 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ public:
 		}
 		else
 		{
-			y = _min(to_del->right);
+			y = min(to_del->right);
 			og_color = y->color;
 			to_fix = y->right;
 			if (y->parent == to_del)
@@ -184,14 +184,14 @@ public:
 			// std::cout << "fix" << std::endl;
 	}
 
-	node	*next(node *ptr)
+	node	*next(node *ptr)	const
 	{
 		if (!ptr || ptr == _nd_null)
 			return 0;
-		if (ptr == _max(_root))
+		if (ptr == max(_root))
 			return 0;
 		if (ptr->right && ptr->right != _nd_null)
-			return _min(ptr->right);
+			return min(ptr->right);
 		while (ptr->parent)
 		{
 			if (ptr == ptr->parent->left)
@@ -240,8 +240,18 @@ public:
 	}
 	#endif
 
-//private:
-	node	*_min(node *tree)
+	node	*min()	const
+	{
+		node	*tree = _root;
+
+		if (!tree)
+			return 0;
+		while (tree->left && tree->left != _nd_null)
+			tree = tree->left;
+		return tree;
+	}
+
+	node	*min(node *tree)	const
 	{
 		if (!tree)
 			return 0;
@@ -250,7 +260,18 @@ public:
 		return tree;
 	}
 
-	node	*_max(node *tree)
+	node	*max()	const
+	{
+		node	*tree = _root;
+
+		if (!tree)
+			return 0;
+		while (tree->right && tree->right != _nd_null)
+			tree = tree->right;
+		return tree;
+	}
+
+	node	*max(node *tree)	const
 	{
 		if (!tree)
 			return 0;
@@ -258,6 +279,8 @@ public:
 			tree = tree->right;
 		return tree;
 	}
+
+private:
 
 	void	_left_rotate(node *x)
 	{

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/04 18:35:19 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/08 10:07:15 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,24 @@ public:
 	struct	SetIterator : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
 	{
 	public:	
+		SetIterator(): _curr(), _is_end(false) { _it_tree = 0;};
+		SetIterator(const tree<Key>	*tr): _curr(tr->min()), _is_end(false) { _it_tree = tr;};
+		
 		reference operator*()	const
 		{
-			return curr->value;
+			return _curr->value;
 		};
+	
 		pointer operator->()	const
 		{
-			return curr;
+			return _curr;
 		};
 
 		SetIterator &operator++()
 		{
-			curr = _t.next(curr);
+			if (!_curr || !_it_tree)
+				return *this;
+			_curr = _it_tree->next(_curr);
 
 			return *this;
 		};
@@ -107,18 +113,42 @@ public:
 		};
 		SetIterator	&operator--();
 		SetIterator	operator--(int);
-	
-		// bool	operator == (const SetIterator &x,
-							// const SetIterator &y);
+
+		iterator	begin()
+		{
+			_curr = _it_tree->min();
+			if (!_curr)
+				_is_end = true;
+		
+			return *this;
+		}
+		iterator	end()
+		{
+			_curr = 0;
+			_is_end = true;
+		
+			return *this;
+		}
+
+		bool	operator == (const SetIterator &y)
+		{
+			if (this->_curr == y._curr)
+				return true;
+			return false;
+		}
+		bool	operator != (const SetIterator &y)
+		{
+			if (this->_curr != y._curr)
+				return true;
+			return false;
+		}
 
 	private:
-		node<Key>	*curr;
-		bool		_is_end;
+		const tree<Key>	*_it_tree;
+		node<Key>		*_curr;
+		bool			_is_end;
 	};
-	
-	template <class SetIterator = ft::set<Key, Compare, Allocator>::iterator>
-	friend bool	operator != (const SetIterator &x,
-							const SetIterator &y);
+
 
 	// template <class Key>
 	class	SetRIterator : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
@@ -145,10 +175,10 @@ public:
 		Key	curr;
 	};
 
-	iterator		begin();			// retourne un `iterator` sur le debut
-	const_iterator	begin()		const;	// retourne un `const_iterator` sur le debut
-	iterator		end();				// retourne un `iterator` sur l'end
-	const_iterator	end()		const;	// retourne un `const_iterator` sur l'end
+	iterator		begin() 		{return SetIterator(&_t).begin();};			// retourne un `iterator` sur le debut
+	const_iterator	begin()	const	{return SetIterator(&_t).begin();};	// retourne un `const_iterator` sur le debut
+	iterator		end()			{return SetIterator(&_t).end();};			// retourne un `iterator` sur l'end
+	const_iterator	end()	const	{return SetIterator(&_t).end();};	// retourne un `const_iterator` sur l'end
 	iterator		rbegin();			// retourne un `reverse_iterator` sur le debut
 	const_iterator	rbegin()	const;	// retourne un `reverse_const_iterator` sur le debut
 	iterator		rend();				// retourne un `reverse_iterator` sur l'end

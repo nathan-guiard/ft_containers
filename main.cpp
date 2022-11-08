@@ -43,15 +43,6 @@ int main()
 
 	for (; it != ite; it++)
 	{
-		std::cout << *it << std::endl;
+		std::cout << "iterateur:" << *it << std::endl;
 	}
-
-	// ft::node<int>	*ptr = s._t._min(s._t._root);
-
-	// while (ptr)
-	// {
-	// 	std::cout << ptr->value << std::endl;
-	// 	ptr = s._t._next(ptr);
-	// 	// getwchar();
-	// }
 }
