@@ -32,24 +32,15 @@ int main()
 	std::vector<int>::iterator vit = v.begin();
 	std::vector<int>::iterator vite = v.end();
 
-	const ft::set<int>	s(vit, vite);
+	ft::set<int>	s(vit, vite);
 
 	s._t.print();
 	std::cout << "----------------------" << std::endl;
 
-	ft::set<int>::const_iterator	it = s.begin();
-	ft::set<int>::const_iterator	ite = s.end();
+	ft::set<int>::iterator	it = s.begin();
+	// ft::set<int>::iterator	ite = s.end();
 
-	for (; it != ite; it++)
-	{
-		std::cout << "iterateur: " << *it << std::endl;
-	}
+	s.clear();
 
 	it = s.begin();
-
-	it++; it++; it++;
-
-	// *it = 7000;
-
-	s._t.print();
 }

@@ -3,3 +3,6 @@
 
 *.o
 test
+
+containers_test
+containers_test/**

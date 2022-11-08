@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/08 12:50:40 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/08 17:54:54 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ public:
 		return ptr;
 	}
 
-	node	*search(const T &val)
+	node	*search(const T &val)	const
 	{
 		node	*searching = _root;
 		if (_root == 0)
@@ -299,6 +299,12 @@ public:
 		while (tree->right && tree->right != _nd_null)
 			tree = tree->right;
 		return tree;
+	}
+
+	void	clear()
+	{
+		_delete_everything(_root);
+		_root = _nd_null;
 	}
 
 private:
@@ -425,7 +431,7 @@ private:
 			return;
 		_delete_everything(ptr->left);
 		_delete_everything(ptr->right);
-		delete ptr; 
+		_alloc.deallocate(ptr, 1);
 	}
 
 	void	_del_fix(node *ptr)

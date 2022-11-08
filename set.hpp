@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/08 16:14:09 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/08 18:02:57 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ public:
 
 		SetIterator &operator++()
 		{
-			if (!_curr || !_it_tree)
+			if (!_curr || !_it_tree || _it_tree->size() == 0)
 				return *this;
 			_curr = _it_tree->next(_curr);
 			return *this;
@@ -194,7 +194,7 @@ public:
 
 		SetConstIt &operator++()
 		{
-			if (!_curr || !_it_tree)
+			if (!_curr || !_it_tree || _it_tree->size() == 0)
 				return *this;
 			_curr = _it_tree->next(_curr);
 			return *this;
@@ -287,7 +287,7 @@ public:
 
 		SetRIterator &operator++()
 		{
-			if (!_curr || !_it_tree)
+			if (!_curr || !_it_tree || _it_tree->size() == 0)
 				return *this;
 			_curr = _it_tree->prev(_curr);
 			return *this;
@@ -380,7 +380,7 @@ public:
 
 		SetConstRIt &operator++()
 		{
-			if (!_curr || !_it_tree)
+			if (!_curr || !_it_tree || _it_tree->size() == 0)
 				return *this;
 			_curr = _it_tree->prev(_curr);
 			return *this;
@@ -454,24 +454,24 @@ public:
 		bool			_is_end;
 	};
 
-	iterator				begin() 			{return iterator(&_t).begin();};				// retourne un `iterator` sur le debut
-	const_iterator			begin()		const	{return const_iterator(&_t).begin();};			// retourne un `const_iterator` sur le debut
-	iterator				end()				{return iterator(&_t).end();};					// retourne un `iterator` sur l'end
-	const_iterator			end()		const	{return const_iterator(&_t).end();};			// retourne un `const_iterator` sur l'end
-	reverse_iterator		rbegin() 			{return reverse_iterator(&_t).begin();};		// retourne un `reverse_iterator` sur le debut
-	const_reverse_iterator	rbegin()	const	{return const_reverse_iterator(&_t).begin();};	// retourne un `const_reverse_iterator` sur le debut
-	reverse_iterator		rend()				{return reverse_iterator(&_t).end();};			// retourne un `reverse_iterator` sur l'end
-	const_reverse_iterator	rend()		const	{return const_reverse_iterator(&_t).end();};	// retourne un `const_reverse_iterator` sur l'end
+	iterator				begin() 			{return iterator(&_t).begin();};				/* retourne un `iterator` sur le debut					*/
+	const_iterator			begin()		const	{return const_iterator(&_t).begin();};			/* retourne un `const_iterator` sur le debut			*/
+	iterator				end()				{return iterator(&_t).end();};					/* retourne un `iterator` sur l'end						*/
+	const_iterator			end()		const	{return const_iterator(&_t).end();};			/* retourne un `const_iterator` sur l'end				*/
+	reverse_iterator		rbegin() 			{return reverse_iterator(&_t).begin();};		/* retourne un `reverse_iterator` sur le debut			*/
+	const_reverse_iterator	rbegin()	const	{return const_reverse_iterator(&_t).begin();};	/* retourne un `const_reverse_iterator` sur le debut	*/
+	reverse_iterator		rend()				{return reverse_iterator(&_t).end();};			/* retourne un `reverse_iterator` sur l'end				*/
+	const_reverse_iterator	rend()		const	{return const_reverse_iterator(&_t).end();};	/* retourne un `const_reverse_iterator` sur l'end		*/
 
 	/*	Capacity	*/
-	bool		empty()		const	{if (_t.size() == 0) return true; return false;}	// Check si le container est vide
-	size_type	size()		const	{return _t.size();}									// Retourne, en `size_type`, le nombre d'objet dans le container
-	size_type	max_size()	const	{return _alloc.max_size(get_allocator());}	// Retourne, en `size_type`, le nb max d'objet dans le container
-
+	bool		empty()		const	{if (_t.size() == 0) return true; return false;}	/* Check si le container est vide									*/
+	size_type	size()		const	{return _t.size();}									/* Retourne, en `size_type`, le nombre d'objet dans le container	*/
+	size_type	max_size()	const	{return _alloc.max_size() / 10;}					/* Retourne, en `size_type`, le nb max d'objet dans le container	*/
+	//												^~~~ PUE SA MERE DEMANDER A CLODAGH
 	/*	Modifiers	*/
-	void	clear();	// Efface tous les elements du container, le container redeviens comme si on appelais son constructeur par defaut
-	
-	ft::pair<iterator, bool>	insert(const value_type* value)	// Ajoute une valeur au container avec la valeur pointee en paramettre
+	void	clear() {_t.clear();};	/* Efface tous les elements du container, le container redeviens comme si on appelais son constructeur par defaut	*/
+
+	ft::pair<iterator, bool>	insert(const value_type* value)	/* Ajoute une valeur au container avec la valeur pointee en paramettre					*/
 	{
 		ft::pair<iterator, bool>	p;
 		iterator					it;
@@ -492,7 +492,7 @@ public:
 		return p;
 	}
 	
-	ft::pair<iterator, bool>	insert(const value_type& value)	// Ajoute une valeur au container avec la valeur en paramettre
+	ft::pair<iterator, bool>	insert(const value_type& value)	/* Ajoute une valeur au container avec la valeur en paramettre							*/
 	{
 		ft::pair<iterator, bool>	p;
 		iterator					it;
@@ -514,7 +514,7 @@ public:
 	}
 	
 	template <class InputIt>
-	void	insert(InputIt first, InputIt last)	// Ajoute des valeurs au containers avec la range d'iterateurs
+	void	insert(InputIt first, InputIt last)	/* Ajoute des valeurs au containers avec la range d'iterateurs	*/
 	{
 		for (; first != last; first++)
 			_t.add(*first);
@@ -527,14 +527,15 @@ public:
 		return find(value);
 	}
 
-	iterator	erase(iterator pos)		// Enleve un element du container avec sa position grace a l'iterateur
+	iterator	erase(iterator pos)		/* Enleve un element du container avec sa position grace a l'iterateur	*/
 	{
 		node<Key>	*nd = _t.search(*pos);
 		if (nd)
 			_t.del(*pos);
 		return iterator();
 	}
-	size_type	erase(const Key &key)	// Enleve un element du container avec sa valeur
+	
+	size_type	erase(const Key &key)	/* Enleve un element du container avec sa valeur	*/
 	{
 		node<Key>	*nd = _t.search(key);
 		if (!nd)
@@ -542,7 +543,15 @@ public:
 		_t.del(key);
 		return 1;
 	}
-	void	swap(set &other);	// On verra
+
+	iterator	erase(iterator first, iterator last)
+	{
+		for (; first != last; first++)
+			_t.del(*first);
+		return iterator();
+	}
+
+	void	swap(set &other);	/* On verra	*/
 
 	/*	Look up		*/
 	size_type		count(const Key &key)	const
@@ -567,8 +576,8 @@ public:
 	
 	const_iterator	find(const Key &key)	const
 	{
-		iterator	it;
-		iterator	ite;
+		const_iterator	it;
+		const_iterator	ite;
 
 		for (it = begin(), ite = end(); it != ite; it++)
 		{
@@ -578,7 +587,7 @@ public:
 		return ite;
 	}
 
-	ft::pair<iterator, iterator>	equal_range(const Key &key)
+	ft::pair<iterator, iterator>				equal_range(const Key &key)
 	{
 		ft::pair<iterator, iterator>	p;
 	
@@ -600,13 +609,59 @@ public:
 		return p;
 	}
 	
-	iterator	lower_bound(const Key &key);
+	iterator	lower_bound(const Key &key)
+	{
+		Key	var = key;
+		node<Key>	*ptr;
+		if (var > _t.max()->value)
+			return end();
+		while ((ptr = _t.search(var)) != 0)
+		{
+			var++;
+		}
+		return find(var);
+	}
 	
-	const_iterator	lower_bound(const Key &key)	const;
+	const_iterator	lower_bound(const Key &key)	const
+	{
+		Key	var = key;
+		node<Key>	*ptr;
+		if (var > _t.max()->value)
+			return end();
+		while ((ptr = _t.search(var)) != 0)
+		{
+			var++;
+		}
+		return find(var);
+	}
 	
-	iterator	upper_bound(const Key &key);
+	iterator	upper_bound(const Key &key)
+	{
+		Key	var = key;
+		node<Key>	*ptr;
+		var++;
+		if (var > _t.max()->value)
+			return end();
+		while ((ptr = _t.search(var)) != 0)
+		{
+			var++;
+		}
+		return find(var);
+	}
 	
-	const_iterator	upper_bound(const Key &key)	const;
+	const_iterator	upper_bound(const Key &key)	const
+	{
+		Key	var = key;
+		node<Key>	*ptr;
+		var++;
+		if (var > _t.max()->value)
+			return end();
+		while ((ptr = _t.search(var)) != 0)
+		{
+			var++;
+		}
+		return find(var);
+	}
 
 	/*	Observers	*/
 	key_compare	key_comp()	const;
