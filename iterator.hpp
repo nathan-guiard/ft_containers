@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:22:55 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/04 18:22:28 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/08 11:58:40 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ template<typename Category,
 	typename Tp,
 	typename Distance = std::ptrdiff_t,
 	typename Pointer = Tp*,
-	typename Reference = Tp&>
+	typename Reference = Tp& >
 struct iterator_traits
 {
 	typedef Category	iterator_category;

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/08 09:13:31 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/08 11:37:18 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,25 @@ public:
 		return ptr;
 	}
 
-	node	*search(const T &val) //needs to return iterators note: maybe not depending on the implementation of iterators in map and set
+	node	*prev(node *ptr)	const
+	{
+		if (!ptr || ptr == _nd_null)
+			return 0;
+		if (ptr == min(_root))
+			return 0;
+		if (ptr->left && ptr->left != _nd_null)
+			return max(ptr->left);
+		while (ptr->parent)
+		{
+			if (ptr == ptr->parent->right)
+				return ptr->parent;
+			else
+				ptr = ptr->parent;
+		}
+		return ptr;
+	}
+
+	node	*search(const T &val)
 	{
 		node	*searching = _root;
 		if (_root == 0)
@@ -219,6 +237,8 @@ public:
 				searching = searching->right;
 		}
 	}
+
+	unsigned int	size() const {return _size;}
 
 	#ifdef CAN_USE_PRINT
 	void	print()	const
@@ -281,7 +301,6 @@ public:
 	}
 
 private:
-
 	void	_left_rotate(node *x)
 	{
 		node *y = x->right;

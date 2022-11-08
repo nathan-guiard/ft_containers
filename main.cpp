@@ -32,17 +32,32 @@ int main()
 	std::vector<int>::iterator vit = v.begin();
 	std::vector<int>::iterator vite = v.end();
 
-
 	ft::set<int>	s(vit, vite);
 
 	s._t.print();
 	std::cout << "----------------------" << std::endl;
 
-	ft::set<int>::iterator	it = s.begin();
-	ft::set<int>::iterator	ite = s.end();
+	// ft::set<int>::reverse_iterator	it = s.rbegin();
+	// ft::set<int>::reverse_iterator	ite = s.rend();
 
-	for (; it != ite; it++)
-	{
-		std::cout << "iterateur:" << *it << std::endl;
-	}
+	// for (; it != ite; it++)
+	// {
+	// 	std::cout << "iterateur: " << *it << std::endl;
+	// }
+
+	// std::cout << "op--" << std::endl;
+
+	// it = s.rbegin();
+	// do 
+	// {
+	// 	ite--;
+	// 	std::cout << "iterateur: " << *ite << std::endl;
+	// } while (it != ite);
+
+	ft::set<int>		empty;
+
+	std::cout << "Is empty empty? " << empty.empty() << std::endl;
+	empty.insert(4);
+	empty.erase(4);
+	std::cout << "Is empty empty? " << empty.empty() << std::endl;
 }
