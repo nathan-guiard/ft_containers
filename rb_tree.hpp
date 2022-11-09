@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/08 17:54:54 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/09 17:33:08 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,18 +94,19 @@ public:
 	bool	add(const T &val)
 	{
 		node	*p = _root;
-		node	*nv = _alloc.allocate(1);
+		node	*nv;
+	
+		if (search(val) != 0)
+			return false;
+		
+		nv = _alloc.allocate(1);
+		_alloc.construct(nv, *nv);
 		nv->parent = 0;
 		nv->value = val;
 		nv->left = _nd_null;
 		nv->right = _nd_null;
 		nv->color = red;
 
-		if (search(val) != 0)
-		{
-			_alloc.deallocate(nv, 1);
-			return false;
-		}
 		_size++;
 		if (_root != _nd_null)
 		{

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:00:33 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/08 14:12:46 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/09 17:46:33 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ public:
 
 	bool operator == (const pair<A, B>& p)	const	{return p.first == this->first && p.second == this->second;}
 	bool operator != (const pair<A, B>& p)	const	{return !(this == p);}
-	bool operator <	 (const pair<A, B>& p)	const	{return ((p.first < this->first) || !(this->first < p.first) && p.first < this->first);};
+	bool operator <	 (const pair<A, B>& p)	const	{return ((p.first < this->first) || (!(this->first < p.first) && p.first < this->first));};
 	bool operator <= (const pair<A, B>& p)	const	{return !(this > p);};
-	bool operator >	 (const pair<A, B>& p)	const	{return ((p.first > this->first) || !(this->first > p.first) && p.first > this->first);};	bool operator >= (const pair<A, B>& p)	const	{return !(this < p);};
+	bool operator >	 (const pair<A, B>& p)	const	{return ((p.first > this->first) || (!(this->first > p.first) && p.first > this->first));};	bool operator >= (const pair<A, B>& p)	const	{return !(this < p);};
 
 	A	first;
 	B	second;
