@@ -33,14 +33,15 @@ int main()
 	std::vector<int>::iterator vite = v.end();
 
 	ft::set<int>	s(vit, vite);
+	ft::set<int>	sb(vit, vite);
 
 	s._t.print();
 	std::cout << "----------------------" << std::endl;
 
-	ft::set<int>::iterator	it = s.begin();
-	// ft::set<int>::iterator	ite = s.end();
+	std::cout << (s == sb) << std::endl;
+	std::cout << (s != sb) << std::endl;
+	sb.insert(842);
+	// std::cout
+	// ft::set<int>::iterator	it = s.begin();
 
-	s.clear();
-
-	it = s.begin();
 }

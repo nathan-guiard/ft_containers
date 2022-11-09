@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/08 18:02:57 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/09 14:55:03 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 #include	"rb_tree.hpp"
 #include	"pair.hpp"
 #include	"iterator.hpp"
+#include	"lexicographical_compare.hpp"
+#include	"equal.hpp"
 
 namespace ft
 {
@@ -87,8 +89,16 @@ public:
 	public:	
 		SetIterator(): _curr(), _is_end(false) { _it_tree = 0;};
 		SetIterator(const tree<Key>	*tr): _curr(tr->min()), _is_end(false) { _it_tree = tr;};
-		
-		reference operator*()	const
+		SetIterator(const SetIterator &c): _it_tree(c._it_tree), _curr(c._curr), _is_end(c._is_end) {};
+		SetIterator(const SetConstIt &c): _it_tree(c.get_tree()), _curr(c.get_curr()), _is_end(c.get_isend()) {};
+
+		const tree<Key>	*get_tree()	const {return _it_tree;};
+
+		node<Key>	*get_curr() const {return _curr;};
+	
+		bool	get_isend()	const	{return _is_end;};
+
+		const_reference operator*()	const
 		{
 			Key var = Key();
 			Key &ref = var;
@@ -97,7 +107,7 @@ public:
 			return ref;
 		}
 	
-		pointer operator->()	const	{return _curr;}
+		const_pointer operator->()	const	{return &_curr->value;}
 
 		SetIterator &operator++()
 		{
@@ -168,8 +178,14 @@ public:
 				return true;
 			return false;
 		}
+		bool	operator < (const SetIterator &y)	const
+		{
+			if (_curr->value < y._curr->value)
+				return true;
+			return false;
+		}
 
-	private:
+	protected:
 		const tree<Key>	*_it_tree;
 		node<Key>		*_curr;
 		bool			_is_end;
@@ -179,8 +195,16 @@ public:
 	{
 	public:	
 		SetConstIt(): _curr(), _is_end(false) { _it_tree = 0;};
-		SetConstIt(const tree<Key>	*tr): _curr(tr->min()), _is_end(false) { _it_tree = tr;};
-		
+		SetConstIt(const tree<Key>	*tr):	_curr(tr->min()), _is_end(false) { _it_tree = tr;};
+		SetConstIt(const SetConstIt &c):	_it_tree(c._it_tree), _curr(c._curr), _is_end(c._is_end) {};
+		SetConstIt(const SetIterator &c):	_it_tree(c.get_tree()), _curr(c.get_curr()), _is_end(c.get_isend()) {};
+
+		const tree<Key>	*get_tree()	const {return _it_tree;};
+
+		node<Key>	*get_curr() const {return _curr;};
+	
+		bool	get_isend()	const	{return _is_end;};
+
 		const_reference operator*()	const
 		{
 			Key var = Key();
@@ -190,7 +214,7 @@ public:
 			return ref;
 		}
 	
-		const_pointer operator->()	const	{return _curr;}
+		const_pointer operator->()	const	{return &_curr->value;}
 
 		SetConstIt &operator++()
 		{
@@ -255,9 +279,16 @@ public:
 				return true;
 			return false;
 		}
+
 		bool	operator != (const SetConstIt &y)	const
 		{
 			if (this->_curr != y._curr)
+				return true;
+			return false;
+		}
+		bool	operator < (const SetConstIt &y)	const
+		{
+			if (_curr->value < y._curr->value)
 				return true;
 			return false;
 		}
@@ -271,25 +302,26 @@ public:
 	struct	SetRIterator : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
 	{
 	public:	
-		SetRIterator(): _curr(), _is_end(false) { _it_tree = 0;};
-		SetRIterator(const tree<Key>	*tr): _curr(tr->max()), _is_end(false) { _it_tree = tr;};
-		
-		reference operator*()	const
+		SetRIterator(): _base() {};
+		SetRIterator(const tree<Key> *tr):	_base(tr)	{};
+		SetRIterator(const SetIterator &c): _base(c)	{};
+		SetRIterator(const SetConstIt &c):	_base(c)	{};
+
+		iterator	base()	const
 		{
-			Key var = Key();
-			Key &ref = var;
-			if (_curr)
-				return _curr->value;
-			return ref;
+			return _base;
+		}
+
+		const_reference operator*()	const
+		{
+			return *_base;
 		}
 	
-		pointer operator->()	const	{return _curr;}
+		const_pointer operator->()	const	{return &_base.get_curr()->value;}
 
 		SetRIterator &operator++()
 		{
-			if (!_curr || !_it_tree || _it_tree->size() == 0)
-				return *this;
-			_curr = _it_tree->prev(_curr);
+			_base--;
 			return *this;
 		}
 
@@ -304,15 +336,7 @@ public:
 		
 		SetRIterator	&operator--()
 		{
-			if (!_it_tree)
-				return *this;
-			if (_is_end)
-			{
-				_curr = _it_tree->min();
-				_is_end = false;
-			}
-			else
-				_curr = _it_tree->next(_curr);
+			_base++;
 			return *this;
 		}
 
@@ -327,62 +351,61 @@ public:
 
 		reverse_iterator	begin()
 		{
-			_curr = _it_tree->max();
-			if (!_curr)
-				_is_end = true;
-		
-			return *this;
+			return _base.end()--;
 		}
 		
 		reverse_iterator	end()
 		{
-			_curr = 0;
-			_is_end = true;
-		
-			return *this;
+			return _base.begin()--;
 		}
 
 		bool	operator == (const SetRIterator &y)
 		{
-			if (this->_curr == y._curr)
+			if (*_base == *y._base)
 				return true;
 			return false;
 		}
 		bool	operator != (const SetRIterator &y)
 		{
-			if (this->_curr != y._curr)
+			if (*_base != *y._base)
+				return true;
+			return false;
+		}
+		bool	operator < (const SetRIterator &y)	const
+		{
+			if (*_base > *y._base)
 				return true;
 			return false;
 		}
 
 	private:
-		const tree<Key>	*_it_tree;
-		node<Key>		*_curr;
-		bool			_is_end;
+		iterator		_base;
 	};
 
 	struct	SetConstRIt : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
 	{
 	public:	
-		SetConstRIt(): _curr(), _is_end(false) { _it_tree = 0;};
-		SetConstRIt(const tree<Key>	*tr): _curr(tr->max()), _is_end(false) { _it_tree = tr;};
-		
+		SetConstRIt(): _base() {};
+		SetConstRIt(const tree<Key> *tr):	_base(tr)	{};
+		SetConstRIt(const SetIterator &c):	_base(c)	{};
+		SetConstRIt(const SetConstIt &c):	_base(c)	{};
+		SetConstRIt(const SetRIterator &c):	_base(c.base())	{};
+
+		const_iterator	base()	const
+		{
+			return _base;
+		}
+
 		const_reference operator*()	const
 		{
-			Key var = Key();
-			Key &ref = var;
-			if (_curr)
-				return _curr->value;
-			return ref;
+			return *_base;
 		}
 	
-		const_pointer operator->()	const	{return _curr;}
+		const_pointer operator->()	const	{return &_base.get_curr()->value;}
 
 		SetConstRIt &operator++()
 		{
-			if (!_curr || !_it_tree || _it_tree->size() == 0)
-				return *this;
-			_curr = _it_tree->prev(_curr);
+			_base--;
 			return *this;
 		}
 
@@ -397,15 +420,7 @@ public:
 		
 		SetConstRIt	&operator--()
 		{
-			if (!_it_tree)
-				return *this;
-			if (_is_end)
-			{
-				_curr = _it_tree->min();
-				_is_end = false;
-			}
-			else
-				_curr = _it_tree->next(_curr);
+			_base++;
 			return *this;
 		}
 
@@ -420,38 +435,35 @@ public:
 
 		const_reverse_iterator	begin()
 		{
-			_curr = _it_tree->max();
-			if (!_curr)
-				_is_end = true;
-		
-			return *this;
+			return _base.end()--;
 		}
 		
 		const_reverse_iterator	end()
 		{
-			_curr = 0;
-			_is_end = true;
-		
-			return *this;
+			return _base.begin()--;
 		}
 
 		bool	operator == (const SetConstRIt &y)
 		{
-			if (this->_curr == y._curr)
+			if (*_base == *y._base)
 				return true;
 			return false;
 		}
 		bool	operator != (const SetConstRIt &y)
 		{
-			if (this->_curr != y._curr)
+			if (*_base != *y._base)
+				return true;
+			return false;
+		}
+		bool	operator < (const SetConstRIt &y)	const
+		{
+			if (*_base > *y._base)
 				return true;
 			return false;
 		}
 
 	private:
-		const tree<Key>	*_it_tree;
-		node<Key>		*_curr;
-		bool			_is_end;
+		iterator		_base;
 	};
 
 	iterator				begin() 			{return iterator(&_t).begin();};				/* retourne un `iterator` sur le debut					*/
@@ -467,7 +479,8 @@ public:
 	bool		empty()		const	{if (_t.size() == 0) return true; return false;}	/* Check si le container est vide									*/
 	size_type	size()		const	{return _t.size();}									/* Retourne, en `size_type`, le nombre d'objet dans le container	*/
 	size_type	max_size()	const	{return _alloc.max_size() / 10;}					/* Retourne, en `size_type`, le nb max d'objet dans le container	*/
-	//												^~~~ PUE SA MERE DEMANDER A CLODAGH
+												//	^~~~ PUE SA MERE DEMANDER A CLODAGH
+
 	/*	Modifiers	*/
 	void	clear() {_t.clear();};	/* Efface tous les elements du container, le container redeviens comme si on appelais son constructeur par defaut	*/
 
@@ -551,7 +564,13 @@ public:
 		return iterator();
 	}
 
-	void	swap(set &other);	/* On verra	*/
+	void	swap(set &other)	/* On verra	*/
+	{
+		set	tmp(other);
+	
+		other = *this;
+		*this = tmp;
+	}
 
 	/*	Look up		*/
 	size_type		count(const Key &key)	const
@@ -664,43 +683,68 @@ public:
 	}
 
 	/*	Observers	*/
-	key_compare	key_comp()	const;
+	key_compare	key_comp()	const	{return _comp;};
 	
-	value_compare	value_comp()	const;
+	value_compare	value_comp()	const {return _comp;};
 
+// template <class Key, class Compare, class Alloc>
+friend bool	operator ==	(const ft::set<Key, Compare, Allocator> &lhs,
+					const ft::set<Key, Compare, Allocator> &rhs)
+{
+	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
+
+friend bool	operator !=	(const ft::set<Key, Compare, Allocator> &lhs,
+					const ft::set<Key, Compare, Allocator> &rhs)
+{
+	return (!(lhs == rhs));
+}
+
+friend bool	operator <	(const ft::set<Key, Compare, Allocator> &lhs,
+					const ft::set<Key, Compare, Allocator> &rhs)
+{
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));	
+}
+
+friend bool	operator <=	(const ft::set<Key, Compare, Allocator> &lhs,
+					const ft::set<Key, Compare, Allocator> &rhs)
+{
+	return (!(rhs < lhs));	
+}
+
+friend bool	operator >	(const ft::set<Key, Compare, Allocator> &lhs,
+					const ft::set<Key, Compare, Allocator> &rhs)
+{
+	return (rhs < lhs);
+}
+
+friend bool	operator >=	(const ft::set<Key, Compare, Allocator> &lhs,
+					const ft::set<Key, Compare, Allocator> &rhs)
+{
+	return (!(lhs < rhs));
+}
 // A REMETTRE EN PRIVE PLUS TARD
+//private:
 	Compare			_comp;
 	Allocator		_alloc;
 	ft::tree<Key>	_t;
 };
 
-template <class Key, class Compare, class Alloc>
-bool	operator ==	(const ft::set<Key, Compare, Alloc> &lhs,
-					const ft::set<Key, Compare, Alloc> &rhs);
+// template <class Key, class Compare, class Allocator>
+// bool	operator <= (const ft::set<Key, Compare, Allocator> &lhs,
+// 					const ft::set<Key, Compare, Allocator> &rhs);
 
-template <class Key, class Compare, class Alloc>
-bool	operator !=	(const ft::set<Key, Compare, Alloc> &lhs,
-					const ft::set<Key, Compare, Alloc> &rhs);
+// template <class Key, class Compare, class Allocator>
+// bool	operator >	(const ft::set<Key, Compare, Allocator> &lhs,
+// 					const ft::set<Key, Compare, Allocator> &rhs);
 
-template <class Key, class Compare, class Alloc>
-bool	operator <	(const ft::set<Key, Compare, Alloc> &lhs,
-					const ft::set<Key, Compare, Alloc> &rhs);
+// template <class Key, class Compare, class Allocator>
+// bool	operator >=	(const ft::set<Key, Compare, Allocator> &lhs,
+// 					const ft::set<Key, Compare, Allocator> &rhs);
 
-template <class Key, class Compare, class Alloc>
-bool	operator <= (const ft::set<Key, Compare, Alloc> &lhs,
-					const ft::set<Key, Compare, Alloc> &rhs);
-
-template <class Key, class Compare, class Alloc>
-bool	operator >	(const ft::set<Key, Compare, Alloc> &lhs,
-					const ft::set<Key, Compare, Alloc> &rhs);
-
-template <class Key, class Compare, class Alloc>
-bool	operator >=	(const ft::set<Key, Compare, Alloc> &lhs,
-					const ft::set<Key, Compare, Alloc> &rhs);
-
-template <class Key, class Compare, class Alloc>
-void	swap(const ft::set<Key, Compare, Alloc> &lhs,
-			const ft::set<Key, Compare, Alloc> &rhs);
+// template <class Key, class Compare, class Allocator>
+// void	swap(const ft::set<Key, Compare, Allocator> &lhs,
+// 			const ft::set<Key, Compare, Allocator> &rhs);
 }
 
 #endif

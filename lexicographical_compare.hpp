@@ -1,32 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   equal.hpp                                          :+:      :+:    :+:   */
+/*   lexicographical_compare.hpp                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/21 18:32:37 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/09 11:49:44 by nguiard          ###   ########.fr       */
+/*   Created: 2022/11/09 11:11:55 by nguiard           #+#    #+#             */
+/*   Updated: 2022/11/09 11:50:00 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_EQUAL_HPP
-#define	FT_EQUAL_HPP
-
-#include <algorithm>
+#ifndef FT_LEXICOGRAPHCAL_COMPARE_HPP
+#define FT_LEXICOGRAPHCAL_COMPARE_HPP
 
 namespace ft
 {
 
-template <class it1, class it2>
-bool equal(it1 f1, it1 e1, it2 f2)
+template <class ita, class itb>
+inline bool lexicographical_compare(ita f1, ita e1, itb f2, itb e2)
 {
-	for (; f1 != e1; ++f1, ++f2)
-		if (*f1 != *f2)
+	for (; f1 != e1 && f2 != e2; ++f1, ++f2)
+	{
+		if (f1 < f2)
+			return true;
+		if (f2 < f1)
 			return false;
-	return true;
+	}
+	return (f1 == e1 && f2 != e2);
 }
 
-}
+}//fin du namespace ft
 
 #endif
