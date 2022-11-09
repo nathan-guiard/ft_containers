@@ -41,6 +41,16 @@ int main()
 	std::cout << (s == sb) << std::endl;
 	std::cout << (s != sb) << std::endl;
 	sb.insert(842);
+
+	std::set< std::vector<int> >	a;
+
+	a.insert(v);
+
+	std::set< std::vector<int> >::iterator	test_it = a.begin();
+
+	std::cout << test_it->max_size() << std::endl;
+	test_it++;
+	std::cout << test_it->max_size() << std::endl;
 	// std::cout
 	// ft::set<int>::iterator	it = s.begin();
 

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/09 14:55:03 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/09 16:46:21 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ public:
 			return false;
 		}
 
-	protected:
+	private:
 		const tree<Key>	*_it_tree;
 		node<Key>		*_curr;
 		bool			_is_end;
@@ -302,26 +302,42 @@ public:
 	struct	SetRIterator : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
 	{
 	public:	
-		SetRIterator(): _base() {};
-		SetRIterator(const tree<Key> *tr):	_base(tr)	{};
-		SetRIterator(const SetIterator &c): _base(c)	{};
-		SetRIterator(const SetConstIt &c):	_base(c)	{};
+		SetRIterator(): _b(), _curr(), _is_end(false) { _it_tree = 0;};
+		SetRIterator(const tree<Key> *tr): _b(tr), _curr(tr->max()), _is_end(false) { _it_tree = tr;};
+		SetRIterator(const SetRIterator &c): _b(c._b), _it_tree(c._it_tree), _curr(c._curr), _is_end(c._is_end) {};
+		SetRIterator(const SetConstIt &c): _b(c), _it_tree(c.get_tree()), _curr(c.get_curr()), _is_end(c.get_isend()) {};
 
-		iterator	base()	const
-		{
-			return _base;
-		}
+		const tree<Key>	*get_tree()	const {return _it_tree;};
+
+		node<Key>	*get_curr() const {return _curr;};
+	
+		bool	get_isend()	const	{return _is_end;};
+		
+		iterator	base()	const	{return _b;};
 
 		const_reference operator*()	const
 		{
-			return *_base;
+			Key var = Key();
+			Key &ref = var;
+			if (_curr)
+				return _curr->value;
+			return ref;
 		}
 	
-		const_pointer operator->()	const	{return &_base.get_curr()->value;}
+		const_pointer operator->()	const	{return &_curr->value;}
 
 		SetRIterator &operator++()
 		{
-			_base--;
+			_b--;
+			if (!_it_tree)
+				return *this;
+			if (_is_end)
+			{
+				_curr = _it_tree->min();
+				_is_end = false;
+			}
+			else
+				_curr = _it_tree->prev(_curr);
 			return *this;
 		}
 
@@ -336,8 +352,12 @@ public:
 		
 		SetRIterator	&operator--()
 		{
-			_base++;
+			_b++;
+			if (!_curr || !_it_tree || _it_tree->size() == 0)
+				return *this;
+			_curr = _it_tree->prev(_curr);
 			return *this;
+
 		}
 
 		SetRIterator	operator--(int)
@@ -351,61 +371,90 @@ public:
 
 		reverse_iterator	begin()
 		{
-			return _base.end()--;
+			_b = _b.end();
+			_b--;
+			_curr = _b.get_curr();
+			_is_end = _b.get_isend();
+
+			return *this;
 		}
 		
 		reverse_iterator	end()
 		{
-			return _base.begin()--;
+			_b = _b.begin();
+			_b--;
+			_curr = _b.get_curr();
+			_is_end = _b.get_isend();
+			
+			return *this;
 		}
 
-		bool	operator == (const SetRIterator &y)
+		bool	operator == (const SetRIterator &y)	const
 		{
-			if (*_base == *y._base)
+			if (this->_curr == y._curr)
 				return true;
 			return false;
 		}
-		bool	operator != (const SetRIterator &y)
+		bool	operator != (const SetRIterator &y)	const
 		{
-			if (*_base != *y._base)
+			if (this->_curr != y._curr)
 				return true;
 			return false;
 		}
 		bool	operator < (const SetRIterator &y)	const
 		{
-			if (*_base > *y._base)
+			if (_curr->value < y._curr->value)
 				return true;
 			return false;
 		}
 
 	private:
-		iterator		_base;
+		iterator		_b;
+		const tree<Key>	*_it_tree;
+		node<Key>		*_curr;
+		bool			_is_end;
 	};
 
 	struct	SetConstRIt : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
 	{
 	public:	
-		SetConstRIt(): _base() {};
-		SetConstRIt(const tree<Key> *tr):	_base(tr)	{};
-		SetConstRIt(const SetIterator &c):	_base(c)	{};
-		SetConstRIt(const SetConstIt &c):	_base(c)	{};
-		SetConstRIt(const SetRIterator &c):	_base(c.base())	{};
+		SetConstRIt(): _b(), _curr(), _is_end(false) { _it_tree = 0;};
+		SetConstRIt(const tree<Key> *tr): _b(tr), _curr(tr->max()), _is_end(false) { _it_tree = tr;};
+		SetConstRIt(const SetConstRIt &c): _b(c._b), _it_tree(c._it_tree), _curr(c._curr), _is_end(c._is_end)   {};
+		SetConstRIt(const SetRIterator &c): _b(c.base()), _it_tree(c.get_tree()), _curr(c.get_curr()), _is_end(c.get_isend()){};
+		SetConstRIt(const SetConstIt &c): _b(c), _it_tree(c.get_tree()), _curr(c.get_curr()), _is_end(c.get_isend()) {};
 
-		const_iterator	base()	const
-		{
-			return _base;
-		}
+		const tree<Key>	*get_tree()	const {return _it_tree;};
+
+		node<Key>	*get_curr() const {return _curr;};
+	
+		bool	get_isend()	const	{return _is_end;};
+		
+		iterator	base()	const	{return _b;};
 
 		const_reference operator*()	const
 		{
-			return *_base;
+			Key var = Key();
+			Key &ref = var;
+			if (_curr)
+				return _curr->value;
+			return ref;
 		}
 	
-		const_pointer operator->()	const	{return &_base.get_curr()->value;}
+		const_pointer operator->()	const	{return &_curr->value;}
 
 		SetConstRIt &operator++()
 		{
-			_base--;
+			_b--;
+			if (!_it_tree)
+				return *this;
+			if (_is_end)
+			{
+				_curr = _it_tree->min();
+				_is_end = false;
+			}
+			else
+				_curr = _it_tree->prev(_curr);
 			return *this;
 		}
 
@@ -420,8 +469,12 @@ public:
 		
 		SetConstRIt	&operator--()
 		{
-			_base++;
+			_b++;
+			if (!_curr || !_it_tree || _it_tree->size() == 0)
+				return *this;
+			_curr = _it_tree->prev(_curr);
 			return *this;
+
 		}
 
 		SetConstRIt	operator--(int)
@@ -435,35 +488,48 @@ public:
 
 		const_reverse_iterator	begin()
 		{
-			return _base.end()--;
+			*this = _b.end();
+			*this--;
+			_curr = _b.get_curr();
+			_is_end = _b.get_isend();
+
+			return *this;
 		}
 		
 		const_reverse_iterator	end()
 		{
-			return _base.begin()--;
+			*this = _b.begin();
+			*this--;
+			_curr = _b.get_curr();
+			_is_end = _b.get_isend();
+			
+			return *this;
 		}
 
-		bool	operator == (const SetConstRIt &y)
+		bool	operator == (const SetConstRIt &y)	const
 		{
-			if (*_base == *y._base)
+			if (this->_curr == y._curr)
 				return true;
 			return false;
 		}
-		bool	operator != (const SetConstRIt &y)
+		bool	operator != (const SetConstRIt &y)	const
 		{
-			if (*_base != *y._base)
+			if (this->_curr != y._curr)
 				return true;
 			return false;
 		}
 		bool	operator < (const SetConstRIt &y)	const
 		{
-			if (*_base > *y._base)
+			if (_curr->value < y._curr->value)
 				return true;
 			return false;
 		}
 
 	private:
-		iterator		_base;
+		iterator		_b;
+		const tree<Key>	*_it_tree;
+		node<Key>		*_curr;
+		bool			_is_end;
 	};
 
 	iterator				begin() 			{return iterator(&_t).begin();};				/* retourne un `iterator` sur le debut					*/
