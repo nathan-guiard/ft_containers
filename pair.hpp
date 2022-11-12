@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:00:33 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/09 17:46:33 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/12 14:03:29 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ public:
 	pair(): first(), second() {};
 	pair(const A& a, const B& b) : first(a), second(b) {};
 	pair(const pair<A, B>&p) : first(p.first), second(p.second) {};
+	~pair()	{};
 	
 	pair	&operator = (const pair &copy)
 	{
@@ -42,8 +43,6 @@ public:
 	A	first;
 	B	second;
 };
-
-
 
 }//fin du namespace ft
 

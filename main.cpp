@@ -38,19 +38,11 @@ int main()
 	s._t.print();
 	std::cout << "----------------------" << std::endl;
 
-	std::cout << (s == sb) << std::endl;
-	std::cout << (s != sb) << std::endl;
-	sb.insert(842);
+	ft::set<int>::iterator	it = s.begin();
+	ft::set<int>::iterator	ite = s.end();
 
-	std::set< std::vector<int> >	a;
-
-	a.insert(v);
-
-	std::set< std::vector<int> >::iterator	test_it = a.begin();
-
-	std::cout << test_it->max_size() << std::endl;
-	test_it++;
-	std::cout << test_it->max_size() << std::endl;
+	for (; it != ite; it++)
+		std::cout << *it << std::endl;
 	// std::cout
 	// ft::set<int>::iterator	it = s.begin();
 

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/09 17:33:08 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/12 14:49:52 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <iomanip>
 #include <memory>
+#include "iterator.hpp"
 
 namespace ft
 {
@@ -44,6 +45,10 @@ private:
 	typedef struct node<T> node;
 
 public:
+	class	rb_it;
+
+	typedef	rb_it	iterator;
+
 	tree()
 	{
 		_nd_null = _alloc.allocate(1); 
@@ -90,6 +95,166 @@ public:
 
 		return *this;
 	}
+
+	const tree &operator = (const tree &copy) const
+	{
+		_delete_everything(this->_root);
+		this->_root = this->_nd_null;
+		if (copy._root && copy._root != copy._nd_null)
+			_copy_helper(copy._root, copy._nd_null);
+
+		return *this;
+	}
+
+	class rb_it : iterator_traits<std::bidirectional_iterator_tag, T>
+	{
+	public:
+		rb_it(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
+		{
+			T	val = T();
+
+			_nd_null = _alloc.allocate(1);
+			_nd_null->color = black;
+			_nd_null->left = 0;
+			_nd_null->right = 0;
+			_nd_null->value = val;
+			_curr = _nd_null;
+		}
+
+		rb_it(const rb_it &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
+			_is_end(copy._is_end), _has_been_alloc(copy._has_been_alloc), _alloc()  {}
+
+		rb_it(tree *tr): _tr(tr), _curr(tr->min()),
+			_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
+		{
+			_is_end = false;
+			if (_curr == 0)
+				_is_end = true;
+		}
+
+		~rb_it() {if (_has_been_alloc) _alloc.deallocate(_nd_null, 1);}
+
+		rb_it &operator = (const rb_it &copy)
+		{
+			_tr = copy._tr;
+			_curr = copy._curr;
+			_nd_null = copy._nd_null;
+			_is_end = copy._is_end;
+			_has_been_alloc = copy._has_been_alloc;
+		
+			return *this;
+		}
+
+		tree	get_tree()	const		{return _tr;}
+
+		node	*get_curr()	const		{return _curr;}
+
+		node	*get_it_null()	const	{return _nd_null;}
+	
+		bool	get_is_end()	const	{return _is_end;}
+	
+		bool	get_been_alloc()	const	{return _has_been_alloc;}
+	
+		const T &operator*() const
+		{
+			if (_curr && _curr != _nd_null)
+				return _curr->value;
+			return _nd_null->value;
+		}
+
+		const T *operator->() const
+		{
+			if (_curr)
+				return &_curr->value;
+			return &_nd_null->value;
+		}
+
+		rb_it	&operator++()
+		{
+			if (!_curr || _curr == _nd_null || _tr->size() == 0 || _is_end)
+				return *this;
+			_curr = _tr->next(_curr);
+			if (!_curr)
+				_is_end = true;
+			return *this;
+		}
+
+		rb_it	operator++(int)
+		{
+			rb_it	tmp;
+
+			tmp = *this;
+			++*this;
+			return tmp;
+		}
+
+		rb_it	&operator--()
+		{
+			if (_tr->size() == 0)
+				return *this;
+			if (_is_end || !_curr || _curr == _nd_null)
+			{
+				_is_end = false;
+				_curr = _tr->max();
+			}
+			else
+				_curr = _tr->prev(_curr);
+			return *this;
+			
+		}
+
+		rb_it	operator--(int)
+		{
+			rb_it	tmp;
+
+			tmp = *this;
+			--*this;
+			return tmp;
+		}
+
+		rb_it	begin()
+		{
+			_curr = _tr->min();
+			if (!_curr)
+				_is_end = true;
+			
+			return *this;
+		}
+
+		rb_it	end()
+		{
+			_curr = 0;
+			_is_end = true;
+		
+			return *this;
+		}
+
+	bool operator == (const rb_it &y)	const
+	{
+		if (_curr == y._curr)
+			return true;
+		return false;
+	}
+
+	bool operator != (const rb_it &y)	const	{return (!(*this == y));}
+
+	bool operator <  (const rb_it &y)	const
+	{
+		if (_curr < y._curr)
+			return true;
+		return false;
+	}
+
+	private:
+		tree	*_tr;
+		node	*_curr;
+		node	*_nd_null;
+		bool	_is_end;
+		bool	_has_been_alloc;
+		Alloc	_alloc;
+	};
+
+	node	*get_nd_null() const {return _nd_null;}
 
 	bool	add(const T &val)
 	{
