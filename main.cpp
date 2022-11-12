@@ -38,12 +38,22 @@ int main()
 	s._t.print();
 	std::cout << "----------------------" << std::endl;
 
-	ft::set<int>::iterator	it = s.begin();
-	ft::set<int>::iterator	ite = s.end();
+	ft::set<int>::const_iterator	it = s.begin();
+	ft::set<int>::const_iterator	ite = s.end();
 
 	for (; it != ite; it++)
 		std::cout << *it << std::endl;
-	// std::cout
-	// ft::set<int>::iterator	it = s.begin();
 
+	std::set<int>	td(it, ite);
+
+	std::set<int>::const_iterator	stdit = td.begin();
+	std::set<int>::const_iterator	stdite = td.end();
+
+	for (std::set<int>::iterator truc = stdit; truc != stdite; truc++)
+		std::cout << *truc << std::endl;
+
+	td.clear();
+
+	for (std::set<int>::iterator truc = stdit; truc != stdite; truc++)
+		std::cout << *truc << std::endl;
 }

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/12 14:49:52 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/12 16:11:03 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,14 @@ private:
 
 public:
 	class	rb_it;
+	class	rb_cit;
+	class	rb_rit;
+	class	rb_crit;
 
 	typedef	rb_it	iterator;
+	typedef	rb_cit	const_iterator;
+	typedef	rb_rit	reverse_iterator;
+	typedef	rb_crit	const_reverse_iterator;
 
 	tree()
 	{
@@ -121,8 +127,16 @@ public:
 			_curr = _nd_null;
 		}
 
-		rb_it(const rb_it &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
+		rb_it(const iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
 			_is_end(copy._is_end), _has_been_alloc(copy._has_been_alloc), _alloc()  {}
+
+		rb_it(const const_iterator &copy): _tr(copy.get_tree()),
+			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
+			_is_end(copy.get_is_end()), _has_been_alloc(copy.get_been_alloc()) {};
+		
+		rb_it(const const_iterator &copy, bool has_been_alloc): _tr(copy.get_tree()),
+			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
+			_is_end(copy.get_is_end()), _has_been_alloc(has_been_alloc) {};
 
 		rb_it(tree *tr): _tr(tr), _curr(tr->min()),
 			_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
@@ -134,18 +148,21 @@ public:
 
 		~rb_it() {if (_has_been_alloc) _alloc.deallocate(_nd_null, 1);}
 
-		rb_it &operator = (const rb_it &copy)
+		iterator &operator = (const iterator &copy)
 		{
+			if (_has_been_alloc)
+				_alloc.deallocate(_nd_null, 1);
 			_tr = copy._tr;
 			_curr = copy._curr;
 			_nd_null = copy._nd_null;
 			_is_end = copy._is_end;
 			_has_been_alloc = copy._has_been_alloc;
 		
+
 			return *this;
 		}
 
-		tree	get_tree()	const		{return _tr;}
+		tree	*get_tree()	const		{return _tr;}
 
 		node	*get_curr()	const		{return _curr;}
 
@@ -169,7 +186,7 @@ public:
 			return &_nd_null->value;
 		}
 
-		rb_it	&operator++()
+		iterator	&operator++()
 		{
 			if (!_curr || _curr == _nd_null || _tr->size() == 0 || _is_end)
 				return *this;
@@ -179,17 +196,19 @@ public:
 			return *this;
 		}
 
-		rb_it	operator++(int)
+		iterator	operator++(int)
 		{
-			rb_it	tmp;
+			iterator	tmp;
 
 			tmp = *this;
 			++*this;
 			return tmp;
 		}
 
-		rb_it	&operator--()
+		iterator	&operator--()
 		{
+			if (!_tr)
+				return *this;
 			if (_tr->size() == 0)
 				return *this;
 			if (_is_end || !_curr || _curr == _nd_null)
@@ -203,16 +222,16 @@ public:
 			
 		}
 
-		rb_it	operator--(int)
+		iterator	operator--(int)
 		{
-			rb_it	tmp;
+			iterator	tmp;
 
 			tmp = *this;
 			--*this;
 			return tmp;
 		}
 
-		rb_it	begin()
+		iterator	begin()
 		{
 			_curr = _tr->min();
 			if (!_curr)
@@ -221,7 +240,7 @@ public:
 			return *this;
 		}
 
-		rb_it	end()
+		iterator	end()
 		{
 			_curr = 0;
 			_is_end = true;
@@ -229,16 +248,16 @@ public:
 			return *this;
 		}
 
-	bool operator == (const rb_it &y)	const
+	bool operator == (const iterator &y)	const
 	{
 		if (_curr == y._curr)
 			return true;
 		return false;
 	}
 
-	bool operator != (const rb_it &y)	const	{return (!(*this == y));}
+	bool operator != (const iterator &y)	const	{return (!(*this == y));}
 
-	bool operator <  (const rb_it &y)	const
+	bool operator <  (const iterator &y)	const
 	{
 		if (_curr < y._curr)
 			return true;
@@ -252,6 +271,370 @@ public:
 		bool	_is_end;
 		bool	_has_been_alloc;
 		Alloc	_alloc;
+	};
+
+	class rb_cit : iterator_traits<std::bidirectional_iterator_tag, T>
+	{
+	public:
+		rb_cit(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
+		{
+			T	val = T();
+
+			_nd_null = _alloc.allocate(1);
+			_nd_null->color = black;
+			_nd_null->left = 0;
+			_nd_null->right = 0;
+			_nd_null->value = val;
+			_curr = _nd_null;
+		}
+
+		rb_cit(const const_iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
+			_is_end(copy._is_end), _has_been_alloc(copy._has_been_alloc), _alloc()  {}
+
+		rb_cit(const iterator &copy): _tr(copy.get_tree()),
+			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
+			_is_end(copy.get_is_end()), _has_been_alloc(copy.get_been_alloc()) {};
+		
+		rb_cit(const iterator &copy, bool has_been_alloc): _tr(copy.get_tree()),
+			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
+			_is_end(copy.get_is_end()), _has_been_alloc(has_been_alloc) {};
+
+		rb_cit(const tree *tr): _tr(tr), _curr(tr->min()),
+			_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
+		{
+			_is_end = false;
+			if (_curr == 0)
+				_is_end = true;
+		}
+
+		~rb_cit()
+		{
+			if (_has_been_alloc == true)
+				_alloc.deallocate(_nd_null, 1);
+		}
+
+		const_iterator &operator = (const const_iterator &copy)
+		{
+			if (_has_been_alloc)
+				_alloc.deallocate(_nd_null, 1);
+			_tr = copy._tr;
+			_curr = copy._curr;
+			_nd_null = copy._nd_null;
+			_is_end = copy._is_end;
+			_has_been_alloc = copy._has_been_alloc;
+		
+			return *this;
+		}
+
+		tree	*get_tree()	const		{return _tr;}
+
+		node	*get_curr()	const		{return _curr;}
+
+		node	*get_it_null()	const	{return _nd_null;}
+	
+		bool	get_is_end()	const	{return _is_end;}
+	
+		bool	get_been_alloc()	const	{return _has_been_alloc;}
+
+		const T &operator*() const
+		{
+			if (_curr && _curr != _nd_null)
+				return _curr->value;
+			return _nd_null->value;
+		}
+
+		const T *operator->() const
+		{
+			if (_curr)
+				return &_curr->value;
+			return &_nd_null->value;
+		}
+
+		const_iterator	&operator++()
+		{
+			if (!_curr || _curr == _nd_null || _tr->size() == 0 || _is_end)
+				return *this;
+			_curr = _tr->next(_curr);
+			if (!_curr)
+				_is_end = true;
+			return *this;
+		}
+
+		const_iterator	operator++(int)
+		{
+			const_iterator	tmp;
+
+			tmp = *this;
+			++*this;
+			return tmp;
+		}
+
+		const_iterator	&operator--()
+		{
+			if (_tr->size() == 0)
+				return *this;
+			if (*this == this->end())
+			{
+				_is_end = false;
+				_curr = _tr->max();
+			}
+			if (_is_end || !_curr || _curr == _nd_null)
+			{
+				_is_end = false;
+				_curr = _tr->max();
+			}
+			else
+				_curr = _tr->prev(_curr);
+			return *this;
+		}
+
+		const_iterator	operator--(int)
+		{
+			const_iterator	tmp;
+
+			tmp = *this;
+			--*this;
+			return tmp;
+		}
+
+		const_iterator	begin()
+		{
+			_curr = _tr->min();
+			if (!_curr)
+				_is_end = true;
+			
+			return *this;
+		}
+
+		const_iterator	end()
+		{
+			_curr = 0;
+			_is_end = true;
+		
+			return *this;
+		}
+
+	bool operator == (const const_iterator &y)	const
+	{
+		if (_curr == y._curr)
+			return true;
+		return false;
+	}
+
+	bool operator != (const const_iterator &y)	const	{return (!(*this == y));}
+
+	bool operator <  (const const_iterator &y)	const
+	{
+		if (_curr < y._curr)
+			return true;
+		return false;
+	}
+
+	private:
+		const tree	*_tr;
+		node	*_curr;
+		node	*_nd_null;
+		bool	_is_end;
+		bool	_has_been_alloc;
+		Alloc	_alloc;
+	};
+
+	class rb_rit : iterator_traits<std::bidirectional_iterator_tag, T>
+	{
+	public:
+		rb_rit(): _b() {}
+
+		rb_rit(const reverse_iterator &copy): _b(copy._b, false) {}
+
+		rb_rit(const const_iterator &copy): _b(copy, false) {};
+
+		rb_rit(tree *tr): _b(tr) {}
+
+		~rb_rit() {}
+
+		reverse_iterator &operator = (const reverse_iterator &copy)
+		{
+			_b = copy._b;
+			return *this;
+		}
+
+		iterator	base()	const	{return _b;}
+
+		const T &operator*() const
+		{
+			return *_b;
+		}
+
+		const T *operator->() const
+		{
+			return &_b.get_curr()->value;
+		}
+
+		reverse_iterator	&operator++()
+		{
+			_b--;
+			return *this;
+		}
+
+		reverse_iterator	operator++(int)
+		{
+			reverse_iterator	tmp;
+
+			tmp = *this;
+			++*this;
+			return tmp;
+		}
+
+		reverse_iterator	&operator--()
+		{
+			_b++;
+			return *this;
+		}
+
+		reverse_iterator	operator--(int)
+		{
+			reverse_iterator	tmp;
+
+			tmp = *this;
+			--*this;
+			return tmp;
+		}
+
+		reverse_iterator	begin()
+		{
+			_b = iterator(_b.get_tree()).end();
+			_b--;
+
+			return *this;
+		}
+
+		reverse_iterator	end()
+		{
+			_b = iterator(_b.get_tree()).begin();
+			_b--;
+
+			return *this;
+		}
+		
+
+	bool operator == (const reverse_iterator &y)	const
+	{
+		if (_b.get_curr() == y._b.get_curr())
+			return true;
+		return false;
+	}
+
+	bool operator != (const reverse_iterator &y)	const	{return (!(*this == y));}
+
+	bool operator <  (const reverse_iterator &y)	const
+	{
+		if (_b.get_curr() < y._b.get_curr())
+			return true;
+		return false;
+	}
+
+	private:
+		iterator	_b;
+	};
+
+	class rb_crit : iterator_traits<std::bidirectional_iterator_tag, T>
+	{
+	public:
+		rb_crit(): _b() {}
+
+		rb_crit(const const_reverse_iterator &copy): _b(copy._b, false) {}
+
+		rb_crit(const reverse_iterator &copy): _b(copy.base(), false) {}
+
+		rb_crit(const const_iterator &copy): _b(copy, false) {};
+
+		rb_crit(tree *tr): _b(tr) {}
+
+		~rb_crit() {}
+
+		const_reverse_iterator &operator = (const const_reverse_iterator &copy)
+		{
+			_b = copy._b;
+			return *this;
+		}
+
+		iterator	base()	const	{return _b;}
+
+		const T &operator*() const
+		{
+			return *_b;
+		}
+
+		const T *operator->() const
+		{
+			return &_b.get_curr()->value;
+		}
+
+		const_reverse_iterator	&operator++()
+		{
+			_b--;
+			return *this;
+		}
+
+		const_reverse_iterator	operator++(int)
+		{
+			const_reverse_iterator	tmp;
+
+			tmp = *this;
+			++*this;
+			return tmp;
+		}
+
+		const_reverse_iterator	&operator--()
+		{
+			_b++;
+			return *this;
+		}
+
+		const_reverse_iterator	operator--(int)
+		{
+			const_reverse_iterator	tmp;
+
+			tmp = *this;
+			--*this;
+			return tmp;
+		}
+
+		const_reverse_iterator	begin()
+		{
+			_b = iterator(_b.get_tree()).end();
+			_b--;
+
+			return *this;
+		}
+
+		const_reverse_iterator	end()
+		{
+			_b = iterator(_b.get_tree()).begin();
+			_b--;
+
+			return *this;
+		}
+		
+
+	bool operator == (const const_reverse_iterator &y)	const
+	{
+		if (_b.get_curr() == y._b.get_curr())
+			return true;
+		return false;
+	}
+
+	bool operator != (const const_reverse_iterator &y)	const	{return (!(*this == y));}
+
+	bool operator <  (const const_reverse_iterator &y)	const
+	{
+		if (_b.get_curr() < y._b.get_curr())
+			return true;
+		return false;
+	}
+
+	private:
+		iterator	_b;
 	};
 
 	node	*get_nd_null() const {return _nd_null;}
