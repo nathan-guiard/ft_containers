@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 14:20:50 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 14:59:38 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <iomanip>
 #include <memory>
+#include <cstring>
 #include "iterator.hpp"
 
 namespace ft
@@ -646,9 +647,8 @@ public:
 	
 		if (search(val) != 0)
 			return false;
-		
 		nv = _alloc.allocate(1);
-		_alloc.construct(nv, *nv);
+		bzero(nv, sizeof(node));
 		nv->parent = 0;
 		nv->value = val;
 		nv->left = _nd_null;
@@ -976,12 +976,13 @@ private:
 
 	void	_delete_everything(node *ptr)
 	{
+		std::allocator<T>	alloc_type;
+		
 		if (!ptr || ptr == _nd_null)
 			return;
 		_delete_everything(ptr->left);
 		_delete_everything(ptr->right);
-		ptr->left = 0;
-		ptr->right = 0;
+		alloc_type.destroy(&ptr->value);
 		_alloc.deallocate(ptr, 1);
 	}
 

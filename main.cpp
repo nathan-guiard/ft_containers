@@ -10,52 +10,31 @@
 
 int main()
 {
-	std::vector<int>	v;
+	std::vector<std::string>	v;
 
-	v.push_back(5);
-	v.push_back(10);
-	v.push_back(4);
-	v.push_back(9);
-	v.push_back(25);
-	v.push_back(26);
-	v.push_back(98);
-	v.push_back(120);
-	v.push_back(8);
-	v.push_back(22);
-	v.push_back(20);
-	v.push_back(90);
-	v.push_back(50);
-	v.push_back(72);
-	v.push_back(42);
-	v.push_back(609);
+	v.push_back("a");
+	v.push_back("b");
+	v.push_back("c");
+	v.push_back("d");
+	v.push_back("e");
+	v.push_back("f");
+	v.push_back("g");
+	v.push_back("h");
+	v.push_back("i");
+	v.push_back("j");
+	v.push_back("k");
+	v.push_back("l");
+	v.push_back("m");
+	v.push_back("n");
+	v.push_back("o");
+	v.push_back("p");
 
-	std::vector<int>::iterator vit = v.begin();
-	std::vector<int>::iterator vite = v.end();
+	std::vector<std::string>::iterator vit = v.begin();
+	std::vector<std::string>::iterator vite = v.end();
 
-	ft::set<int>	s(vit, vite);
-	ft::set<int>	sb(vit, vite);
+	ft::set<std::string>	s(vit, vite);
 
 	s._t.print();
 	std::cout << "----------------------" << std::endl;
 
-	ft::set<int>::const_iterator	it = s.begin();
-	ft::set<int>::const_iterator	ite = s.end();
-
-	for (; it != ite; it++)
-		std::cout << *it << std::endl;
-
-	std::cout << "test" << std::endl;
-
-	ft::set<int>	td(vit, vite);
-
-	ft::set<int>::const_iterator	ftit = td.begin();
-	ft::set<int>::const_iterator	ftite = td.end();
-
-	for (ft::set<int>::iterator truc = ftit; truc != ftite; truc++)
-		std::cout << "stl: " << *truc << std::endl;
-
-	td.clear();
-
-	for (ft::set<int>::iterator truc = ftit; truc != ftite; truc++)
-		;//std::cout << *truc << std::endl;
 }

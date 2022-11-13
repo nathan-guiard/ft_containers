@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/12 16:22:45 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 14:32:23 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,17 @@ public:
 		const Compare &comp = Compare(),
 		const Allocator &alloc = Allocator()) : _t(comp, alloc)
 	{
+		std::cout << "Avant l'ajout" << std::endl;
 		if (first == last)
 		{
 			_t.add(*first);
 			return;
 		}
 		for (; first != last; first++)
+		{
+			std::cout << "tentative d'ajout de " << *first << std::endl;
 			_t.add(*first);
+		}
 	}
 
 	~set() {};
