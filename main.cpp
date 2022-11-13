@@ -44,16 +44,18 @@ int main()
 	for (; it != ite; it++)
 		std::cout << *it << std::endl;
 
-	std::set<int>	td(it, ite);
+	std::cout << "test" << std::endl;
 
-	std::set<int>::const_iterator	stdit = td.begin();
-	std::set<int>::const_iterator	stdite = td.end();
+	ft::set<int>	td(vit, vite);
 
-	for (std::set<int>::iterator truc = stdit; truc != stdite; truc++)
-		std::cout << *truc << std::endl;
+	ft::set<int>::const_iterator	ftit = td.begin();
+	ft::set<int>::const_iterator	ftite = td.end();
+
+	for (ft::set<int>::iterator truc = ftit; truc != ftite; truc++)
+		std::cout << "stl: " << *truc << std::endl;
 
 	td.clear();
 
-	for (std::set<int>::iterator truc = stdit; truc != stdite; truc++)
-		std::cout << *truc << std::endl;
+	for (ft::set<int>::iterator truc = ftit; truc != ftite; truc++)
+		;//std::cout << *truc << std::endl;
 }

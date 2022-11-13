@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/12 16:11:03 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 14:20:50 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ public:
 			return *this;
 		}
 
-		tree	*get_tree()	const		{return _tr;}
+		const tree	*get_tree()	const		{return _tr;}
 
 		node	*get_curr()	const		{return _curr;}
 
@@ -188,7 +188,7 @@ public:
 
 		iterator	&operator++()
 		{
-			if (!_curr || _curr == _nd_null || _tr->size() == 0 || _is_end)
+			if (!_tr || !_curr)
 				return *this;
 			_curr = _tr->next(_curr);
 			if (!_curr)
@@ -265,7 +265,7 @@ public:
 	}
 
 	private:
-		tree	*_tr;
+		const tree	*_tr;
 		node	*_curr;
 		node	*_nd_null;
 		bool	_is_end;
@@ -326,7 +326,7 @@ public:
 			return *this;
 		}
 
-		tree	*get_tree()	const		{return _tr;}
+		const tree	*get_tree()	const		{return _tr;}
 
 		node	*get_curr()	const		{return _curr;}
 
@@ -352,7 +352,7 @@ public:
 
 		const_iterator	&operator++()
 		{
-			if (!_curr || _curr == _nd_null || _tr->size() == 0 || _is_end)
+			if (!_curr || !_tr)
 				return *this;
 			_curr = _tr->next(_curr);
 			if (!_curr)
@@ -980,6 +980,8 @@ private:
 			return;
 		_delete_everything(ptr->left);
 		_delete_everything(ptr->right);
+		ptr->left = 0;
+		ptr->right = 0;
 		_alloc.deallocate(ptr, 1);
 	}
 
