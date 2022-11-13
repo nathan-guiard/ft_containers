@@ -2,6 +2,7 @@
 #define	DEBUG
 
 #include "set.hpp"
+#include "pair.hpp"
 
 #include <string>
 #include <iostream>
@@ -44,7 +45,18 @@ int main()
 
 	std::cout << "erase de " << *s.begin() << " a " << *--(--(s.end())) << std::endl;
 
-	s.erase(s.begin(), --(s.end()));
+	s.erase(s.begin(), s.end());
+
+	if (s.begin() == s.end())
+		std::cout << "OKAY BBY" << std::endl;
+	else
+		std::cout << s.size() << std::endl;
+
+	ft::set<std::string>::const_iterator	k = s.begin();
+	ft::set<std::string>::const_iterator	l = s.end();
+
+	for (; k != l; ++k)
+		std::cout << *k << std::endl;
 
 	s._t.print();
 
@@ -53,14 +65,8 @@ int main()
 	s.insert("helloc");
 	s.insert("hellod");
 
-	s.erase(s.begin(), s.end());
+	ft::pair<ft::set<std::string>::iterator, bool>	p;
 
-	ft::set<std::string>::iterator a = s.begin();
-
-	for (ft::set<std::string>::iterator b = s.end(); a != b; a++)
-	{
-		std::cout << *a << " [" << a.get_curr() << "] [" << b.get_curr() << "]"
-			<< (a == b) << (a != b) << std::endl;
-	}
-
+	p = s.insert("hello");
+	std::cout << *p.first << " bool: "<< p.second<<  std::endl;
 }

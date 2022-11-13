@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:00:33 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/12 14:03:29 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 18:43:38 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ template <typename A, typename B>
 class pair
 {
 public:
-	pair(): first(), second() {};
-	pair(const A& a, const B& b) : first(a), second(b) {};
-	pair(const pair<A, B>&p) : first(p.first), second(p.second) {};
-	~pair()	{};
-	
+	pair(): first(), second() {}
+	pair(const A& a, const B& b) : first(a), second(b) {}
+	pair(const pair<A, B>&p) {*this = p;}
+	~pair()	{}
+
 	pair	&operator = (const pair &copy)
 	{
 		first = copy.first;

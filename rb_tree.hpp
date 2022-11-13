@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 17:53:36 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 20:52:48 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,10 @@ public:
 		rb_it(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
 		{
 			T	val = T();
+			std::allocator<T>	alloc_type;
 
 			_nd_null = _alloc.allocate(1);
-			bzero(_nd_null, sizeof(node));
-			if (!_nd_null)
-				return;
+			alloc_type.construct(&_nd_null->value, val);
 			_nd_null->color = black;
 			_nd_null->left = 0;
 			_nd_null->right = 0;
@@ -137,7 +136,7 @@ public:
 		rb_it(const const_iterator &copy): _tr(copy.get_tree()),
 			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
 			_is_end(copy.get_is_end()), _has_been_alloc(copy.get_been_alloc()) {};
-		
+
 		rb_it(const const_iterator &copy, bool has_been_alloc): _tr(copy.get_tree()),
 			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
 			_is_end(copy.get_is_end()), _has_been_alloc(has_been_alloc) {};
@@ -150,7 +149,15 @@ public:
 				_is_end = true;
 		}
 
-		~rb_it() {if (_has_been_alloc) _alloc.deallocate(_nd_null, 1);}
+		~rb_it()
+		{
+			std::allocator<T>	alloc_type;
+			if (_has_been_alloc)
+			{
+				alloc_type.destroy(&_nd_null->value);
+				_alloc.deallocate(_nd_null, 1);
+			}
+		}
 
 		iterator &operator = (const iterator &copy)
 		{
@@ -991,6 +998,7 @@ private:
 		_delete_everything(ptr->right);
 		alloc_type.destroy(&ptr->value);
 		_alloc.deallocate(ptr, 1);
+		_size--;
 	}
 
 	void	_del_fix(node *ptr)

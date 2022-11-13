@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 17:42:37 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 20:49:25 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,18 +135,7 @@ public:
 	
 		second = _t.add(value);
 		if (second)
-		{
-			for (;it != ite; it++)
-			{
-				if (*it == value)
-				{
-					save = it;
-					break;
-				}
-				if (*it == *ite)
-					break;
-			}
-		}
+			save = find(value);
 		ft::pair<iterator, bool>	p(save, second);
 		return p;
 	}
@@ -191,7 +180,7 @@ public:
 		if (first == begin() && last == end())
 		{
 			clear();
-			// std::cout << "fin erase tout" << std::endl;
+			std::cout << "LLLLLLLLLLLLLLLLLLLfin erase tout" << std::endl;
 			return begin();
 		}
 	
@@ -202,7 +191,7 @@ public:
 		for (; first != last;)
 		{
 			// //getwchar();
-			if (*first == *last)
+			if (*first == *--last)
 				break;
 			save = ++first;
 			// // std::cout << "apres delete de [" << *first << "] :" << std::endl;
