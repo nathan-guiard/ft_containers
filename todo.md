@@ -3,11 +3,9 @@
 ### Problemes d'output:
 
 - [ ] bounds
-- [ ] copy_construct
-- [ ] empty
+- [x] copy_construct
 - [ ] erase
 - [ ] insert
-- [ ] ite_arrow
 - [ ] more
 - [ ] relational_ope
 - [ ] rite
@@ -16,5 +14,7 @@
 ### Probleme de max_size:
 
 - [ ] comp
+- [ ] empty
+- [ ] ite_arrow
 - [ ] rite_arrow
 - [ ] swap

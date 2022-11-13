@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 22:59:50 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 00:09:03 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,6 @@ public:
 			_is_end = copy._is_end;
 			_has_been_alloc = copy._has_been_alloc;
 		
-
 			return *this;
 		}
 
@@ -186,7 +185,6 @@ public:
 	
 		const T &operator*() const
 		{
-			// // std::cout << "dans lop *" << std::endl;
 			if (_curr && _curr != _nd_null)
 				return _curr->value;
 			return _nd_null->value;
@@ -231,7 +229,6 @@ public:
 			else
 				_curr = _tr->prev(_curr);
 			return *this;
-			
 		}
 
 		iterator	operator--(int)
@@ -264,11 +261,6 @@ public:
 
 	bool operator == (const iterator &y)	const
 	{
-		// std::cout << this->_curr->value << " - " << *y <<"|"
-		// << this->get_curr() << " " <<y.get_curr() << "|"
-		// << this->get_curr()->value << " " << y.get_curr()->value << "\t";
-		// std::cout << (_tr == y._tr ? "\033[32mSAME" : "\033[31mDIFF") << "\033[0m" << "\t";
-	
 		if (_tr == y._tr && y._curr && _curr->value == y._curr->value)
 			return true;
 		if (_curr == y._curr)
@@ -302,8 +294,10 @@ public:
 		rb_cit(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
 		{
 			T	val = T();
+			std::allocator<T>	alloc_type;
 
 			_nd_null = _alloc.allocate(1);
+			alloc_type.construct(&_nd_null->value, val);
 			_nd_null->color = black;
 			_nd_null->left = 0;
 			_nd_null->right = 0;
@@ -332,8 +326,12 @@ public:
 
 		~rb_cit()
 		{
-			if (_has_been_alloc == true)
+			std::allocator<T>	alloc_type;
+			if (_has_been_alloc)
+			{
+				alloc_type.destroy(&_nd_null->value);
 				_alloc.deallocate(_nd_null, 1);
+			}
 		}
 
 		const_iterator &operator = (const const_iterator &copy)
@@ -385,22 +383,18 @@ public:
 
 		const_iterator	operator++(int)
 		{
-			const_iterator	tmp;
-
-			tmp = *this;
+			const_iterator	tmp(*this);
+		
 			++*this;
 			return tmp;
 		}
 
 		const_iterator	&operator--()
 		{
+			if (!_tr)
+				return *this;
 			if (_tr->size() == 0)
 				return *this;
-			if (*this == this->end())
-			{
-				_is_end = false;
-				_curr = _tr->max();
-			}
 			if (_is_end || !_curr || _curr == _nd_null)
 			{
 				_is_end = false;
@@ -422,6 +416,8 @@ public:
 
 		const_iterator	begin()
 		{
+			if (_tr->size() == 0)
+				return(end());
 			_curr = _tr->min();
 			if (!_curr)
 				_is_end = true;
@@ -439,6 +435,8 @@ public:
 
 	bool operator == (const const_iterator &y)	const
 	{
+		if (_tr == y._tr && y._curr && _curr->value == y._curr->value)
+			return true;
 		if (_curr == y._curr)
 			return true;
 		return false;
