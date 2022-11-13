@@ -23,50 +23,38 @@ int main()
 	v.push_back("h");
 	v.push_back("i");
 	v.push_back("j");
-	// v.push_back("k");
-	// v.push_back("l");
-	// v.push_back("m");
-	// v.push_back("n");
-	// v.push_back("o");
-	// v.push_back("p");
+	v.push_back("k");
+	v.push_back("l");
+	v.push_back("m");
+	v.push_back("n");
+	v.push_back("o");
+	v.push_back("p");
 
-	std::vector<std::string>::iterator vit = v.begin();
-	std::vector<std::string>::iterator vite = v.end();
+	std::vector<std::string>::iterator vit	= v.begin();
+	std::vector<std::string>::iterator vite	= v.end();
 
 	ft::set<std::string>	s(vit, vite);
 
 	s._t.print();
 	std::cout << "----------------------" << std::endl;
 
-	ft::set<std::string>::iterator	it = s.begin();
+	ft::set<std::string>	b(vit, --(--(--vite)));
 
-	it++;
-	it++;
+	b._t.print();
+	std::cout << "----------------------" << std::endl;
 
-	std::cout << "erase de " << *s.begin() << " a " << *--(--(s.end())) << std::endl;
+	ft::set<std::string>::iterator	m = b.begin();
+	ft::set<std::string>::iterator	n = s.begin();
 
-	s.erase(s.begin(), s.end());
+	
+	std::cout << ((m == b.begin()) == false ? "false" : "true") << std::endl;
+	std::cout << ((n == s.begin()) == false ? "false" : "true") << std::endl;
 
-	if (s.begin() == s.end())
-		std::cout << "OKAY BBY" << std::endl;
-	else
-		std::cout << s.size() << std::endl;
+	b.swap(s);
 
-	ft::set<std::string>::const_iterator	k = s.begin();
-	ft::set<std::string>::const_iterator	l = s.end();
+	std::cout << "APRES SWAP" << std::endl; 
 
-	for (; k != l; ++k)
-		std::cout << *k << std::endl;
+	std::cout << ((m == s.begin()) == false ? "false" : "true") << std::endl;
+	std::cout << ((n == b.begin()) == false ? "false" : "true") << std::endl;
 
-	s._t.print();
-
-	s.insert("hello");
-	s.insert("hellob");
-	s.insert("helloc");
-	s.insert("hellod");
-
-	ft::pair<ft::set<std::string>::iterator, bool>	p;
-
-	p = s.insert("hello");
-	std::cout << *p.first << " bool: "<< p.second<<  std::endl;
 }

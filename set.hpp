@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 20:49:25 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 22:12:06 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ public:
 	bool		empty()		const	{if (_t.size() == 0) return true; return false;}	/* Check si le container est vide									*/
 	size_type	size()		const	{return _t.size();}									/* Retourne, en `size_type`, le nombre d'objet dans le container	*/
 	size_type	max_size()	const	{return _alloc.max_size() / 10;}					/* Retourne, en `size_type`, le nb max d'objet dans le container	*/
-												//	^~~~ PUE SA MERE DEMANDER A CLODAGH
+											//	^~~~ PUE SA MERE DEMANDER A CLODAGH
 
 	/*	Modifiers	*/
 	void	clear() {_t.clear();}	/* Efface tous les elements du container, le container redeviens comme si on appelais son constructeur par defaut	*/
@@ -125,7 +125,7 @@ public:
 		}
 		return p;
 	}
-	
+
 	ft::pair<iterator, bool>	insert(const value_type& value)	/* Ajoute une valeur au container avec la valeur en paramettre							*/
 	{
 		iterator	save(&_t);
@@ -161,7 +161,7 @@ public:
 			_t.del(*pos);
 		return iterator(&_t);
 	}
-	
+
 	size_type	erase(const Key &key)	/* Enleve un element du container avec sa valeur	*/
 	{
 		node<Key>	*nd = _t.search(key);

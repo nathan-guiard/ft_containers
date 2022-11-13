@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 20:52:48 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 22:59:50 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <memory>
 #include <cstring>
 #include "iterator.hpp"
+#include "equal.hpp"
 
 namespace ft
 {
@@ -263,6 +264,13 @@ public:
 
 	bool operator == (const iterator &y)	const
 	{
+		// std::cout << this->_curr->value << " - " << *y <<"|"
+		// << this->get_curr() << " " <<y.get_curr() << "|"
+		// << this->get_curr()->value << " " << y.get_curr()->value << "\t";
+		// std::cout << (_tr == y._tr ? "\033[32mSAME" : "\033[31mDIFF") << "\033[0m" << "\t";
+	
+		if (_tr == y._tr && y._curr && _curr->value == y._curr->value)
+			return true;
 		if (_curr == y._curr)
 			return true;
 		return false;
@@ -272,6 +280,8 @@ public:
 
 	bool operator <  (const iterator &y)	const
 	{
+		if (_curr && y._curr && _curr->value < y._curr->value)
+			return true;
 		if (_curr < y._curr)
 			return true;
 		return false;
