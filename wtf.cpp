@@ -303,8 +303,8 @@ class RedBlackTree
 		indent += 4;
 		printHelper(root->right, indent);
 		for (int i = 4; i < indent; i++)
-			std::cout << " ";
-		std::cout << (root->color == 0 ? "\033[90m" : "\033[31m") << std::setw(4) << root->value << "\033[0m" << std::endl;
+			// std::cout << " ";
+		// std::cout << (root->color == 0 ? "\033[90m" : "\033[31m") << std::setw(4) << root->value << "\033[0m" << std::endl;
 		printHelper(root->left, indent);
 	}
 

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 14:59:38 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 17:53:36 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,9 @@ public:
 			T	val = T();
 
 			_nd_null = _alloc.allocate(1);
+			bzero(_nd_null, sizeof(node));
+			if (!_nd_null)
+				return;
 			_nd_null->color = black;
 			_nd_null->left = 0;
 			_nd_null->right = 0;
@@ -175,6 +178,7 @@ public:
 	
 		const T &operator*() const
 		{
+			// // std::cout << "dans lop *" << std::endl;
 			if (_curr && _curr != _nd_null)
 				return _curr->value;
 			return _nd_null->value;
@@ -199,9 +203,8 @@ public:
 
 		iterator	operator++(int)
 		{
-			iterator	tmp;
+			iterator	tmp(*this);
 
-			tmp = *this;
 			++*this;
 			return tmp;
 		}
@@ -234,6 +237,8 @@ public:
 
 		iterator	begin()
 		{
+			if (_tr->size() == 0)
+				return(end());
 			_curr = _tr->min();
 			if (!_curr)
 				_is_end = true;
@@ -693,6 +698,7 @@ public:
 		node	*to_del = search(val);
 		node	*to_fix, *y;
 		int		og_color;
+		std::allocator<T>	alloc_type;
 
 		if (!to_del)
 			return false;
@@ -727,6 +733,7 @@ public:
 			y->left->parent = y;
 			y->color = to_del->color;			
 		}
+		alloc_type.destroy(&to_del->value);
 		_alloc.deallocate(to_del, 1);
 		_size--;
 		if (og_color == black)
@@ -805,7 +812,7 @@ public:
 		std::cout
 			<< (ptr->color == black ? "\033[90m" : "\033[31m") << std::setw(space)
 			<< ptr->value << "\033[0m" << std::endl;
-		// getwchar();
+		// //getwchar();
 		real_print(ptr->left, space);
 	}
 	#endif

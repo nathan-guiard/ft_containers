@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 14:32:23 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/13 17:42:37 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,17 +60,13 @@ public:
 		const Compare &comp = Compare(),
 		const Allocator &alloc = Allocator()) : _t(comp, alloc)
 	{
-		std::cout << "Avant l'ajout" << std::endl;
 		if (first == last)
 		{
 			_t.add(*first);
 			return;
 		}
 		for (; first != last; first++)
-		{
-			std::cout << "tentative d'ajout de " << *first << std::endl;
 			_t.add(*first);
-		}
 	}
 
 	~set() {};
@@ -108,6 +104,7 @@ public:
 	/*	Modifiers	*/
 	void	clear() {_t.clear();}	/* Efface tous les elements du container, le container redeviens comme si on appelais son constructeur par defaut	*/
 
+	// a change r en consequence de la fcn den dessous
 	ft::pair<iterator, bool>	insert(const value_type* value)	/* Ajoute une valeur au container avec la valeur pointee en paramettre					*/
 	{
 		ft::pair<iterator, bool>	p;
@@ -131,25 +128,29 @@ public:
 	
 	ft::pair<iterator, bool>	insert(const value_type& value)	/* Ajoute une valeur au container avec la valeur en paramettre							*/
 	{
-		ft::pair<iterator, bool>	p;
-		iterator					it;
-		iterator					ite;
+		iterator	save(&_t);
+		iterator	it = begin();
+		iterator	ite = end();
+		bool		second;
 	
-		p.second = _t.add(value);
-		if (p.second)
+		second = _t.add(value);
+		if (second)
 		{
-			for (it = begin(), ite = end(); it != ite; it++)
+			for (;it != ite; it++)
 			{
 				if (*it == value)
 				{
-					p.first = it;
+					save = it;
 					break;
 				}
+				if (*it == *ite)
+					break;
 			}
 		}
+		ft::pair<iterator, bool>	p(save, second);
 		return p;
 	}
-	
+
 	template <class InputIt>
 	void	insert(InputIt first, InputIt last)	/* Ajoute des valeurs au containers avec la range d'iterateurs	*/
 	{
@@ -169,7 +170,7 @@ public:
 		node<Key>	*nd = _t.search(*pos);
 		if (nd)
 			_t.del(*pos);
-		return iterator();
+		return iterator(&_t);
 	}
 	
 	size_type	erase(const Key &key)	/* Enleve un element du container avec sa valeur	*/
@@ -183,9 +184,36 @@ public:
 
 	iterator	erase(iterator first, iterator last)
 	{
-		for (; first != last; first++)
-			_t.del(*first);
-		return iterator();
+		iterator save(first);
+	
+		// std::cout << "dans erase" << std::endl;
+		//getwchar();
+		if (first == begin() && last == end())
+		{
+			clear();
+			// std::cout << "fin erase tout" << std::endl;
+			return begin();
+		}
+	
+		// std::cout << "avant lop *" << std::endl;
+		//getwchar();
+		// std::cout << "avant le for : [" << *first << "] [" << *last << "]" <<  std::endl;
+		//getwchar();
+		for (; first != last;)
+		{
+			// //getwchar();
+			if (*first == *last)
+				break;
+			save = ++first;
+			// // std::cout << "apres delete de [" << *first << "] :" << std::endl;
+			_t.del(*--first);
+			// _t.print();
+			// // std::cout << "-------------------------" << std::endl;
+			first = save;
+		}
+		// std::cout << "fin erase" << std::endl;
+		//getwchar();
+		return iterator(&_t);
 	}
 
 	void	swap(set &other)	/* On verra	*/
