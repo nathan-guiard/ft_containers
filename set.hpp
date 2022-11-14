@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 17:47:33 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 18:30:23 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,10 +195,7 @@ public:
 
 	void	swap(set &other)	/* On verra	*/
 	{
-		set	tmp(other);
-	
-		other = *this;
-		*this = tmp;
+		_t.swap(other._t);
 	}
 
 	/*	Look up		*/

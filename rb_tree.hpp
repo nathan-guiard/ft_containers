@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 15:58:28 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 18:39:57 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ public:
 		return *this;
 	}
 
+	/*	ITERATORS	*/
 	class rb_it : iterator_traits<std::bidirectional_iterator_tag, T>
 	{
 	public:
@@ -814,6 +815,24 @@ public:
 			else
 				searching = searching->right;
 		}
+	}
+
+	void	swap(ft::tree<T, Comp> &other)
+	{
+		node	*save_root, *save_null;
+		unsigned int	save_size;
+	
+		save_null = _nd_null;
+		save_root = _root;
+		save_size = _size;
+	
+		_nd_null = other._nd_null;
+		_root = other._root;
+		_size = other._size;
+		
+		other._nd_null = save_null;
+		other._root = save_root;
+		other._size = save_size;
 	}
 
 	unsigned int	size() const {return _size;}
