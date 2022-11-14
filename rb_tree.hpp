@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 02:18:58 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 04:23:25 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,8 +246,10 @@ public:
 				return(end());
 			_curr = _tr->min();
 			if (!_curr)
+			{
 				_is_end = true;
-			
+				return (end());
+			}			
 			return *this;
 		}
 
@@ -422,8 +424,10 @@ public:
 				return(end());
 			_curr = _tr->min();
 			if (!_curr)
+			{
 				_is_end = true;
-			
+				return (end());
+			}			
 			return *this;
 		}
 

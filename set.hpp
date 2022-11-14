@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 02:24:56 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 04:18:36 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,49 +226,55 @@ public:
 
 	iterator		find(const Key &key)
 	{
-		iterator	it;
-		iterator	ite;
+		iterator	it = begin();
+		iterator	ite = end();
 
-		for (it = begin(), ite = end(); it != ite; it++)
+		for (; it != ite;)
 		{
 			if (*it == key)
 				return it;
+			it++;
 		}
 		return ite;
 	}
 	
 	const_iterator	find(const Key &key)	const
 	{
-		const_iterator	it;
-		const_iterator	ite;
+		const_iterator	it = begin();
+		const_iterator	ite = end();
 
-		for (it = begin(), ite = end(); it != ite; it++)
+		for (; it != ite;)
 		{
 			if (*it == key)
 				return it;
+			it++;
 		}
 		return ite;
 	}
 
 	ft::pair<iterator, iterator>				equal_range(const Key &key)
 	{
-		ft::pair<iterator, iterator>	p;
+		iterator	f;
+		iterator	s;
+		
+		f = find(key);
+		s = find(key);
+		s++;
 	
-		p.first = find(key);
-		p.second = find(key);
-		p.second++;
-	
+		ft::pair<iterator, iterator>	p(f, s);
 		return p;
 	}
 
 	ft::pair<const_iterator, const_iterator>	equal_range(const Key &key)	const
 	{
-		ft::pair<const_iterator, const_iterator>	p;
+		const_iterator	f;
+		const_iterator	s;
+		
+		f = find(key);
+		s = find(key);
+		s++;
 	
-		p.first = find(key);
-		p.second = find(key);
-		p.second++;
-	
+		ft::pair<const_iterator, const_iterator>	p(f, s);
 		return p;
 	}
 	
