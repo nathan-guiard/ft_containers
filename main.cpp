@@ -14,54 +14,43 @@ typedef ft::set<std::string>::const_iterator const_iterator;
 typedef ft::set<std::string>::reverse_iterator reverse_iterator;
 typedef ft::set<std::string>::const_reverse_iterator const_reverse_iterator;
 
-// template<class T>
-// void	every_comp(const T &a, const T &b, bool s);
-
 int main()
 {
-	std::vector<int>	v;
+	std::vector<std::string>	v;
 
-	v.push_back(5);
-	v.push_back(10);
-	v.push_back(4);
-	v.push_back(9);
-	v.push_back(25);
-	v.push_back(26);
-	v.push_back(98);
-	v.push_back(120);
-	v.push_back(8);
-	v.push_back(22);
-	v.push_back(20);
-	v.push_back(90);
-	v.push_back(50);
-	v.push_back(72);
-	v.push_back(42);
-	v.push_back(609);
+	v.push_back("a");
+	v.push_back("b");
+	v.push_back("c");
+	v.push_back("d");
+	v.push_back("e");
+	v.push_back("f");
+	v.push_back("g");
+	v.push_back("h");
+	v.push_back("i");
+	v.push_back("j");
+	v.push_back("k");
+	v.push_back("l");
+	v.push_back("m");
+	v.push_back("n");
+	v.push_back("o");
+	v.push_back("p");
 
-	std::vector<int>::iterator vit	= v.begin();
-	std::vector<int>::iterator vite	= v.end();
+	std::vector<std::string>::iterator vit	= v.begin();
+	std::vector<std::string>::iterator vite	= v.end();
 
-	ft::set<int>	ft(vit, vite);
-	std::set<int>	std(vit, vite);
+	std::set<std::string>	s(vit, vite);
 
-	ft._t.print();
+	// s._t.print();
 	std::cout << "----------------------" << std::endl;
 	// TESTS:
 
-	std::cout << *std.lower_bound(45) << " " << *std.upper_bound(80) << std::endl;
-	std::cout << *std.lower_bound(50) << " " << *std.upper_bound(90) << std::endl;
+	std::set<std::string>::reverse_iterator	a = s.rbegin();
 
+	a.base()++;
+
+	--a;
+	std::cout << *a << std::endl;
+	std::cout << *a.base() << std::endl;
+
+	std::cout << *a << std::endl;
 }
-
-// template<class T>
-// void	every_comp(const T &a, const T &b, bool s)
-// {
-// 	std::cout << (s ? "\033[32mFT" : "\033[34mSTD") << std::endl;
-// 	std::cout << "eq: " << (a == b) << " | ";
-// 	std::cout << "ne: " << (a != b) << std::endl;
-// 	std::cout << "lt: " << (a < b) << " | ";
-// 	std::cout << "le: " << (a <= b) << std::endl;
-// 	std::cout << "gt: " << (a > b) << " | ";
-// 	std::cout << "ge: " << (a >= b) << std::endl;
-// 	std::cout << "\033[0m";
-// }

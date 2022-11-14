@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 04:18:36 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 00:39:50 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,55 +226,49 @@ public:
 
 	iterator		find(const Key &key)
 	{
-		iterator	it = begin();
-		iterator	ite = end();
+		iterator	it;
+		iterator	ite;
 
-		for (; it != ite;)
+		for (it = begin(), ite = end(); it != ite; it++)
 		{
 			if (*it == key)
 				return it;
-			it++;
 		}
 		return ite;
 	}
 	
 	const_iterator	find(const Key &key)	const
 	{
-		const_iterator	it = begin();
-		const_iterator	ite = end();
+		const_iterator	it;
+		const_iterator	ite;
 
-		for (; it != ite;)
+		for (it = begin(), ite = end(); it != ite; it++)
 		{
 			if (*it == key)
 				return it;
-			it++;
 		}
 		return ite;
 	}
 
 	ft::pair<iterator, iterator>				equal_range(const Key &key)
 	{
-		iterator	f;
-		iterator	s;
-		
-		f = find(key);
-		s = find(key);
-		s++;
+		ft::pair<iterator, iterator>	p;
 	
-		ft::pair<iterator, iterator>	p(f, s);
+		p.first = find(key);
+		p.second = find(key);
+		p.second++;
+	
 		return p;
 	}
 
 	ft::pair<const_iterator, const_iterator>	equal_range(const Key &key)	const
 	{
-		const_iterator	f;
-		const_iterator	s;
-		
-		f = find(key);
-		s = find(key);
-		s++;
+		ft::pair<const_iterator, const_iterator>	p;
 	
-		ft::pair<const_iterator, const_iterator>	p(f, s);
+		p.first = find(key);
+		p.second = find(key);
+		p.second++;
+	
 		return p;
 	}
 	
@@ -358,13 +352,13 @@ friend bool	operator <	(const ft::set<Key, Compare, Allocator> &lhs,
 friend bool	operator <=	(const ft::set<Key, Compare, Allocator> &lhs,
 					const ft::set<Key, Compare, Allocator> &rhs)
 {
-	return (lhs < rhs || lhs == rhs);	
+	return (!(rhs < lhs));	
 }
 
 friend bool	operator >	(const ft::set<Key, Compare, Allocator> &lhs,
 					const ft::set<Key, Compare, Allocator> &rhs)
 {
-	return (!(lhs <= rhs));
+	return (rhs < lhs);
 }
 
 friend bool	operator >=	(const ft::set<Key, Compare, Allocator> &lhs,
