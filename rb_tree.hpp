@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 18:39:57 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 20:58:38 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -488,12 +488,13 @@ public:
 
 		const T &operator*() const
 		{
-			return *_b;
+			iterator	tmp(_b);
+			return *(--tmp);
 		}
 
 		const T *operator->() const
 		{
-			return &_b.get_curr()->value;
+			return &(this->operator*());
 		}
 
 		reverse_iterator	&operator++()
@@ -529,7 +530,6 @@ public:
 		reverse_iterator	begin()
 		{
 			_b = iterator(_b.get_tree()).end();
-			_b--;
 
 			return *this;
 		}
@@ -537,7 +537,6 @@ public:
 		reverse_iterator	end()
 		{
 			_b = iterator(_b.get_tree()).begin();
-			_b--;
 
 			return *this;
 		}
@@ -569,7 +568,7 @@ public:
 		rb_crit(): _b() {}
 
 		rb_crit(const const_reverse_iterator &copy): _b(copy._b, false) {}
-
+		
 		rb_crit(const reverse_iterator &copy): _b(copy.base(), false) {}
 
 		rb_crit(const const_iterator &copy): _b(copy, false) {};
@@ -588,12 +587,13 @@ public:
 
 		const T &operator*() const
 		{
-			return *_b;
+			iterator	tmp(_b);
+			return *(--tmp);
 		}
 
 		const T *operator->() const
 		{
-			return &_b.get_curr()->value;
+			return &(this->operator*());
 		}
 
 		const_reverse_iterator	&operator++()
@@ -629,7 +629,6 @@ public:
 		const_reverse_iterator	begin()
 		{
 			_b = iterator(_b.get_tree()).end();
-			_b--;
 
 			return *this;
 		}
@@ -637,7 +636,6 @@ public:
 		const_reverse_iterator	end()
 		{
 			_b = iterator(_b.get_tree()).begin();
-			_b--;
 
 			return *this;
 		}
@@ -654,7 +652,7 @@ public:
 
 	bool operator <  (const const_reverse_iterator &y)	const
 	{
-		if (Comp(_b.get_curr(), y._b.get_curr()))
+		if (_b.get_curr() < y._b.get_curr())
 			return true;
 		return false;
 	}
