@@ -2,19 +2,11 @@
 
 ### Problemes d'output:
 
-- [ ] bounds (tout)
 - [x] copy_construct
-- [ ] erase
-- [ ] insert
 - [x] more
 - [x] relational_ope
-- [ ] rite
-- [ ] swap
-
-### Probleme de max_size:
-
-- [ ] comp
-- [ ] empty
-- [ ] rite_arrow
-- [ ] ite_arrow
-- [ ] swap
+- [x] bounds
+- [ ] erase
+- [ ] insert
+- [ ] rite  [avoir un base different du rit]
+- [ ] swap  [garder les iterateurs malgres le swap]

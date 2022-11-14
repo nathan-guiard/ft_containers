@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 15:10:41 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 16:01:54 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ public:
 	/*	Capacity	*/
 	bool		empty()		const	{if (_t.size() == 0) return true; return false;}	/* Check si le container est vide									*/
 	size_type	size()		const	{return _t.size();}									/* Retourne, en `size_type`, le nombre d'objet dans le container	*/
-	size_type	max_size()	const	{return _alloc.max_size() / 10;}					/* Retourne, en `size_type`, le nb max d'objet dans le container	*/
+	size_type	max_size()	const	{return _t.get_allocator().max_size();}					/* Retourne, en `size_type`, le nb max d'objet dans le container	*/
 											//	^~~~ PUE SA MERE DEMANDER A CLODAGH
 
 	/*	Modifiers	*/
@@ -254,9 +254,8 @@ public:
 	{
 		ft::pair<iterator, iterator>	p;
 	
-		p.first = find(key);
-		p.second = find(key);
-		p.second++;
+		p.first = lower_bound(key);
+		p.second = upper_bound(key);
 	
 		return p;
 	}
@@ -265,65 +264,62 @@ public:
 	{
 		ft::pair<const_iterator, const_iterator>	p;
 	
-		p.first = find(key);
-		p.second = find(key);
-		p.second++;
+		p.first = lower_bound(key);
+		p.second = upper_bound(key);
 	
 		return p;
 	}
 	
 	iterator	lower_bound(const Key &key)
 	{
-		Key	var = key;
-		node<Key>	*ptr;
-		if (var > _t.max()->value)
+		iterator	res = begin();
+
+		if (key <= *res)
+			return res;
+		if (_t.size() != 0 && *(--end()) < key)
 			return end();
-		while ((ptr = _t.search(var)) != 0)
-		{
-			var++;
-		}
-		return find(var);
+		while (*res < key)
+			res++;
+		return res;
 	}
 	
 	const_iterator	lower_bound(const Key &key)	const
 	{
-		Key	var = key;
-		node<Key>	*ptr;
-		if (var > _t.max()->value)
+		const_iterator	res = begin();
+
+		if (key <= *res)
+			return res;
+		if (_t.size() != 0 && *(--end()) < key)
 			return end();
-		while ((ptr = _t.search(var)) != 0)
-		{
-			var++;
-		}
-		return find(var);
+		while (*res < key)
+			res++;
+		return res;
 	}
 	
 	iterator	upper_bound(const Key &key)
 	{
-		Key	var = key;
-		node<Key>	*ptr;
-		var++;
-		if (var > _t.max()->value)
+		iterator	res = begin();
+
+		if (key <= *res)
+			return res;
+		if (_t.size() != 0 && *(--end()) < key)
 			return end();
-		while ((ptr = _t.search(var)) != 0)
-		{
-			var++;
-		}
-		return find(var);
+		while (*res <= key)
+			res++;
+		return res;
 	}
 	
 	const_iterator	upper_bound(const Key &key)	const
 	{
-		Key	var = key;
-		node<Key>	*ptr;
-		var++;
-		if (var > _t.max()->value)
+		const_iterator	res = begin();
+
+		if (key <= *res)
+			return res;
+		if (_t.size() != 0 && *(--end()) < key)
 			return end();
-		while ((ptr = _t.search(var)) != 0)
-		{
-			var++;
-		}
-		return find(var);
+		while (*res <= key)
+			res++;
+		return res;
 	}
 
 	/*	Observers	*/

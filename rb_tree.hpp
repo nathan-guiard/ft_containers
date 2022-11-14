@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 15:24:06 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 15:58:28 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,7 +261,7 @@ public:
 
 	bool operator == (const iterator &y)	const
 	{
-		if (_tr == y._tr && y._curr && _curr->value == y._curr->value)
+		if (_tr == y._tr && _curr && y._curr && _curr->value == y._curr->value)
 			return true;
 		if (_curr == y._curr)
 			return true;
@@ -435,7 +435,7 @@ public:
 
 	bool operator == (const const_iterator &y)	const
 	{
-		if (_tr == y._tr && y._curr && _curr->value == y._curr->value)
+		if (_tr == y._tr && _curr && y._curr && _curr->value == y._curr->value)
 			return true;
 		if (_curr == y._curr)
 			return true;
@@ -663,6 +663,8 @@ public:
 	};
 
 	node	*get_nd_null() const {return _nd_null;}
+
+	Alloc	get_allocator()	const	{return _alloc;}
 
 	bool	add(const T &val)
 	{

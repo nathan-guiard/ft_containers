@@ -12,7 +12,11 @@
 typedef ft::set<std::string>::iterator iterator;
 typedef ft::set<std::string>::const_iterator const_iterator;
 typedef ft::set<std::string>::reverse_iterator reverse_iterator;
-typedef ft::set<std::string>::const_reverse_iterator const_reverse_iterator;
+
+typedef std::set<std::string>::iterator std_iterator;
+typedef std::set<std::string>::const_iterator std_const_iterator;
+typedef std::set<std::string>::reverse_iterator std_reverse_iterator;
+typedef std::set<std::string>::const_reverse_iterator std_const_reverse_iterator;
 
 
 template<class T>
@@ -43,23 +47,16 @@ int main()
 	std::vector<std::string>::iterator vite	= v.end();
 
 	ft::set<std::string>	s(vit, vite);
-	ft::set<std::string>	s2(vit, vite);
 	std::set<std::string>	o(vit, vite);
-	std::set<std::string>	o2(vit, vite);
 
 	// s._t.print();
 	std::cout << "----------------------" << std::endl;
 	// TESTS:
 
-	every_comp(s, s, 1);
-	s.insert("test");
-	o.insert("test");
-	std::cout << "Plus grand" << std::endl;
-	every_comp(s, s2, 1);
-	every_comp(o, o2, 0);
-	std::cout << "Plus petit" << std::endl;
-	every_comp(s2, s, 1);
-	every_comp(o2, o, 0);
+	iterator	it = s.lower_bound("b");
+	std_iterator	sit = o.lower_bound("b");
+
+	std::cout << *it << " " << *sit;
 }
 
 template<class T>
