@@ -14,6 +14,10 @@ typedef ft::set<std::string>::const_iterator const_iterator;
 typedef ft::set<std::string>::reverse_iterator reverse_iterator;
 typedef ft::set<std::string>::const_reverse_iterator const_reverse_iterator;
 
+
+template<class T>
+void        every_comp(const T &a, const T &b, bool s);
+
 int main()
 {
 	std::vector<std::string>	v;
@@ -38,19 +42,37 @@ int main()
 	std::vector<std::string>::iterator vit	= v.begin();
 	std::vector<std::string>::iterator vite	= v.end();
 
-	std::set<std::string>	s(vit, vite);
+	ft::set<std::string>	s(vit, vite);
+	ft::set<std::string>	s2(vit, vite);
+	std::set<std::string>	o(vit, vite);
+	std::set<std::string>	o2(vit, vite);
 
 	// s._t.print();
 	std::cout << "----------------------" << std::endl;
 	// TESTS:
 
-	std::set<std::string>::reverse_iterator	a = s.rbegin();
+	every_comp(s, s, 1);
+	s.insert("test");
+	o.insert("test");
+	std::cout << "Plus grand" << std::endl;
+	every_comp(s, s2, 1);
+	every_comp(o, o2, 0);
+	std::cout << "Plus petit" << std::endl;
+	every_comp(s2, s, 1);
+	every_comp(o2, o, 0);
+}
 
-	a.base()++;
+template<class T>
+void        every_comp(const T &a, const T &b, bool s)
+{
+	std::string color = (s ? "\033[35m" : "\033[34m");
 
-	--a;
-	std::cout << *a << std::endl;
-	std::cout << *a.base() << std::endl;
-
-	std::cout << *a << std::endl;
+	std::cout << color << (s ? "FT" : "STD") << std::endl;
+    std::cout << "==: " << ((a == b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << " | ";
+    std::cout << "!=: " << ((a != b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << std::endl;
+    std::cout << "< : " << ((a <  b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << " | ";
+    std::cout << "<=: " << ((a <= b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << std::endl;
+    std::cout << "> : " << ((a >  b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << " | ";
+    std::cout << ">=: " << ((a >= b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << std::endl;
+    std::cout << "\033[0m";
 }

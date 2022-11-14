@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 01:51:10 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 15:24:06 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -448,6 +448,8 @@ public:
 	{
 		if (_curr && y._curr && _curr->value < y._curr->value)
 			return true;
+		if (_curr && y._curr && (_curr->value == y._curr->value || y._curr->value < _curr->value))
+			return false;
 		if (_curr < y._curr)
 			return true;
 		return false;

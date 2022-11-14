@@ -7,8 +7,7 @@
 - [ ] erase
 - [ ] insert
 - [x] more
-- [ ] relational_ope
-- [ ] rite_arrow
+- [x] relational_ope
 - [ ] rite
 - [ ] swap
 
@@ -16,5 +15,6 @@
 
 - [ ] comp
 - [ ] empty
+- [ ] rite_arrow
 - [ ] ite_arrow
 - [ ] swap
