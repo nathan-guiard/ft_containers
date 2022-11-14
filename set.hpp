@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 16:05:20 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 17:35:16 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,7 @@ public:
 		bool		second;
 	
 		second = _t.add(value);
-		if (second)
-			save = find(value);
+		save = find(value);
 		ft::pair<iterator, bool>	p(save, second);
 		return p;
 	}
