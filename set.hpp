@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 17:35:16 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 17:47:33 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,32 +178,18 @@ public:
 	{
 		iterator save(first);
 	
-		// std::cout << "dans erase" << std::endl;
-		//getwchar();
 		if (first == begin() && last == end())
 		{
 			clear();
 			return begin();
 		}
-	
-		// std::cout << "avant lop *" << std::endl;
-		//getwchar();
-		// std::cout << "avant le for : [" << *first << "] [" << *last << "]" <<  std::endl;
-		//getwchar();
 		for (; first != last;)
 		{
-			// //getwchar();
-			if (*first == *--last)
-				break;
-			save = ++first;
-			// // std::cout << "apres delete de [" << *first << "] :" << std::endl;
-			_t.del(*--first);
-			// _t.print();
-			// // std::cout << "-------------------------" << std::endl;
+			save = first;
+			save++;
+			_t.del(*first);
 			first = save;
 		}
-		// std::cout << "fin erase" << std::endl;
-		//getwchar();
 		return iterator(&_t);
 	}
 

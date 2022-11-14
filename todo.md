@@ -7,7 +7,7 @@
 - [x] relational_ope
 - [x] bounds
 - [x] insert
-- [ ] erase
+- [x] erase
 - [ ] rite  [avoir un base different du rit]
 - [ ] swap  [garder les iterateurs malgres le swap]
 
