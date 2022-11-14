@@ -2,12 +2,13 @@
 
 ### Problemes d'output:
 
-- [ ] bounds
+- [ ] bounds (tout)
 - [x] copy_construct
 - [ ] erase
 - [ ] insert
 - [ ] more
 - [ ] relational_ope
+- [ ] rite_arrow
 - [ ] rite
 - [ ] swap
 
@@ -16,5 +17,4 @@
 - [ ] comp
 - [ ] empty
 - [ ] ite_arrow
-- [ ] rite_arrow
 - [ ] swap

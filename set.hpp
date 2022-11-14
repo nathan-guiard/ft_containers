@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 22:12:06 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 00:39:50 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,12 @@ public:
 		const Compare &comp = Compare(),
 		const Allocator &alloc = Allocator()) : _t(comp, alloc)
 	{
-		if (first == last)
+		if (++first == last)
 		{
 			_t.add(*first);
 			return;
 		}
+		--first;
 		for (; first != last; first++)
 			_t.add(*first);
 	}
@@ -157,9 +158,12 @@ public:
 	iterator	erase(iterator pos)		/* Enleve un element du container avec sa position grace a l'iterateur	*/
 	{
 		node<Key>	*nd = _t.search(*pos);
+		Key	val = *pos;
+		
+		pos++;
 		if (nd)
-			_t.del(*pos);
-		return iterator(&_t);
+			_t.del(val);
+		return pos;
 	}
 
 	size_type	erase(const Key &key)	/* Enleve un element du container avec sa valeur	*/
@@ -180,7 +184,6 @@ public:
 		if (first == begin() && last == end())
 		{
 			clear();
-			std::cout << "LLLLLLLLLLLLLLLLLLLfin erase tout" << std::endl;
 			return begin();
 		}
 	

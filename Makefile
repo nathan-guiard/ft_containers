@@ -6,7 +6,7 @@
 #    By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/14 11:00:15 by nguiard           #+#    #+#              #
-#    Updated: 2022/11/13 17:28:54 by nguiard          ###   ########.fr        #
+#    Updated: 2022/11/14 00:27:59 by nguiard          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ SHELL:= /bin/zsh
 
 SRC =	main.cpp		\
 
-CC = c++ -g
+CC = c++ -g3
 
 OBJ = ${SRC:.cpp=.o}
 

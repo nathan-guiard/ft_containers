@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 00:09:03 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 01:03:19 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ public:
 				return *this;
 			if (_tr->size() == 0)
 				return *this;
-			if (_is_end || !_curr || _curr == _nd_null)
+			if (_is_end || !_curr || _curr == _nd_null) // ne pas mettre *this == end()
 			{
 				_is_end = false;
 				_curr = _tr->max();

@@ -9,6 +9,11 @@
 #include <stdlib.h>
 #include <vector>
 
+typedef ft::set<std::string>::iterator iterator;
+typedef ft::set<std::string>::const_iterator const_iterator;
+typedef ft::set<std::string>::reverse_iterator reverse_iterator;
+typedef ft::set<std::string>::const_reverse_iterator const_reverse_iterator;
+
 int main()
 {
 	std::vector<std::string>	v;
@@ -33,28 +38,19 @@ int main()
 	std::vector<std::string>::iterator vit	= v.begin();
 	std::vector<std::string>::iterator vite	= v.end();
 
-	ft::set<std::string>	s(vit, vite);
+	std::set<std::string>	s(vit, vite);
 
-	s._t.print();
+	// s._t.print();
 	std::cout << "----------------------" << std::endl;
+	// TESTS:
 
-	ft::set<std::string>	b(vit, --(--(--vite)));
+	std::set<std::string>::reverse_iterator	a = s.rbegin();
 
-	b._t.print();
-	std::cout << "----------------------" << std::endl;
+	a.base()++;
 
-	ft::set<std::string>::iterator	m = b.begin();
-	ft::set<std::string>::iterator	n = s.begin();
+	--a;
+	std::cout << *a << std::endl;
+	std::cout << *a.base() << std::endl;
 
-	
-	std::cout << ((m == b.begin()) == false ? "false" : "true") << std::endl;
-	std::cout << ((n == s.begin()) == false ? "false" : "true") << std::endl;
-
-	b.swap(s);
-
-	std::cout << "APRES SWAP" << std::endl; 
-
-	std::cout << ((m == s.begin()) == false ? "false" : "true") << std::endl;
-	std::cout << ((n == b.begin()) == false ? "false" : "true") << std::endl;
-
+	std::cout << *a << std::endl;
 }
