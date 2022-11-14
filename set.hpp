@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 16:01:54 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 16:05:20 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -385,5 +385,6 @@ friend bool	operator >=	(const ft::set<Key, Compare, Allocator> &lhs,
 // void	swap(const ft::set<Key, Compare, Allocator> &lhs,
 // 			const ft::set<Key, Compare, Allocator> &rhs);
 }
+// ATTENTION! FARE LA FONCTION FT::SWAP
 
 #endif

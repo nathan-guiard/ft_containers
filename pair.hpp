@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:00:33 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/13 18:43:38 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 16:14:29 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ public:
 	A	first;
 	B	second;
 };
+
+template <typename A, typename B>
+inline pair<A, B>	make_pair(const A &a, const B &b)
+{
+	return pair<A, B>(a, b);
+}
 
 }//fin du namespace ft
 
