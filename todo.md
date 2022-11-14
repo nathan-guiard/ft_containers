@@ -6,7 +6,7 @@
 - [x] copy_construct
 - [ ] erase
 - [ ] insert
-- [ ] more
+- [x] more
 - [ ] relational_ope
 - [ ] rite_arrow
 - [ ] rite

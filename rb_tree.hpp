@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 01:03:19 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 01:51:10 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -446,6 +446,8 @@ public:
 
 	bool operator <  (const const_iterator &y)	const
 	{
+		if (_curr && y._curr && _curr->value < y._curr->value)
+			return true;
 		if (_curr < y._curr)
 			return true;
 		return false;
@@ -649,7 +651,7 @@ public:
 
 	bool operator <  (const const_reverse_iterator &y)	const
 	{
-		if (_b.get_curr() < y._b.get_curr())
+		if (Comp(_b.get_curr(), y._b.get_curr()))
 			return true;
 		return false;
 	}
@@ -680,11 +682,11 @@ public:
 		{
 			while (1)
 			{
-				if (val > p->value && p->right == _nd_null)
+				if (_comp(p->value, val) && p->right == _nd_null)
 					break;
-				if (val < p->value && p->left == _nd_null)
+				if (_comp(val, p->value) && p->left == _nd_null)
 					break;
-				if (val > p->value)
+				if (_comp(p->value, val))
 					p = p->right;
 				else
 					p = p->left;
@@ -697,7 +699,7 @@ public:
 			return true;
 		}
 		nv->parent = p;
-		if (p->value < nv->value)
+		if (_comp(p->value, nv->value))
 			p->right = nv;
 		else
 			p->left = nv;
@@ -803,7 +805,7 @@ public:
 				return 0;
 			if (searching->value == val)
 				return searching;
-			if (searching->value > val)
+			if (_comp(val, searching->value))
 				searching = searching->left;
 			else
 				searching = searching->right;
