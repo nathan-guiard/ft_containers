@@ -14,6 +14,9 @@ typedef ft::set<std::string>::const_iterator const_iterator;
 typedef ft::set<std::string>::reverse_iterator reverse_iterator;
 typedef ft::set<std::string>::const_reverse_iterator const_reverse_iterator;
 
+template<class T>
+void	every_comp(const T &a, const T &b, bool s);
+
 int main()
 {
 	std::vector<std::string>	v;
@@ -38,19 +41,49 @@ int main()
 	std::vector<std::string>::iterator vit	= v.begin();
 	std::vector<std::string>::iterator vite	= v.end();
 
-	std::set<std::string>	s(vit, vite);
+	ft::set<std::string>	ft(vit, vite);
+	ft::set<std::string>	ft2(ft);
+	std::set<std::string>	std(vit, vite);
+	std::set<std::string>	std2(std);
 
 	// s._t.print();
 	std::cout << "----------------------" << std::endl;
 	// TESTS:
+	every_comp(ft, ft2, 1);
+	every_comp(std, std2, 0);
+	every_comp(ft, ft, 1);
+	every_comp(std, std, 0);
 
-	std::set<std::string>::reverse_iterator	a = s.rbegin();
+	std::cout << "GT/GE/NE" << std::endl;
+	ft.insert("coucou");
+	std.insert("coucou");
+	every_comp(ft, ft2, 1);
+	every_comp(std, std2, 0);
+	std::cout << "a l'envers" << std::endl;
+	every_comp(ft2, ft, 1);
+	every_comp(std2, std, 0);
 
-	a.base()++;
+	std::cout << "LT/LE/NE" << std::endl;
+	ft2.insert("coucou");
+	std2.insert("coucou");
+	ft2.insert("COUCOU MF");
+	std2.insert("COUCOU MF");
+	every_comp(ft, ft2, 1);
+	every_comp(std, std2, 0);
+	std::cout << "a l'envers" << std::endl;
+	every_comp(ft2, ft, 1);
+	every_comp(std2, std, 0);
+}
 
-	--a;
-	std::cout << *a << std::endl;
-	std::cout << *a.base() << std::endl;
-
-	std::cout << *a << std::endl;
+template<class T>
+void	every_comp(const T &a, const T &b, bool s)
+{
+	std::cout << (s ? "\033[32mFT" : "\033[34mSTD") << std::endl;
+	std::cout << "eq: " << (a == b) << " | ";
+	std::cout << "ne: " << (a != b) << std::endl;
+	std::cout << "lt: " << (a < b) << " | ";
+	std::cout << "le: " << (a <= b) << std::endl;
+	std::cout << "gt: " << (a > b) << " | ";
+	std::cout << "ge: " << (a >= b) << std::endl;
+	std::cout << "\033[0m";
 }

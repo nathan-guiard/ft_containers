@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 01:51:10 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/14 02:18:58 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,9 +261,11 @@ public:
 
 	bool operator == (const iterator &y)	const
 	{
-		if (_tr == y._tr && y._curr && _curr->value == y._curr->value)
+		if (_curr && y._curr && _curr->value < y._curr->value)
 			return true;
-		if (_curr == y._curr)
+		if (_curr && y._curr && (y._curr->value < _curr->value || _curr->value == y._curr->value))
+			return false;
+		if (_curr < y._curr)
 			return true;
 		return false;
 	}
@@ -448,6 +450,8 @@ public:
 	{
 		if (_curr && y._curr && _curr->value < y._curr->value)
 			return true;
+		if (_curr && y._curr && (y._curr->value < _curr->value || _curr->value == y._curr->value))
+			return false;
 		if (_curr < y._curr)
 			return true;
 		return false;
@@ -551,7 +555,7 @@ public:
 
 	bool operator <  (const reverse_iterator &y)	const
 	{
-		if (_b.get_curr() < y._b.get_curr())
+		if (y._b < _b)
 			return true;
 		return false;
 	}
@@ -651,7 +655,7 @@ public:
 
 	bool operator <  (const const_reverse_iterator &y)	const
 	{
-		if (Comp(_b.get_curr(), y._b.get_curr()))
+		if (y._b < _b)
 			return true;
 		return false;
 	}
