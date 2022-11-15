@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:00:33 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 16:14:29 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/15 15:09:47 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class pair
 public:
 	pair(): first(), second() {}
 	pair(const A& a, const B& b) : first(a), second(b) {}
-	pair(const pair<A, B>&p) {*this = p;}
+	pair(const pair<A, B>&p): first(p.first), second(p.second) {}
 	~pair()	{}
 
 	pair	&operator = (const pair &copy)

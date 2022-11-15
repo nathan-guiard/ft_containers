@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rb_tree.hpp                                        :+:      :+:    :+:   */
+/*   rb_tree_set.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 14:56:37 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/15 17:02:00 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RB_TREE_HPP
-#define RB_TREE_HPP
+#ifndef RB_TREE_SET_HPP
+#define RB_TREE_SET_HPP
 
 #include <iostream>
 #include <unistd.h>
@@ -41,7 +41,7 @@ struct	node
 
 
 template <typename T, class Comp = std::less<T>, class Alloc = std::allocator<node<T> > >
-class	tree
+class	tree_set
 {
 private:
 	typedef struct node<T> node;
@@ -57,7 +57,7 @@ public:
 	typedef	rb_rit	reverse_iterator;
 	typedef	rb_crit	const_reverse_iterator;
 
-	tree()
+	tree_set()
 	{
 		_nd_null = _alloc.allocate(1); 
 		_nd_null->color = black;
@@ -66,7 +66,7 @@ public:
 		_root = _nd_null;
 		_size = 0;
 	}
-	explicit tree(const Comp &comp, const Alloc &alloc = Alloc())
+	explicit tree_set(const Comp &comp, const Alloc &alloc = Alloc()) : _comp(Comp())
 	{
 		_comp = comp;
 		_alloc = alloc;
@@ -77,7 +77,7 @@ public:
 		_root = _nd_null;
 		_size = 0;
 	}
-	tree (const tree &copy)
+	tree_set (const tree_set &copy)
 	{
 		_nd_null = _alloc.allocate(1); 
 		_nd_null->color = black;
@@ -88,13 +88,13 @@ public:
 		if (copy._root && copy._root != copy._nd_null)
 			_copy_helper(copy._root, copy._nd_null);
 	}
-	~tree()
+	~tree_set()
 	{
 		_delete_everything(_root);
 		_alloc.deallocate(_nd_null, 1);
 	};
 
-	tree &operator = (const tree &copy)
+	tree_set &operator = (const tree_set &copy)
 	{
 		_delete_everything(this->_root);
 		this->_root = this->_nd_null;
@@ -104,7 +104,7 @@ public:
 		return *this;
 	}
 
-	const tree &operator = (const tree &copy) const
+	const tree_set &operator = (const tree_set &copy) const
 	{
 		_delete_everything(this->_root);
 		this->_root = this->_nd_null;
@@ -128,22 +128,22 @@ public:
 			_nd_null->color = black;
 			_nd_null->left = 0;
 			_nd_null->right = 0;
-			_nd_null->value = val;
+			// _nd_null->value = val;
 			_curr = _nd_null;
 		}
 
 		rb_it(const iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
 			_is_end(copy._is_end), _has_been_alloc(copy._has_been_alloc), _alloc()  {}
 
-		rb_it(const const_iterator &copy): _tr(copy.get_tree()),
+		rb_it(const const_iterator &copy): _tr(copy.get_tree_set()),
 			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
 			_is_end(copy.get_is_end()), _has_been_alloc(copy.get_been_alloc()) {};
 
-		rb_it(const const_iterator &copy, bool has_been_alloc): _tr(copy.get_tree()),
+		rb_it(const const_iterator &copy, bool has_been_alloc): _tr(copy.get_tree_set()),
 			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
 			_is_end(copy.get_is_end()), _has_been_alloc(has_been_alloc) {};
 
-		rb_it(tree *tr): _tr(tr), _curr(tr->min()),
+		rb_it(tree_set *tr): _tr(tr), _curr(tr->min()),
 			_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
 		{
 			_is_end = false;
@@ -174,7 +174,7 @@ public:
 			return *this;
 		}
 
-		const tree	*get_tree()	const		{return _tr;}
+		const tree_set	*get_tree_set()	const		{return _tr;}
 
 		node	*get_curr()	const		{return _curr;}
 
@@ -287,7 +287,7 @@ public:
 	}
 
 	private:
-		const tree	*_tr;
+		const tree_set	*_tr;
 		node	*_curr;
 		node	*_nd_null;
 		bool	_is_end;
@@ -316,15 +316,15 @@ public:
 		rb_cit(const const_iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
 			_is_end(copy._is_end), _has_been_alloc(copy._has_been_alloc), _alloc()  {}
 
-		rb_cit(const iterator &copy): _tr(copy.get_tree()),
+		rb_cit(const iterator &copy): _tr(copy.get_tree_set()),
 			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
 			_is_end(copy.get_is_end()), _has_been_alloc(copy.get_been_alloc()) {};
 		
-		rb_cit(const iterator &copy, bool has_been_alloc): _tr(copy.get_tree()),
+		rb_cit(const iterator &copy, bool has_been_alloc): _tr(copy.get_tree_set()),
 			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
 			_is_end(copy.get_is_end()), _has_been_alloc(has_been_alloc) {};
 
-		rb_cit(const tree *tr): _tr(tr), _curr(tr->min()),
+		rb_cit(const tree_set *tr): _tr(tr), _curr(tr->min()),
 			_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
 		{
 			_is_end = false;
@@ -355,7 +355,7 @@ public:
 			return *this;
 		}
 
-		const tree	*get_tree()	const		{return _tr;}
+		const tree_set	*get_tree_set()	const		{return _tr;}
 
 		node	*get_curr()	const		{return _curr;}
 
@@ -470,7 +470,7 @@ public:
 	}
 
 	private:
-		const tree	*_tr;
+		const tree_set	*_tr;
 		node	*_curr;
 		node	*_nd_null;
 		bool	_is_end;
@@ -488,7 +488,7 @@ public:
 
 		rb_rit(const const_iterator &copy): _b(copy, false) {};
 
-		rb_rit(tree *tr): _b(tr) {}
+		rb_rit(tree_set *tr): _b(tr) {}
 
 		~rb_rit() {}
 
@@ -543,14 +543,14 @@ public:
 
 		reverse_iterator	begin()
 		{
-			_b = iterator(_b.get_tree()).end();
+			_b = iterator(_b.get_tree_set()).end();
 
 			return *this;
 		}
 
 		reverse_iterator	end()
 		{
-			_b = iterator(_b.get_tree()).begin();
+			_b = iterator(_b.get_tree_set()).begin();
 
 			return *this;
 		}
@@ -587,7 +587,7 @@ public:
 
 		rb_crit(const const_iterator &copy): _b(copy, false) {};
 
-		rb_crit(tree *tr): _b(tr) {}
+		rb_crit(tree_set *tr): _b(tr) {}
 
 		~rb_crit() {}
 
@@ -642,14 +642,14 @@ public:
 
 		const_reverse_iterator	begin()
 		{
-			_b = iterator(_b.get_tree()).end();
+			_b = iterator(_b.get_tree_set()).end();
 
 			return *this;
 		}
 
 		const_reverse_iterator	end()
 		{
-			_b = iterator(_b.get_tree()).begin();
+			_b = iterator(_b.get_tree_set()).begin();
 
 			return *this;
 		}
@@ -683,13 +683,14 @@ public:
 	{
 		node	*p = _root;
 		node	*nv;
+		std::allocator<T>	alloc_type;
 
 		if (search(val) != 0)
 			return false;
 		nv = _alloc.allocate(1);
-		bzero(nv, sizeof(node));
+		alloc_type.construct(&nv->value, val);
 		nv->parent = 0;
-		nv->value = val;
+		// nv->value = val;
 		nv->left = _nd_null;
 		nv->right = _nd_null;
 		nv->color = red;
@@ -739,9 +740,9 @@ public:
 
 		og_color = to_del->color;
 		y = to_del;
-		if (!to_del->left || to_del->left == _nd_null)	// si on delete une node avec qu'un seul subtree
+		if (!to_del->left || to_del->left == _nd_null)	// si on delete une node avec qu'un seul subtree_set
 		{												// alors on a que a delete la node et mettre l'unique
-			to_fix = to_del->right;						// subtree a la place
+			to_fix = to_del->right;						// subtree_set a la place
 			_replace(to_del, to_del->right);
 		}
 		else if (!to_del->right || to_del->right == _nd_null)
@@ -829,7 +830,7 @@ public:
 		}
 	}
 
-	void	swap(ft::tree<T, Comp> &other)
+	void	swap(ft::tree_set<T, Comp> &other)
 	{
 		node	*save_root, *save_null;
 		unsigned int	save_size;
@@ -870,42 +871,42 @@ public:
 
 	node	*min()	const
 	{
-		node	*tree = _root;
+		node	*tree_set = _root;
 
-		if (!tree)
+		if (!tree_set)
 			return 0;
-		while (tree->left && tree->left != _nd_null)
-			tree = tree->left;
-		return tree;
+		while (tree_set->left && tree_set->left != _nd_null)
+			tree_set = tree_set->left;
+		return tree_set;
 	}
 
-	node	*min(node *tree)	const
+	node	*min(node *tree_set)	const
 	{
-		if (!tree)
+		if (!tree_set)
 			return 0;
-		while (tree->left && tree->left != _nd_null)
-			tree = tree->left;
-		return tree;
+		while (tree_set->left && tree_set->left != _nd_null)
+			tree_set = tree_set->left;
+		return tree_set;
 	}
 
 	node	*max()	const
 	{
-		node	*tree = _root;
+		node	*tree_set = _root;
 
-		if (!tree)
+		if (!tree_set)
 			return 0;
-		while (tree->right && tree->right != _nd_null)
-			tree = tree->right;
-		return tree;
+		while (tree_set->right && tree_set->right != _nd_null)
+			tree_set = tree_set->right;
+		return tree_set;
 	}
 
-	node	*max(node *tree)	const
+	node	*max(node *tree_set)	const
 	{
-		if (!tree)
+		if (!tree_set)
 			return 0;
-		while (tree->right && tree->right != _nd_null)
-			tree = tree->right;
-		return tree;
+		while (tree_set->right && tree_set->right != _nd_null)
+			tree_set = tree_set->right;
+		return tree_set;
 	}
 
 	void	clear()
@@ -1139,7 +1140,7 @@ private:
 	unsigned int	_size;
 	Comp			_comp;
 	Alloc			_alloc;
-}; /* fin de la class tree */
+}; /* fin de la class tree_set */
 
 } /* fin du namespace ft */
 

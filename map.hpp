@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 14:41:24 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/15 16:58:59 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include 	<functional> //a surement enlever
 #include	<memory>
 #include	<map>	//a enlever
-#include	"rb_tree.hpp"
+#include	"rb_tree_map.hpp"
 #include	"pair.hpp"
 #include	"iterator.hpp"
 #include	"lexicographical_compare.hpp"
@@ -30,6 +30,8 @@ class map
 {
 
 public:
+	class value_compare;
+
 	typedef	Key						key_type;
 	typedef	T						mapped_type;
 	typedef	ft::pair<const Key, T>	value_type;
@@ -43,21 +45,20 @@ public:
 	typedef	typename Allocator::pointer							pointer;
 	typedef	typename Allocator::const_pointer					const_pointer;
 
-	typedef	typename ft::tree<Key, Compare>::iterator				iterator;
-	typedef	typename ft::tree<Key, Compare>::const_iterator			const_iterator;
-	typedef	typename ft::tree<Key, Compare>::reverse_iterator		reverse_iterator;
-	typedef	typename ft::tree<Key, Compare>::const_reverse_iterator	const_reverse_iterator;
+	typedef	typename ft::tree_map<value_type, value_compare>::iterator				iterator;
+	typedef	typename ft::tree_map<value_type, value_compare>::const_iterator			const_iterator;
+	typedef	typename ft::tree_map<value_type, value_compare>::reverse_iterator		reverse_iterator;
+	typedef	typename ft::tree_map<value_type, value_compare>::const_reverse_iterator	const_reverse_iterator;
 
 	class value_compare
 	{
-	
-	// friend class map<Key, T, Compare, Allocator>;
 	
 	public:
 		typedef	bool		return_type;
 		typedef	value_type	first_argument_type;
 		typedef	value_type	second_argument_type;
 
+		value_compare(): comp() {}
 		value_compare(Compare c) : comp(c) {}
 	
 		return_type	operator()(const first_argument_type &a,
@@ -111,7 +112,14 @@ public:
 	/*	Element acces	*/
 	Key			&at(const Key &key);
 	const Key	&at(const Key &key)	const;
-	Key	&operator[](const Key& key);
+	T	&operator[](const Key& key)
+	{
+		iterator	it = lower_bound(key);
+	
+		if (it == end() || key_comp()(key, (*it).first))
+			it = insert(it, value_type(key, mapped_type()));
+		return (*it).second;
+	}
 
 	/*	Iterators	*/
 	iterator	begin()	{return iterator(&_t).begin();}
@@ -151,7 +159,7 @@ public:
 			_t.add(*first);
 	}
 
-	iterator	insert(iterator pos, const value_type &value)
+	iterator	insert(iterator pos, const value_type &value) // a revoir
 	{
 		(void)pos;
 		_t.add(value);
@@ -217,7 +225,7 @@ public:
 
 		for (it = begin(), ite = end(); it != ite; it++)
 		{
-			if (*it == key)
+			if ((*it).first == key)
 				return it;
 		}
 		return ite;
@@ -236,7 +244,7 @@ public:
 		return ite;
 	}
 
-	ft::pair<iterator, iterator>				equal_range(const Key &key)
+	ft::pair<iterator, iterator>	equal_range(const Key &key)
 	{
 		ft::pair<iterator, iterator>	p;
 	
@@ -246,12 +254,12 @@ public:
 		return p;
 	}
 
-	ft::pair<const_iterator, const_iterator>	equal_range(const Key &key)	const
+	ft::pair<const_iterator, const_iterator>	equal_range(const Key &k) const
 	{
 		ft::pair<const_iterator, const_iterator>	p;
 	
-		p.first = lower_bound(key);
-		p.second = upper_bound(key);
+		p.first = lower_bound(k);
+		p.second = upper_bound(k);
 	
 		return p;
 	}
@@ -260,11 +268,11 @@ public:
 	{
 		iterator	res = begin();
 
-		if (key <= *res)
+		if (key <= (*res).first)
 			return res;
-		if (_t.size() != 0 && *(--end()) < key)
+		if (_t.size() != 0 && (*(--end())).first < key)
 			return end();
-		while (*res < key)
+		while (_comp((*res).first, key))
 			res++;
 		return res;
 	}
@@ -273,11 +281,11 @@ public:
 	{
 		const_iterator	res = begin();
 
-		if (key <= *res)
+		if (key <= (*res).first)
 			return res;
-		if (_t.size() != 0 && *(--end()) < key)
+		if (_t.size() != 0 && (*(--end())).first < key)
 			return end();
-		while (*res < key)
+		while (_comp((*res).first, key))
 			res++;
 		return res;
 	}
@@ -311,7 +319,10 @@ public:
 	/*	Observers	*/
 	key_compare	key_comp()	const	{return _comp;};
 	
-	value_compare	value_comp()	const {return _comp;};
+	value_compare	value_comp()	const
+	{
+		return _t._comp;
+	};
 
 friend bool	operator ==	(const ft::map<Key, Compare, Allocator> &lhs,
 					const ft::map<Key, Compare, Allocator> &rhs)
@@ -354,9 +365,9 @@ friend bool	operator >=	(const ft::map<Key, Compare, Allocator> &lhs,
 private:
 	Compare		_comp;
 	Allocator	_alloc;
-	ft::tree<value_type, value_compare>		_t;
+	ft::tree_map<value_type, value_compare>		_t;
 };
 
-}
+}// fin namespace ft
 
 #endif

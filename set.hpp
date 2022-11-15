@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 14:38:01 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/15 17:00:57 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define		FT_SET_HPP
 
 #include	<memory>
-#include	"rb_tree.hpp"
+#include	"rb_tree_set.hpp"
 #include	"pair.hpp"
 #include	"iterator.hpp"
 #include	"lexicographical_compare.hpp"
@@ -41,10 +41,10 @@ public:
 	typedef	typename Allocator::pointer							pointer;
 	typedef	typename Allocator::const_pointer					const_pointer;
 
-	typedef	typename ft::tree<Key, Compare>::iterator				iterator;
-	typedef	typename ft::tree<Key, Compare>::const_iterator			const_iterator;
-	typedef	typename ft::tree<Key, Compare>::reverse_iterator		reverse_iterator;
-	typedef	typename ft::tree<Key, Compare>::const_reverse_iterator	const_reverse_iterator;
+	typedef	typename ft::tree_set<Key, Compare>::iterator				iterator;
+	typedef	typename ft::tree_set<Key, Compare>::const_iterator			const_iterator;
+	typedef	typename ft::tree_set<Key, Compare>::reverse_iterator		reverse_iterator;
+	typedef	typename ft::tree_set<Key, Compare>::const_reverse_iterator	const_reverse_iterator;
 
 	/*	MEMBER FUNCTIONS			*/
 	/*	Constructors/Destructor		*/
@@ -324,7 +324,7 @@ friend bool	operator >=	(const ft::set<Key, Compare, Allocator> &lhs,
 private:
 	Compare								_comp;
 	Allocator							_alloc;
-	ft::tree<Key, Compare>	_t;
+	ft::tree_set<Key, Compare>	_t;
 };
 
 }
