@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 20:58:38 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/15 14:56:37 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ public:
 				return *this;
 			if (_tr->size() == 0)
 				return *this;
-			if (_is_end || !_curr || _curr == _nd_null) // ne pas mettre *this == end()
+			if (_is_end || !_curr || _curr == _nd_null)  
 			{
 				_is_end = false;
 				_curr = _tr->max();
@@ -262,7 +262,8 @@ public:
 
 	bool operator == (const iterator &y)	const
 	{
-		if (_tr == y._tr && _curr && y._curr && _curr->value == y._curr->value)
+		if (_tr == y._tr && _curr && y._curr &&
+			_comp_eq(_curr->value, y._curr->value))
 			return true;
 		if (_curr == y._curr)
 			return true;
@@ -273,11 +274,16 @@ public:
 
 	bool operator <  (const iterator &y)	const
 	{
-		if (_curr && y._curr && _curr->value < y._curr->value)
+		if (_curr && y._curr && _comp(_curr->value, y._curr->value))
 			return true;
 		if (_curr < y._curr)
 			return true;
 		return false;
+	}
+
+	inline bool	_comp_eq(const T &a, const T &b)	const
+	{
+		return !(_comp(a, b) || _comp(b, a));
 	}
 
 	private:
@@ -287,6 +293,7 @@ public:
 		bool	_is_end;
 		bool	_has_been_alloc;
 		Alloc	_alloc;
+		Comp	_comp;
 	};
 
 	class rb_cit : iterator_traits<std::bidirectional_iterator_tag, T>
@@ -447,13 +454,19 @@ public:
 
 	bool operator <  (const const_iterator &y)	const
 	{
-		if (_curr && y._curr && _curr->value < y._curr->value)
+		if (_curr && y._curr && _comp(_curr->value, y._curr->value))
 			return true;
-		if (_curr && y._curr && (_curr->value == y._curr->value || y._curr->value < _curr->value))
+		if (_curr && y._curr && (_comp_eq(_curr->value, y._curr->value)
+			|| _comp(y._curr->value, _curr->value)))
 			return false;
 		if (_curr < y._curr)
 			return true;
 		return false;
+	}
+
+	inline bool	_comp_eq(const T &a, const T &b)	const
+	{
+		return !(_comp(a, b) || _comp(b, a));
 	}
 
 	private:
@@ -463,6 +476,7 @@ public:
 		bool	_is_end;
 		bool	_has_been_alloc;
 		Alloc	_alloc;
+		Comp	_comp;
 	};
 
 	class rb_rit : iterator_traits<std::bidirectional_iterator_tag, T>
@@ -669,7 +683,7 @@ public:
 	{
 		node	*p = _root;
 		node	*nv;
-	
+
 		if (search(val) != 0)
 			return false;
 		nv = _alloc.allocate(1);
@@ -806,7 +820,7 @@ public:
 		{
 			if (searching == _nd_null)
 				return 0;
-			if (searching->value == val)
+			if (_comp_eq(searching->value, val))
 				return searching;
 			if (_comp(val, searching->value))
 				searching = searching->left;
@@ -850,7 +864,6 @@ public:
 		std::cout
 			<< (ptr->color == black ? "\033[90m" : "\033[31m") << std::setw(space)
 			<< ptr->value << "\033[0m" << std::endl;
-		// //getwchar();
 		real_print(ptr->left, space);
 	}
 	#endif
@@ -1116,13 +1129,18 @@ private:
 		_copy_helper(ptr->right, ptr_null);
 	}
 
+	inline bool	_comp_eq(const T &a, const T &b)	const
+	{
+		return !(_comp(a, b) || _comp(b, a));
+	}
+
 	node			*_root;
 	node			*_nd_null;
 	unsigned int	_size;
 	Comp			_comp;
 	Alloc			_alloc;
-}; // fin de la class tree
+}; /* fin de la class tree */
 
-} // fin du namespace ft
+} /* fin du namespace ft */
 
 #endif

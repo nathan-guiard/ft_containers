@@ -6,16 +6,14 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/14 18:30:23 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/15 14:38:01 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef		FT_SET_HPP
 #define		FT_SET_HPP
 
-#include 	<functional> //a surement enlever
 #include	<memory>
-#include	<set>	//a enlever
 #include	"rb_tree.hpp"
 #include	"pair.hpp"
 #include	"iterator.hpp"
@@ -70,6 +68,8 @@ public:
 			_t.add(*first);
 	}
 
+	set(const set &other): _t(other._t) {};
+
 	~set() {};
 
 	set& operator = (const set &other)
@@ -100,32 +100,9 @@ public:
 	bool		empty()		const	{if (_t.size() == 0) return true; return false;}	/* Check si le container est vide									*/
 	size_type	size()		const	{return _t.size();}									/* Retourne, en `size_type`, le nombre d'objet dans le container	*/
 	size_type	max_size()	const	{return _t.get_allocator().max_size();}					/* Retourne, en `size_type`, le nb max d'objet dans le container	*/
-											//	^~~~ PUE SA MERE DEMANDER A CLODAGH
 
 	/*	Modifiers	*/
 	void	clear() {_t.clear();}	/* Efface tous les elements du container, le container redeviens comme si on appelais son constructeur par defaut	*/
-
-	// a change r en consequence de la fcn den dessous
-	ft::pair<iterator, bool>	insert(const value_type* value)	/* Ajoute une valeur au container avec la valeur pointee en paramettre					*/
-	{
-		ft::pair<iterator, bool>	p;
-		iterator					it;
-		iterator					ite;
-	
-		p.second = _t.add(*value);
-		if (p.second)
-		{
-			for (it = begin(), ite = end(); it != ite; it++)
-			{
-				if (*it == *value)
-				{
-					p.first = it;
-					break;
-				}
-			}
-		}
-		return p;
-	}
 
 	ft::pair<iterator, bool>	insert(const value_type& value)	/* Ajoute une valeur au container avec la valeur en paramettre							*/
 	{
@@ -344,29 +321,12 @@ friend bool	operator >=	(const ft::set<Key, Compare, Allocator> &lhs,
 {
 	return (!(lhs < rhs));
 }
-// A REMETTRE EN PRIVE PLUS TARD
-//private:
+private:
 	Compare								_comp;
 	Allocator							_alloc;
 	ft::tree<Key, Compare>	_t;
 };
 
-// template <class Key, class Compare, class Allocator>
-// bool	operator <= (const ft::set<Key, Compare, Allocator> &lhs,
-// 					const ft::set<Key, Compare, Allocator> &rhs);
-
-// template <class Key, class Compare, class Allocator>
-// bool	operator >	(const ft::set<Key, Compare, Allocator> &lhs,
-// 					const ft::set<Key, Compare, Allocator> &rhs);
-
-// template <class Key, class Compare, class Allocator>
-// bool	operator >=	(const ft::set<Key, Compare, Allocator> &lhs,
-// 					const ft::set<Key, Compare, Allocator> &rhs);
-
-// template <class Key, class Compare, class Allocator>
-// void	swap(const ft::set<Key, Compare, Allocator> &lhs,
-// 			const ft::set<Key, Compare, Allocator> &rhs);
 }
-// ATTENTION! FARE LA FONCTION FT::SWAP
 
 #endif
