@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 16:58:35 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/15 18:47:32 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,22 +128,16 @@ public:
 			_nd_null->color = black;
 			_nd_null->left = 0;
 			_nd_null->right = 0;
-			// _nd_null->value = val;
 			_curr = _nd_null;
 		}
 
 		rb_it(const iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
 			_is_end(copy._is_end), _has_been_alloc(copy._has_been_alloc), _alloc()  {}
+		
+		rb_it(const iterator &copy, bool status): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
+			_is_end(copy._is_end), _has_been_alloc(status), _alloc()  {}
 
-		rb_it(const const_iterator &copy): _tr(copy.get_tree_map()),
-			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
-			_is_end(copy.get_is_end()), _has_been_alloc(copy.get_been_alloc()) {};
-
-		rb_it(const const_iterator &copy, bool has_been_alloc): _tr(copy.get_tree_map()),
-			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
-			_is_end(copy.get_is_end()), _has_been_alloc(has_been_alloc) {};
-
-		rb_it(tree_map *tr): _tr(tr), _curr(tr->min()),
+		rb_it(const tree_map *tr): _tr(tr), _curr(tr->min()),
 			_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
 		{
 			_is_end = false;
@@ -184,19 +178,26 @@ public:
 	
 		bool	get_been_alloc()	const	{return _has_been_alloc;}
 	
-		const T &operator*() const
+		T &operator*() const
 		{
 			if (_curr && _curr != _nd_null)
 				return _curr->value;
 			return _nd_null->value;
 		}
 
-		const T *operator->() const
+		T *operator->()	const
 		{
 			if (_curr)
 				return &_curr->value;
 			return &_nd_null->value;
 		}
+
+		// const T *operator->() const
+		// {
+		// 	if (_curr)
+		// 		return &_curr->value;
+		// 	return &_nd_null->value;
+		// }
 
 		iterator	&operator++()
 		{
@@ -309,7 +310,6 @@ public:
 			_nd_null->color = black;
 			_nd_null->left = 0;
 			_nd_null->right = 0;
-			_nd_null->value = val;
 			_curr = _nd_null;
 		}
 
@@ -500,13 +500,14 @@ public:
 
 		iterator	base()	const	{return _b;}
 
-		const T &operator*() const
+		T &operator*() const
 		{
 			iterator	tmp(_b);
-			return *(--tmp);
+			tmp--;
+			return *tmp;
 		}
 
-		const T *operator->() const
+		T *operator->() const
 		{
 			return &(this->operator*());
 		}
@@ -543,7 +544,7 @@ public:
 
 		reverse_iterator	begin()
 		{
-			_b = iterator(_b.get_tree_map()).end();
+			_b = (iterator(_b.get_tree_map())).end();
 
 			return *this;
 		}

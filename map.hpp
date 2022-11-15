@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 16:58:59 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/15 18:32:08 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ public:
 	const_reverse_iterator	rend()		const	{return const_reverse_iterator(&_t).end();};
 
 	/*	Capacity	*/
-	bool		empty()		const	{return (_t.size() ? true : false);}
+	bool		empty()		const	{return (_t.size() == 0 ? true : false);}
 	size_type	size()		const	{return _t.size();}
 	size_type	max_size()	const	{return _t.get_allocator().max_size();}
 
@@ -147,7 +147,7 @@ public:
 		bool		second;
 	
 		second = _t.add(value);
-		save = find(value);
+		save = find(value.first);
 		ft::pair<iterator, bool>	p(save, second);
 		return p;
 	}
@@ -163,13 +163,13 @@ public:
 	{
 		(void)pos;
 		_t.add(value);
-		return find(value);
+		return find(value.first);
 	}
 
 	iterator	erase(iterator pos)
 	{
-		node<Key>	*nd = _t.search(*pos);
-		Key	val = *pos;
+		node<value_type>	*nd = _t.search(*pos);
+		value_type	val = *pos;
 		
 		pos++;
 		if (nd)
@@ -179,10 +179,13 @@ public:
 
 	size_type	erase(const Key &key)
 	{
-		node<Key>	*nd = _t.search(key);
+		const key_type	dup = key;
+		value_type		a = ft::make_pair(dup, mapped_type());
+
+		node<value_type>	*nd = _t.search(a);
 		if (!nd)
 			return 0;
-		_t.del(key);
+		_t.del(a);
 		return 1;
 	}
 
@@ -213,7 +216,7 @@ public:
 	/*	Look up		*/
 	size_type		count(const Key &key)	const
 	{
-		if (_t.search(key))
+		if (find(key) != end())
 			return 1;
 		return 0;
 	}
@@ -238,7 +241,7 @@ public:
 
 		for (it = begin(), ite = end(); it != ite; it++)
 		{
-			if (*it == key)
+			if ((*it).first == key)
 				return it;
 		}
 		return ite;
@@ -263,8 +266,9 @@ public:
 	
 		return p;
 	}
-	
-	iterator	lower_bound(const Key &key)
+
+	// FAIT EXPRES QUE CA COMPILE PAS
+	Key	lower_bound(const Key &key)
 	{
 		iterator	res = begin();
 
@@ -294,11 +298,11 @@ public:
 	{
 		iterator	res = begin();
 
-		if (key <= *res)
+		if ((*res).first < key)
 			return res;
-		if (_t.size() != 0 && *(--end()) < key)
+		if (_t.size() != 0 && (*(--end())).first < key)
 			return end();
-		while (*res <= key)
+		while (key < (*res).first)
 			res++;
 		return res;
 	}
@@ -307,11 +311,11 @@ public:
 	{
 		const_iterator	res = begin();
 
-		if (key <= *res)
+		if (_comp((*res).first, key))
 			return res;
-		if (_t.size() != 0 && *(--end()) < key)
+		if (_t.size() != 0 && _comp((*(--end())).first, key))
 			return end();
-		while (*res <= key)
+		while (_comp(key < (*res).first))
 			res++;
 		return res;
 	}
@@ -321,7 +325,7 @@ public:
 	
 	value_compare	value_comp()	const
 	{
-		return _t._comp;
+		return value_compare();
 	};
 
 friend bool	operator ==	(const ft::map<Key, Compare, Allocator> &lhs,
