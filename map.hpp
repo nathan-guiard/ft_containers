@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 18:32:08 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 11:08:45 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include	"iterator.hpp"
 #include	"lexicographical_compare.hpp"
 #include	"equal.hpp"
+#include	"reverse_iterator.hpp"
 
 namespace ft
 {
@@ -45,10 +46,10 @@ public:
 	typedef	typename Allocator::pointer							pointer;
 	typedef	typename Allocator::const_pointer					const_pointer;
 
-	typedef	typename ft::tree_map<value_type, value_compare>::iterator				iterator;
-	typedef	typename ft::tree_map<value_type, value_compare>::const_iterator			const_iterator;
-	typedef	typename ft::tree_map<value_type, value_compare>::reverse_iterator		reverse_iterator;
-	typedef	typename ft::tree_map<value_type, value_compare>::const_reverse_iterator	const_reverse_iterator;
+	typedef	typename ft::tree_map<value_type, value_compare>::iterator			iterator;
+	typedef	typename ft::tree_map<value_type, value_compare>::const_iterator	const_iterator;
+	typedef	typename ft::reverse_iterator<iterator>						reverse_iterator;
+	typedef	typename ft::reverse_iterator<const_iterator>				const_reverse_iterator;
 
 	class value_compare
 	{
@@ -179,8 +180,7 @@ public:
 
 	size_type	erase(const Key &key)
 	{
-		const key_type	dup = key;
-		value_type		a = ft::make_pair(dup, mapped_type());
+		value_type	a = ft::make_pair<const Key, mapped_type>(key, mapped_type());
 
 		node<value_type>	*nd = _t.search(a);
 		if (!nd)
@@ -268,7 +268,7 @@ public:
 	}
 
 	// FAIT EXPRES QUE CA COMPILE PAS
-	Key	lower_bound(const Key &key)
+	iterator	lower_bound(const Key &key)
 	{
 		iterator	res = begin();
 
@@ -276,7 +276,7 @@ public:
 			return res;
 		if (_t.size() != 0 && (*(--end())).first < key)
 			return end();
-		while (_comp((*res).first, key))
+		while (res != end() && _comp((*res).first, key))
 			res++;
 		return res;
 	}
@@ -289,7 +289,7 @@ public:
 			return res;
 		if (_t.size() != 0 && (*(--end())).first < key)
 			return end();
-		while (_comp((*res).first, key))
+		while (res != end() && _comp((*res).first, key))
 			res++;
 		return res;
 	}
@@ -302,20 +302,22 @@ public:
 			return res;
 		if (_t.size() != 0 && (*(--end())).first < key)
 			return end();
-		while (key < (*res).first)
+		while (res != end() && key < (*res).first)
 			res++;
 		return res;
 	}
 	
 	const_iterator	upper_bound(const Key &key)	const
 	{
-		const_iterator	res = begin();
+		const_iterator	res(&_t);
+		
+		res = begin();
 
 		if (_comp((*res).first, key))
 			return res;
 		if (_t.size() != 0 && _comp((*(--end())).first, key))
 			return end();
-		while (_comp(key < (*res).first))
+		while (res != end() && _comp(key, (*res).first)) 
 			res++;
 		return res;
 	}
@@ -328,40 +330,40 @@ public:
 		return value_compare();
 	};
 
-friend bool	operator ==	(const ft::map<Key, Compare, Allocator> &lhs,
-					const ft::map<Key, Compare, Allocator> &rhs)
+friend bool	operator ==	(const ft::map<Key, T, Compare, Allocator> &lhs,
+					const ft::map<Key, T, Compare, Allocator> &rhs)
 {
 	return (lhs.size() == rhs.size() &&
 		ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
-friend bool	operator !=	(const ft::map<Key, Compare, Allocator> &lhs,
-					const ft::map<Key, Compare, Allocator> &rhs)
+friend bool	operator !=	(const ft::map<Key, T, Compare, Allocator> &lhs,
+					const ft::map<Key, T, Compare, Allocator> &rhs)
 {
 	return (!(lhs == rhs));
 }
 
-friend bool	operator <	(const ft::map<Key, Compare, Allocator> &lhs,
-					const ft::map<Key, Compare, Allocator> &rhs)
+friend bool	operator <	(const ft::map<Key, T, Compare, Allocator> &lhs,
+					const ft::map<Key, T, Compare, Allocator> &rhs)
 {
 	return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
 		rhs.begin(), rhs.end()));	
 }
 
-friend bool	operator <=	(const ft::map<Key, Compare, Allocator> &lhs,
-					const ft::map<Key, Compare, Allocator> &rhs)
+friend bool	operator <=	(const ft::map<Key, T, Compare, Allocator> &lhs,
+					const ft::map<Key, T, Compare, Allocator> &rhs)
 {
 	return (!(rhs < lhs));	
 }
 
-friend bool	operator >	(const ft::map<Key, Compare, Allocator> &lhs,
-					const ft::map<Key, Compare, Allocator> &rhs)
+friend bool	operator >	(const ft::map<Key, T, Compare, Allocator> &lhs,
+					const ft::map<Key, T, Compare, Allocator> &rhs)
 {
 	return (rhs < lhs);
 }
 
-friend bool	operator >=	(const ft::map<Key, Compare, Allocator> &lhs,
-					const ft::map<Key, Compare, Allocator> &rhs)
+friend bool	operator >=	(const ft::map<Key, T, Compare, Allocator> &lhs,
+					const ft::map<Key, T, Compare, Allocator> &rhs)
 {
 	return (!(lhs < rhs));
 }

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 17:02:00 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 09:34:41 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,6 @@ public:
 			_nd_null->color = black;
 			_nd_null->left = 0;
 			_nd_null->right = 0;
-			// _nd_null->value = val;
 			_curr = _nd_null;
 		}
 

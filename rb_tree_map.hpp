@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 18:47:32 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 11:11:44 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ public:
 	}
 
 	/*	ITERATORS	*/
-	class rb_it : iterator_traits<std::bidirectional_iterator_tag, T>
+	class rb_it : public iterator_traits<std::bidirectional_iterator_tag, T>
 	{
 	public:
 		rb_it(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
@@ -132,7 +132,7 @@ public:
 		}
 
 		rb_it(const iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
-			_is_end(copy._is_end), _has_been_alloc(copy._has_been_alloc), _alloc()  {}
+			_is_end(copy._is_end), _has_been_alloc(false), _alloc()  {}
 		
 		rb_it(const iterator &copy, bool status): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
 			_is_end(copy._is_end), _has_been_alloc(status), _alloc()  {}
@@ -277,6 +277,9 @@ public:
 	{
 		if (_curr && y._curr && _comp(_curr->value, y._curr->value))
 			return true;
+		if (_curr && y._curr && (_comp_eq(_curr->value, y._curr->value)
+			|| _comp(y._curr->value, _curr->value)))
+			return false;
 		if (_curr < y._curr)
 			return true;
 		return false;
@@ -297,7 +300,7 @@ public:
 		Comp	_comp;
 	};
 
-	class rb_cit : iterator_traits<std::bidirectional_iterator_tag, T>
+	class rb_cit : public iterator_traits<std::bidirectional_iterator_tag, T>
 	{
 	public:
 		rb_cit(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
@@ -313,8 +316,9 @@ public:
 			_curr = _nd_null;
 		}
 
-		rb_cit(const const_iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
-			_is_end(copy._is_end), _has_been_alloc(copy._has_been_alloc), _alloc()  {}
+		rb_cit(const const_iterator &copy): _tr(copy._tr), _curr(copy._curr),
+			_nd_null(copy._nd_null), _is_end(copy._is_end),
+			_has_been_alloc(false), _alloc()  {}
 
 		rb_cit(const iterator &copy): _tr(copy.get_tree_map()),
 			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
@@ -443,7 +447,7 @@ public:
 
 	bool operator == (const const_iterator &y)	const
 	{
-		if (_tr == y._tr && _curr && y._curr && _curr->value == y._curr->value)
+		if (_tr == y._tr && _curr && y._curr && _comp_eq(_curr->value, y._curr->value))
 			return true;
 		if (_curr == y._curr)
 			return true;
@@ -486,7 +490,7 @@ public:
 
 		rb_rit(const reverse_iterator &copy): _b(copy._b, false) {}
 
-		rb_rit(const const_iterator &copy): _b(copy, false) {};
+		rb_rit(const iterator &copy): _b(copy, false) {};
 
 		rb_rit(tree_map *tr): _b(tr) {}
 
@@ -587,6 +591,8 @@ public:
 		rb_crit(const reverse_iterator &copy): _b(copy.base(), false) {}
 
 		rb_crit(const const_iterator &copy): _b(copy, false) {};
+		
+		rb_crit(const iterator &copy): _b(copy, false) {};
 
 		rb_crit(tree_map *tr): _b(tr) {}
 

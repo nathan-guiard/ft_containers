@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:00:33 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 18:33:13 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 10:11:38 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,32 @@ public:
 		return *this;
 	}
 
-	bool operator == (const pair<A, B>& p)	const
-	{return p.first == this->first && p.second == this->second;}
-	bool operator != (const pair<A, B>& p)	const	{return !(this == p);}
-	bool operator <	 (const pair<A, B>& p)	const
-	{return ((p.first < this->first) ||
-		(!(this->first < p.first) && p.first < this->first));};
-	bool operator <= (const pair<A, B>& p)	const	{return !(this > p);};
-	bool operator >	 (const pair<A, B>& p)	const
-	{return ((p.first > this->first) ||
-		(!(this->first > p.first) && p.first > this->first));};	bool operator >= (const pair<A, B>& p)	const	{return !(this < p);};
-
 	A	first;
 	B	second;
 };
+
+template<class A, class B>
+inline bool operator != (const pair<A, B>& p, const pair<A, B>& q)	{return !(q == p);}
+
+template<class A, class B>
+inline bool operator <	 (const pair<A, B>& p, const pair<A, B>& q)
+	{return ((p.first < q.first) ||
+		(!(q.first < p.first) && p.first < q.first));};
+
+template<class A, class B>
+inline bool operator <= (const pair<A, B>& p, const pair<A, B>& q)	{return !(q > p);};
+
+template<class A, class B>
+inline bool operator >	 (const pair<A, B>& p, const pair<A, B>& q)
+	{return ((p.first > q.first) ||
+		(!(q.first > p.first) && p.first > q.first));};
+		
+template<class A, class B>
+inline bool operator >= (const pair<A, B>& p, const pair<A, B>& q)	{return !(q < p);};
+
+template<class A, class B>
+inline bool operator == (const pair<A, B>& p, const pair<A, B>& q)
+	{return p.first == q.first && p.second == q.second;}
 
 template <typename A, typename B>
 inline pair<A, B>	make_pair(const A &a, const B &b)

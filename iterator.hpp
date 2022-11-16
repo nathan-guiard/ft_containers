@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:22:55 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/08 11:58:40 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 11:10:03 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ template<typename Category,
 	typename Reference = Tp& >
 struct iterator_traits
 {
+public:
 	typedef Category	iterator_category;
 	typedef Tp			value_type;
 	typedef Distance	difference_type;
