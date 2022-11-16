@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 11:10:13 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 11:41:26 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ public:
 
 	reverse_iterator(): _b() {};
 	reverse_iterator(const reverse_iterator &c): _b(c.base()) {}
+	reverse_iterator(const Iterator &c): _b(c) {}
 
 	reverse_iterator	&operator = (const reverse_iterator &c)
 	{
-		_b = c.b();
+		_b = c.base();
+		return *this;
 	}
 
 	Iterator	base()	const	{return _b;}
@@ -74,13 +76,13 @@ public:
 		return tmp;
 	}
 	
-	reverse_iterator	begin()
+	reverse_iterator	rbegin()
 	{
 		_b = _b.end();
 		return *this;
 	}
-	
-	reverse_iterator	end()
+
+	reverse_iterator	rend()
 	{
 		_b = _b.begin();
 		return *this;
@@ -88,7 +90,7 @@ public:
 	
 	bool operator == (const reverse_iterator &y)	const
 	{
-		return (*this->base() == y.base());
+		return (_b == y._b);
 	}
 	
 	bool operator != (const reverse_iterator &y)	const
@@ -98,7 +100,7 @@ public:
 	
 	bool operator <  (const reverse_iterator &y)	const
 	{
-		return (this->base() < y.base());
+		return (_b < y._b);
 	}
 
 private:

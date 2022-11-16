@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 11:11:44 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 12:06:27 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <cstring>
 #include "iterator.hpp"
 #include "equal.hpp"
+#include "reverse_iterator.hpp"
 
 namespace ft
 {
@@ -54,8 +55,9 @@ public:
 
 	typedef	rb_it	iterator;
 	typedef	rb_cit	const_iterator;
-	typedef	rb_rit	reverse_iterator;
-	typedef	rb_crit	const_reverse_iterator;
+	typedef	ft::reverse_iterator<rb_it>		reverse_iterator;
+	typedef	ft::reverse_iterator<rb_cit>	const_reverse_iterator;
+	// typedef	rb_crit	const_reverse_iterator;
 
 	tree_map()
 	{
@@ -481,205 +483,6 @@ public:
 		bool	_has_been_alloc;
 		Alloc	_alloc;
 		Comp	_comp;
-	};
-
-	class rb_rit : iterator_traits<std::bidirectional_iterator_tag, T>
-	{
-	public:
-		rb_rit(): _b() {}
-
-		rb_rit(const reverse_iterator &copy): _b(copy._b, false) {}
-
-		rb_rit(const iterator &copy): _b(copy, false) {};
-
-		rb_rit(tree_map *tr): _b(tr) {}
-
-		~rb_rit() {}
-
-		reverse_iterator &operator = (const reverse_iterator &copy)
-		{
-			_b = copy._b;
-			return *this;
-		}
-
-		iterator	base()	const	{return _b;}
-
-		T &operator*() const
-		{
-			iterator	tmp(_b);
-			tmp--;
-			return *tmp;
-		}
-
-		T *operator->() const
-		{
-			return &(this->operator*());
-		}
-
-		reverse_iterator	&operator++()
-		{
-			_b--;
-			return *this;
-		}
-
-		reverse_iterator	operator++(int)
-		{
-			reverse_iterator	tmp;
-
-			tmp = *this;
-			++*this;
-			return tmp;
-		}
-
-		reverse_iterator	&operator--()
-		{
-			_b++;
-			return *this;
-		}
-
-		reverse_iterator	operator--(int)
-		{
-			reverse_iterator	tmp;
-
-			tmp = *this;
-			--*this;
-			return tmp;
-		}
-
-		reverse_iterator	begin()
-		{
-			_b = (iterator(_b.get_tree_map())).end();
-
-			return *this;
-		}
-
-		reverse_iterator	end()
-		{
-			_b = iterator(_b.get_tree_map()).begin();
-
-			return *this;
-		}
-		
-
-	bool operator == (const reverse_iterator &y)	const
-	{
-		if (_b.get_curr() == y._b.get_curr())
-			return true;
-		return false;
-	}
-
-	bool operator != (const reverse_iterator &y)	const	{return (!(*this == y));}
-
-	bool operator <  (const reverse_iterator &y)	const
-	{
-		if (_b.get_curr() < y._b.get_curr())
-			return true;
-		return false;
-	}
-
-	private:
-		iterator	_b;
-	};
-
-	class rb_crit : iterator_traits<std::bidirectional_iterator_tag, T>
-	{
-	public:
-		rb_crit(): _b() {}
-
-		rb_crit(const const_reverse_iterator &copy): _b(copy._b, false) {}
-		
-		rb_crit(const reverse_iterator &copy): _b(copy.base(), false) {}
-
-		rb_crit(const const_iterator &copy): _b(copy, false) {};
-		
-		rb_crit(const iterator &copy): _b(copy, false) {};
-
-		rb_crit(tree_map *tr): _b(tr) {}
-
-		~rb_crit() {}
-
-		const_reverse_iterator &operator = (const const_reverse_iterator &copy)
-		{
-			_b = copy._b;
-			return *this;
-		}
-
-		iterator	base()	const	{return _b;}
-
-		const T &operator*() const
-		{
-			iterator	tmp(_b);
-			return *(--tmp);
-		}
-
-		const T *operator->() const
-		{
-			return &(this->operator*());
-		}
-
-		const_reverse_iterator	&operator++()
-		{
-			_b--;
-			return *this;
-		}
-
-		const_reverse_iterator	operator++(int)
-		{
-			const_reverse_iterator	tmp;
-
-			tmp = *this;
-			++*this;
-			return tmp;
-		}
-
-		const_reverse_iterator	&operator--()
-		{
-			_b++;
-			return *this;
-		}
-
-		const_reverse_iterator	operator--(int)
-		{
-			const_reverse_iterator	tmp;
-
-			tmp = *this;
-			--*this;
-			return tmp;
-		}
-
-		const_reverse_iterator	begin()
-		{
-			_b = iterator(_b.get_tree_map()).end();
-
-			return *this;
-		}
-
-		const_reverse_iterator	end()
-		{
-			_b = iterator(_b.get_tree_map()).begin();
-
-			return *this;
-		}
-		
-
-	bool operator == (const const_reverse_iterator &y)	const
-	{
-		if (_b.get_curr() == y._b.get_curr())
-			return true;
-		return false;
-	}
-
-	bool operator != (const const_reverse_iterator &y)	const	{return (!(*this == y));}
-
-	bool operator <  (const const_reverse_iterator &y)	const
-	{
-		if (_b.get_curr() < y._b.get_curr())
-			return true;
-		return false;
-	}
-
-	private:
-		iterator	_b;
 	};
 
 	node	*get_nd_null() const {return _nd_null;}

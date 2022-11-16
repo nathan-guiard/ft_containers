@@ -50,7 +50,9 @@ int main()
 	// std::vector<std::string>::iterator vite	= v.end();
 
 	ft::map<std::string, int>	s;
-	std::map<std::string, int>	o;
+
+	s.insert(9);
+	
 
 	std::cout << "----------------------" << std::endl;
 	// TESTS:
