@@ -51,9 +51,8 @@ int main()
 
 	ft::map<std::string, int>	s;
 
-	std::map<int, int>::iterator	a;
+	std::map<int, int>::const_iterator	a;
 
-	// a.
 	std::cout << "----------------------" << std::endl;
 	// TESTS:
 

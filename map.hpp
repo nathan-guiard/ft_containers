@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 16:58:01 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 17:37:51 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ public:
 	typedef	typename Allocator::const_pointer					const_pointer;
 
 	typedef	typename ft::map_iterator<value_type,
-		std::bidirectional_iterator_tag, value_compare, Allocator>	iterator;
+		std::bidirectional_iterator_tag, value_compare>	iterator;
 
 	typedef	typename ft::const_map_iterator<value_type,
-		std::bidirectional_iterator_tag, value_compare, Allocator>	const_iterator;
+		std::bidirectional_iterator_tag, value_compare>	const_iterator;
 
 	typedef	typename ft::reverse_iterator<iterator>			reverse_iterator;
 	typedef	typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
@@ -127,10 +127,10 @@ public:
 	}
 
 	/*	Iterators	*/
-	iterator	begin()				{return iterator(&_t, ).begin();}
-	iterator	end()				{return iterator(&_t).end();}
-	const_iterator	begin()	const	{return const_iterator(&_t).begin();};
-	const_iterator	end()	const	{return const_iterator(&_t).end();};
+	iterator	begin()				{return iterator(&_t, false);}
+	iterator	end()				{return iterator(&_t, true);}
+	const_iterator	begin()	const	{return const_iterator(&_t, false);};
+	const_iterator	end()	const	{return const_iterator(&_t, true);};
 
 	reverse_iterator	rbegin()
 	{

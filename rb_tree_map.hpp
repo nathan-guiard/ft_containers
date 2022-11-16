@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 16:57:37 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 17:59:37 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 #include "equal.hpp"
 #include "reverse_iterator.hpp"
 
-#define	_IT_MAP_MAGIC	(void *)0x00ff002a
 
 namespace ft
 {
@@ -41,6 +40,10 @@ struct	node
 	int		color;
 };
 
+typedef enum e_throw_tree{
+	begin = false,
+	end = true
+}	e_throw;
 
 template <typename T, class Comp = std::less<T>, class Alloc = std::allocator<node<T> > >
 class	tree_map
@@ -118,373 +121,373 @@ public:
 	}
 
 	/*	ITERATORS	*/
-	class rb_it : public iterator_traits<std::bidirectional_iterator_tag, T>
-	{
-	public:
-		rb_it(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
-		{
-			T	val = T();
-			std::allocator<T>	alloc_type;
+	// class rb_it : public iterator_traits<std::bidirectional_iterator_tag, T>
+	// {
+	// public:
+	// 	rb_it(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
+	// 	{
+	// 		T	val = T();
+	// 		std::allocator<T>	alloc_type;
 
-			_nd_null = _alloc.allocate(1);
-			alloc_type.construct(&_nd_null->value, val);
-			_nd_null->color = black;
-			_nd_null->left = 0;
-			_nd_null->right = 0;
-			_curr = _nd_null;
-		}
+	// 		_nd_null = _alloc.allocate(1);
+	// 		alloc_type.construct(&_nd_null->value, val);
+	// 		_nd_null->color = black;
+	// 		_nd_null->left = 0;
+	// 		_nd_null->right = 0;
+	// 		_curr = _nd_null;
+	// 	}
 
-		rb_it(const iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
-			_is_end(copy._is_end), _has_been_alloc(false), _alloc()  {}
+	// 	rb_it(const iterator &copy): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
+	// 		_is_end(copy._is_end), _has_been_alloc(false), _alloc()  {}
 		
-		rb_it(const iterator &copy, bool status): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
-			_is_end(copy._is_end), _has_been_alloc(status), _alloc()  {}
+	// 	rb_it(const iterator &copy, bool status): _tr(copy._tr), _curr(copy._curr), _nd_null(copy._nd_null),
+	// 		_is_end(copy._is_end), _has_been_alloc(status), _alloc()  {}
 
-		rb_it(const tree_map *tr): _tr(tr), _curr(tr->min()),
-			_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
-		{
-			_is_end = false;
-			if (_curr == 0)
-				_is_end = true;
-		}
+	// 	rb_it(const tree_map *tr): _tr(tr), _curr(tr->min()),
+	// 		_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
+	// 	{
+	// 		_is_end = false;
+	// 		if (_curr == 0)
+	// 			_is_end = true;
+	// 	}
 
-		~rb_it()
-		{
-			std::allocator<T>	alloc_type;
-			if (_has_been_alloc)
-			{
-				alloc_type.destroy(&_nd_null->value);
-				_alloc.deallocate(_nd_null, 1);
-			}
-		}
+	// 	~rb_it()
+	// 	{
+	// 		std::allocator<T>	alloc_type;
+	// 		if (_has_been_alloc)
+	// 		{
+	// 			alloc_type.destroy(&_nd_null->value);
+	// 			_alloc.deallocate(_nd_null, 1);
+	// 		}
+	// 	}
 
-		iterator &operator = (const iterator &copy)
-		{
-			if (_has_been_alloc)
-				_alloc.deallocate(_nd_null, 1);
-			_tr = copy._tr;
-			_curr = copy._curr;
-			_nd_null = copy._nd_null;
-			_is_end = copy._is_end;
-			_has_been_alloc = copy._has_been_alloc;
+	// 	iterator &operator = (const iterator &copy)
+	// 	{
+	// 		if (_has_been_alloc)
+	// 			_alloc.deallocate(_nd_null, 1);
+	// 		_tr = copy._tr;
+	// 		_curr = copy._curr;
+	// 		_nd_null = copy._nd_null;
+	// 		_is_end = copy._is_end;
+	// 		_has_been_alloc = copy._has_been_alloc;
 		
-			return *this;
-		}
+	// 		return *this;
+	// 	}
 
-		const tree_map	*get_tree_map()	const		{return _tr;}
+	// 	const tree_map	*get_tree_map()	const		{return _tr;}
 
-		node	*get_curr()	const		{return _curr;}
+	// 	node	*get_curr()	const		{return _curr;}
 
-		node	*get_it_null()	const	{return _nd_null;}
+	// 	node	*get_it_null()	const	{return _nd_null;}
 	
-		bool	get_is_end()	const	{return _is_end;}
+	// 	bool	get_is_end()	const	{return _is_end;}
 	
-		bool	get_been_alloc()	const	{return _has_been_alloc;}
+	// 	bool	get_been_alloc()	const	{return _has_been_alloc;}
 	
-		T &operator*() const
-		{
-			if (_curr && _curr != _nd_null)
-				return _curr->value;
-			return _nd_null->value;
-		}
+	// 	T &operator*() const
+	// 	{
+	// 		if (_curr && _curr != _nd_null)
+	// 			return _curr->value;
+	// 		return _nd_null->value;
+	// 	}
 
-		T *operator->()	const
-		{
-			if (_curr)
-				return &_curr->value;
-			return &_nd_null->value;
-		}
+	// 	T *operator->()	const
+	// 	{
+	// 		if (_curr)
+	// 			return &_curr->value;
+	// 		return &_nd_null->value;
+	// 	}
 		
-		iterator	&operator++()
-		{
-			if (!_tr || !_curr)
-				return *this;
-			_curr = _tr->next(_curr);
-			if (!_curr)
-				_is_end = true;
-			return *this;
-		}
+	// 	iterator	&operator++()
+	// 	{
+	// 		if (!_tr || !_curr)
+	// 			return *this;
+	// 		_curr = _tr->next(_curr);
+	// 		if (!_curr)
+	// 			_is_end = true;
+	// 		return *this;
+	// 	}
 
-		iterator	operator++(int)
-		{
-			iterator	tmp(*this);
+	// 	iterator	operator++(int)
+	// 	{
+	// 		iterator	tmp(*this);
 
-			++*this;
-			return tmp;
-		}
+	// 		++*this;
+	// 		return tmp;
+	// 	}
 
-		iterator	&operator--()
-		{
-			if (!_tr)
-				return *this;
-			if (_tr->size() == 0)
-				return *this;
-			if (_is_end || !_curr || _curr == _nd_null)  
-			{
-				_is_end = false;
-				_curr = _tr->max();
-			}
-			else
-				_curr = _tr->prev(_curr);
-			return *this;
-		}
+	// 	iterator	&operator--()
+	// 	{
+	// 		if (!_tr)
+	// 			return *this;
+	// 		if (_tr->size() == 0)
+	// 			return *this;
+	// 		if (_is_end || !_curr || _curr == _nd_null)  
+	// 		{
+	// 			_is_end = false;
+	// 			_curr = _tr->max();
+	// 		}
+	// 		else
+	// 			_curr = _tr->prev(_curr);
+	// 		return *this;
+	// 	}
 
-		iterator	operator--(int)
-		{
-			iterator	tmp;
+	// 	iterator	operator--(int)
+	// 	{
+	// 		iterator	tmp;
 
-			tmp = *this;
-			--*this;
-			return tmp;
-		}
+	// 		tmp = *this;
+	// 		--*this;
+	// 		return tmp;
+	// 	}
 
-		iterator	begin()
-		{
-			if (_tr->size() == 0)
-				return(end());
-			_curr = _tr->min();
-			if (!_curr)
-				_is_end = true;
+	// 	iterator	begin()
+	// 	{
+	// 		if (_tr->size() == 0)
+	// 			return(end());
+	// 		_curr = _tr->min();
+	// 		if (!_curr)
+	// 			_is_end = true;
 			
-			return *this;
-		}
+	// 		return *this;
+	// 	}
 
-		iterator	end()
-		{
-			_curr = 0;
-			_is_end = true;
+	// 	iterator	end()
+	// 	{
+	// 		_curr = 0;
+	// 		_is_end = true;
 		
-			return *this;
-		}
+	// 		return *this;
+	// 	}
 
-	bool operator == (const iterator &y)	const
-	{
-		if (_tr == y._tr && _curr && y._curr &&
-			_comp_eq(_curr->value, y._curr->value))
-			return true;
-		if (_curr == y._curr)
-			return true;
-		return false;
-	}
+	// bool operator == (const iterator &y)	const
+	// {
+	// 	if (_tr == y._tr && _curr && y._curr &&
+	// 		_comp_eq(_curr->value, y._curr->value))
+	// 		return true;
+	// 	if (_curr == y._curr)
+	// 		return true;
+	// 	return false;
+	// }
 
-	bool operator != (const iterator &y)	const	{return (!(*this == y));}
+	// bool operator != (const iterator &y)	const	{return (!(*this == y));}
 
-	bool operator <  (const iterator &y)	const
-	{
-		if (_curr && y._curr && _comp(_curr->value, y._curr->value))
-			return true;
-		if (_curr && y._curr && (_comp_eq(_curr->value, y._curr->value)
-			|| _comp(y._curr->value, _curr->value)))
-			return false;
-		if (_curr < y._curr)
-			return true;
-		return false;
-	}
+	// bool operator <  (const iterator &y)	const
+	// {
+	// 	if (_curr && y._curr && _comp(_curr->value, y._curr->value))
+	// 		return true;
+	// 	if (_curr && y._curr && (_comp_eq(_curr->value, y._curr->value)
+	// 		|| _comp(y._curr->value, _curr->value)))
+	// 		return false;
+	// 	if (_curr < y._curr)
+	// 		return true;
+	// 	return false;
+	// }
 
-	inline bool	_comp_eq(const T &a, const T &b)	const
-	{
-		return !(_comp(a, b) || _comp(b, a));
-	}
+	// inline bool	_comp_eq(const T &a, const T &b)	const
+	// {
+	// 	return !(_comp(a, b) || _comp(b, a));
+	// }
 
-	private:
-		const tree_map	*_tr;
-		node	*_curr;
-		node	*_nd_null;
-		bool	_is_end;
-		bool	_has_been_alloc;
-		Alloc	_alloc;
-		Comp	_comp;
-	};
+	// private:
+	// 	const tree_map	*_tr;
+	// 	node	*_curr;
+	// 	node	*_nd_null;
+	// 	bool	_is_end;
+	// 	bool	_has_been_alloc;
+	// 	Alloc	_alloc;
+	// 	Comp	_comp;
+	// };
 
-	class rb_cit : public iterator_traits<std::bidirectional_iterator_tag, T>
-	{
-	public:
-		typedef	T	value_type;
+	// class rb_cit : public iterator_traits<std::bidirectional_iterator_tag, T>
+	// {
+	// public:
+	// 	typedef	T	value_type;
 		
-		rb_cit(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
-		{
-			T	val = T();
-			std::allocator<T>	alloc_type;
+	// 	rb_cit(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
+	// 	{
+	// 		T	val = T();
+	// 		std::allocator<T>	alloc_type;
 
-			_nd_null = _alloc.allocate(1);
-			alloc_type.construct(&_nd_null->value, val);
-			_nd_null->color = black;
-			_nd_null->left = 0;
-			_nd_null->right = 0;
-			_curr = _nd_null;
-		}
+	// 		_nd_null = _alloc.allocate(1);
+	// 		alloc_type.construct(&_nd_null->value, val);
+	// 		_nd_null->color = black;
+	// 		_nd_null->left = 0;
+	// 		_nd_null->right = 0;
+	// 		_curr = _nd_null;
+	// 	}
 
-		rb_cit(const const_iterator &copy): _tr(copy._tr), _curr(copy._curr),
-			_nd_null(copy._nd_null), _is_end(copy._is_end),
-			_has_been_alloc(false), _alloc()  {}
+	// 	rb_cit(const const_iterator &copy): _tr(copy._tr), _curr(copy._curr),
+	// 		_nd_null(copy._nd_null), _is_end(copy._is_end),
+	// 		_has_been_alloc(false), _alloc()  {}
 
-		// rb_cit(const ft::reverse_iterator<iterator> &copy): _tr(copy.base().get_tree_map()),
-		// 	_curr(copy.base().get_curr()), _nd_null(copy.base().get_it_null()),
-		// 	_is_end(copy.base().get_is_end()),
-		// 	_has_been_alloc(copy.base().get_been_alloc()) {};
+	// 	// rb_cit(const ft::reverse_iterator<iterator> &copy): _tr(copy.base().get_tree_map()),
+	// 	// 	_curr(copy.base().get_curr()), _nd_null(copy.base().get_it_null()),
+	// 	// 	_is_end(copy.base().get_is_end()),
+	// 	// 	_has_been_alloc(copy.base().get_been_alloc()) {};
 
-		rb_cit(const iterator &copy): _tr(copy.get_tree_map()),
-			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
-			_is_end(copy.get_is_end()), _has_been_alloc(copy.get_been_alloc()) {};
+	// 	rb_cit(const iterator &copy): _tr(copy.get_tree_map()),
+	// 		_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
+	// 		_is_end(copy.get_is_end()), _has_been_alloc(copy.get_been_alloc()) {};
 		
-		rb_cit(const iterator &copy, bool has_been_alloc): _tr(copy.get_tree_map()),
-			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
-			_is_end(copy.get_is_end()), _has_been_alloc(has_been_alloc) {};
+	// 	rb_cit(const iterator &copy, bool has_been_alloc): _tr(copy.get_tree_map()),
+	// 		_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
+	// 		_is_end(copy.get_is_end()), _has_been_alloc(has_been_alloc) {};
 
-		rb_cit(const tree_map *tr): _tr(tr), _curr(tr->min()),
-			_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
-		{
-			_is_end = false;
-			if (_curr == 0)
-				_is_end = true;
-		}
+	// 	rb_cit(const tree_map *tr): _tr(tr), _curr(tr->min()),
+	// 		_nd_null(tr->get_nd_null()), _has_been_alloc(false), _alloc()
+	// 	{
+	// 		_is_end = false;
+	// 		if (_curr == 0)
+	// 			_is_end = true;
+	// 	}
 
-		~rb_cit()
-		{
-			std::allocator<T>	alloc_type;
-			if (_has_been_alloc)
-			{
-				alloc_type.destroy(&_nd_null->value);
-				_alloc.deallocate(_nd_null, 1);
-			}
-		}
+	// 	~rb_cit()
+	// 	{
+	// 		std::allocator<T>	alloc_type;
+	// 		if (_has_been_alloc)
+	// 		{
+	// 			alloc_type.destroy(&_nd_null->value);
+	// 			_alloc.deallocate(_nd_null, 1);
+	// 		}
+	// 	}
 
-		const_iterator &operator = (const const_iterator &copy)
-		{
-			if (_has_been_alloc)
-				_alloc.deallocate(_nd_null, 1);
-			_tr = copy._tr;
-			_curr = copy._curr;
-			_nd_null = copy._nd_null;
-			_is_end = copy._is_end;
-			_has_been_alloc = copy._has_been_alloc;
+	// 	const_iterator &operator = (const const_iterator &copy)
+	// 	{
+	// 		if (_has_been_alloc)
+	// 			_alloc.deallocate(_nd_null, 1);
+	// 		_tr = copy._tr;
+	// 		_curr = copy._curr;
+	// 		_nd_null = copy._nd_null;
+	// 		_is_end = copy._is_end;
+	// 		_has_been_alloc = copy._has_been_alloc;
 		
-			return *this;
-		}
+	// 		return *this;
+	// 	}
 
-		const tree_map	*get_tree_map()	const		{return _tr;}
+	// 	const tree_map	*get_tree_map()	const		{return _tr;}
 
-		node	*get_curr()	const		{return _curr;}
+	// 	node	*get_curr()	const		{return _curr;}
 
-		node	*get_it_null()	const	{return _nd_null;}
+	// 	node	*get_it_null()	const	{return _nd_null;}
 	
-		bool	get_is_end()	const	{return _is_end;}
+	// 	bool	get_is_end()	const	{return _is_end;}
 	
-		bool	get_been_alloc()	const	{return _has_been_alloc;}
+	// 	bool	get_been_alloc()	const	{return _has_been_alloc;}
 
-		const T &operator*() const
-		{
-			if (_curr && _curr != _nd_null)
-				return _curr->value;
-			return _nd_null->value;
-		}
+	// 	const T &operator*() const
+	// 	{
+	// 		if (_curr && _curr != _nd_null)
+	// 			return _curr->value;
+	// 		return _nd_null->value;
+	// 	}
 
-		const T *operator->() const
-		{
-			if (_curr)
-				return &_curr->value;
-			return &_nd_null->value;
-		}
+	// 	const T *operator->() const
+	// 	{
+	// 		if (_curr)
+	// 			return &_curr->value;
+	// 		return &_nd_null->value;
+	// 	}
 
-		const_iterator	&operator++()
-		{
-			if (!_curr || !_tr)
-				return *this;
-			_curr = _tr->next(_curr);
-			if (!_curr)
-				_is_end = true;
-			return *this;
-		}
+	// 	const_iterator	&operator++()
+	// 	{
+	// 		if (!_curr || !_tr)
+	// 			return *this;
+	// 		_curr = _tr->next(_curr);
+	// 		if (!_curr)
+	// 			_is_end = true;
+	// 		return *this;
+	// 	}
 
-		const_iterator	operator++(int)
-		{
-			const_iterator	tmp(*this);
+	// 	const_iterator	operator++(int)
+	// 	{
+	// 		const_iterator	tmp(*this);
 		
-			++*this;
-			return tmp;
-		}
+	// 		++*this;
+	// 		return tmp;
+	// 	}
 
-		const_iterator	&operator--()
-		{
-			if (!_tr)
-				return *this;
-			if (_tr->size() == 0)
-				return *this;
-			if (_is_end || !_curr || _curr == _nd_null)
-			{
-				_is_end = false;
-				_curr = _tr->max();
-			}
-			else
-				_curr = _tr->prev(_curr);
-			return *this;
-		}
+	// 	const_iterator	&operator--()
+	// 	{
+	// 		if (!_tr)
+	// 			return *this;
+	// 		if (_tr->size() == 0)
+	// 			return *this;
+	// 		if (_is_end || !_curr || _curr == _nd_null)
+	// 		{
+	// 			_is_end = false;
+	// 			_curr = _tr->max();
+	// 		}
+	// 		else
+	// 			_curr = _tr->prev(_curr);
+	// 		return *this;
+	// 	}
 
-		const_iterator	operator--(int)
-		{
-			const_iterator	tmp;
+	// 	const_iterator	operator--(int)
+	// 	{
+	// 		const_iterator	tmp;
 
-			tmp = *this;
-			--*this;
-			return tmp;
-		}
+	// 		tmp = *this;
+	// 		--*this;
+	// 		return tmp;
+	// 	}
 
-		const_iterator	begin()
-		{
-			if (_tr->size() == 0)
-				return(end());
-			_curr = _tr->min();
-			if (!_curr)
-				_is_end = true;
+	// 	const_iterator	begin()
+	// 	{
+	// 		if (_tr->size() == 0)
+	// 			return(end());
+	// 		_curr = _tr->min();
+	// 		if (!_curr)
+	// 			_is_end = true;
 			
-			return *this;
-		}
+	// 		return *this;
+	// 	}
 
-		const_iterator	end()
-		{
-			_curr = 0;
-			_is_end = true;
+	// 	const_iterator	end()
+	// 	{
+	// 		_curr = 0;
+	// 		_is_end = true;
 		
-			return *this;
-		}
+	// 		return *this;
+	// 	}
 
-	bool operator == (const const_iterator &y)	const
-	{
-		if (_tr == y._tr && _curr && y._curr && _comp_eq(_curr->value, y._curr->value))
-			return true;
-		if (_curr == y._curr)
-			return true;
-		return false;
-	}
+	// bool operator == (const const_iterator &y)	const
+	// {
+	// 	if (_tr == y._tr && _curr && y._curr && _comp_eq(_curr->value, y._curr->value))
+	// 		return true;
+	// 	if (_curr == y._curr)
+	// 		return true;
+	// 	return false;
+	// }
 
-	bool operator != (const const_iterator &y)	const	{return (!(*this == y));}
+	// bool operator != (const const_iterator &y)	const	{return (!(*this == y));}
 
-	bool operator <  (const const_iterator &y)	const
-	{
-		if (_curr && y._curr && _comp(_curr->value, y._curr->value))
-			return true;
-		if (_curr && y._curr && (_comp_eq(_curr->value, y._curr->value)
-			|| _comp(y._curr->value, _curr->value)))
-			return false;
-		if (_curr < y._curr)
-			return true;
-		return false;
-	}
+	// bool operator <  (const const_iterator &y)	const
+	// {
+	// 	if (_curr && y._curr && _comp(_curr->value, y._curr->value))
+	// 		return true;
+	// 	if (_curr && y._curr && (_comp_eq(_curr->value, y._curr->value)
+	// 		|| _comp(y._curr->value, _curr->value)))
+	// 		return false;
+	// 	if (_curr < y._curr)
+	// 		return true;
+	// 	return false;
+	// }
 
-	inline bool	_comp_eq(const T &a, const T &b)	const
-	{
-		return !(_comp(a, b) || _comp(b, a));
-	}
+	// inline bool	_comp_eq(const T &a, const T &b)	const
+	// {
+	// 	return !(_comp(a, b) || _comp(b, a));
+	// }
 
-	private:
-		const tree_map	*_tr;
-		node	*_curr;
-		node	*_nd_null;
-		bool	_is_end;
-		bool	_has_been_alloc;
-		Alloc	_alloc;
-		Comp	_comp;
-	};
+	// private:
+	// 	const tree_map	*_tr;
+	// 	node	*_curr;
+	// 	node	*_nd_null;
+	// 	bool	_is_end;
+	// 	bool	_has_been_alloc;
+	// 	Alloc	_alloc;
+	// 	Comp	_comp;
+	// };
 
 	node	*get_nd_null() const {return _nd_null;}
 
@@ -587,14 +590,19 @@ public:
 		return true;
 	}
 
+	/**
+	 * @brief		gives the next node based on ptr
+	 * @exception	throws (e_throw_tree)end if we try to go PAST end
+	 * 
+	 * @param 		ptr 
+	 * @return 		node<T> * -> next node of ptr 
+	 */
 	node	*next(node *ptr)	const
 	{
 		if (!ptr || ptr == _nd_null)
-			return 0;
-		if (ptr == _IT_MAP_MAGIC)
-			return _IT_MAP_MAGIC;
+			throw (end);
 		if (ptr == max(_root))
-			return _IT_MAP_MAGIC;
+			return 0;
 		if (ptr->right && ptr->right != _nd_null)
 			return min(ptr->right);
 		while (ptr->parent)
@@ -607,14 +615,19 @@ public:
 		return ptr;
 	}
 
+	/**
+	 * @brief		gives the previous node based on ptr
+	 * @exception	throws (e_throw_tree)begin if we try to go before begin
+	 * 
+	 * @param ptr 
+	 * @return node<T> * -> previous node of @a ptr 
+	 */
 	node	*prev(node *ptr)	const
 	{
 		if (!ptr || ptr == _nd_null)
 			return 0;
 		if (ptr == min(_root))
-			return 0;
-		if (ptr == _IT_MAP_MAGIC)
-			return max(_root);
+			throw (begin);
 		if (ptr->left && ptr->left != _nd_null)
 			return max(ptr->left);
 		while (ptr->parent)
