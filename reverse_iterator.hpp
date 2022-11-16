@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 11:41:26 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 16:58:19 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ public:
 
 	reverse_iterator(): _b() {};
 	reverse_iterator(const reverse_iterator &c): _b(c.base()) {}
+
+	template <class iter>
+	reverse_iterator(const iter &c): _b(c.base()) {}
 	reverse_iterator(const Iterator &c): _b(c) {}
 
 	reverse_iterator	&operator = (const reverse_iterator &c)

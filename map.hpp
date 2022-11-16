@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 12:07:45 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 16:58:01 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include	"lexicographical_compare.hpp"
 #include	"equal.hpp"
 #include	"reverse_iterator.hpp"
+#include	"map_iterator.hpp"
 
 namespace ft
 {
@@ -29,7 +30,6 @@ namespace ft
 template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
 class map
 {
-
 public:
 	class value_compare;
 
@@ -46,10 +46,14 @@ public:
 	typedef	typename Allocator::pointer							pointer;
 	typedef	typename Allocator::const_pointer					const_pointer;
 
-	typedef	typename ft::tree_map<value_type, value_compare>::iterator			iterator;
-	typedef	typename ft::tree_map<value_type, value_compare>::const_iterator	const_iterator;
-	typedef	typename ft::tree_map<value_type, value_compare>::reverse_iterator			reverse_iterator;
-	typedef	typename ft::tree_map<value_type, value_compare>::const_reverse_iterator	const_reverse_iterator;
+	typedef	typename ft::map_iterator<value_type,
+		std::bidirectional_iterator_tag, value_compare, Allocator>	iterator;
+
+	typedef	typename ft::const_map_iterator<value_type,
+		std::bidirectional_iterator_tag, value_compare, Allocator>	const_iterator;
+
+	typedef	typename ft::reverse_iterator<iterator>			reverse_iterator;
+	typedef	typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 	class value_compare
 	{
@@ -123,29 +127,29 @@ public:
 	}
 
 	/*	Iterators	*/
-	iterator	begin()				{return iterator(&_t).begin();}
+	iterator	begin()				{return iterator(&_t, ).begin();}
 	iterator	end()				{return iterator(&_t).end();}
 	const_iterator	begin()	const	{return const_iterator(&_t).begin();};
 	const_iterator	end()	const	{return const_iterator(&_t).end();};
-	
-	reverse_iterator	rbegin() 
+
+	reverse_iterator	rbegin()
 	{
-		return reverse_iterator(iterator(&_t)).rbegin();
+		return reverse_iterator(end());
 	};
 	
 	reverse_iterator	rend()
 	{
-		return reverse_iterator(iterator(&_t)).rend();
+		return reverse_iterator(begin());
 	};
 
 	const_reverse_iterator	rbegin()	const
 	{
-		return const_reverse_iterator(const_iterator(&_t)).rbegin();
+		return const_reverse_iterator(end());
 	};
 	
 	const_reverse_iterator	rend()		const
 	{
-		return const_reverse_iterator(const_iterator(&_t)).rend();
+		return const_reverse_iterator(begin());
 	};
 
 	/*	Capacity	*/
@@ -158,14 +162,12 @@ public:
 
 	ft::pair<iterator, bool>	insert(const value_type& value)
 	{
-		iterator	save(&_t);
-		iterator	it = begin();
-		iterator	ite = end();
+		iterator	first(&_t);
 		bool		second;
 	
 		second = _t.add(value);
-		save = find(value.first);
-		ft::pair<iterator, bool>	p(save, second);
+		first = find(value.first);
+		ft::pair<iterator, bool>	p(first, second);
 		return p;
 	}
 

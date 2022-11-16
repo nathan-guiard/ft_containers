@@ -51,9 +51,9 @@ int main()
 
 	ft::map<std::string, int>	s;
 
-	s.insert(9);
-	
+	std::map<int, int>::iterator	a;
 
+	// a.
 	std::cout << "----------------------" << std::endl;
 	// TESTS:
 

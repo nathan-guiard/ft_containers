@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 12:06:27 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 16:57:37 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,14 @@
 #define RB_TREE_MAP_HPP
 
 #include <iostream>
-#include <unistd.h>
 #include <iomanip>
 #include <memory>
 #include <cstring>
 #include "iterator.hpp"
 #include "equal.hpp"
 #include "reverse_iterator.hpp"
+
+#define	_IT_MAP_MAGIC	(void *)0x00ff002a
 
 namespace ft
 {
@@ -193,14 +194,7 @@ public:
 				return &_curr->value;
 			return &_nd_null->value;
 		}
-
-		// const T *operator->() const
-		// {
-		// 	if (_curr)
-		// 		return &_curr->value;
-		// 	return &_nd_null->value;
-		// }
-
+		
 		iterator	&operator++()
 		{
 			if (!_tr || !_curr)
@@ -305,6 +299,8 @@ public:
 	class rb_cit : public iterator_traits<std::bidirectional_iterator_tag, T>
 	{
 	public:
+		typedef	T	value_type;
+		
 		rb_cit(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
 		{
 			T	val = T();
@@ -321,6 +317,11 @@ public:
 		rb_cit(const const_iterator &copy): _tr(copy._tr), _curr(copy._curr),
 			_nd_null(copy._nd_null), _is_end(copy._is_end),
 			_has_been_alloc(false), _alloc()  {}
+
+		// rb_cit(const ft::reverse_iterator<iterator> &copy): _tr(copy.base().get_tree_map()),
+		// 	_curr(copy.base().get_curr()), _nd_null(copy.base().get_it_null()),
+		// 	_is_end(copy.base().get_is_end()),
+		// 	_has_been_alloc(copy.base().get_been_alloc()) {};
 
 		rb_cit(const iterator &copy): _tr(copy.get_tree_map()),
 			_curr(copy.get_curr()), _nd_null(copy.get_it_null()),
@@ -590,8 +591,10 @@ public:
 	{
 		if (!ptr || ptr == _nd_null)
 			return 0;
+		if (ptr == _IT_MAP_MAGIC)
+			return _IT_MAP_MAGIC;
 		if (ptr == max(_root))
-			return 0;
+			return _IT_MAP_MAGIC;
 		if (ptr->right && ptr->right != _nd_null)
 			return min(ptr->right);
 		while (ptr->parent)
@@ -610,6 +613,8 @@ public:
 			return 0;
 		if (ptr == min(_root))
 			return 0;
+		if (ptr == _IT_MAP_MAGIC)
+			return max(_root);
 		if (ptr->left && ptr->left != _nd_null)
 			return max(ptr->left);
 		while (ptr->parent)
