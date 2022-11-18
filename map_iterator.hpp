@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:38:23 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 18:55:56 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 15:11:46 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ public:
 	**/
 	map_iterator_base(const tree_map<value_type, Compare> *tree,
 		bool status = false): _tr(tree),
-		_curr((status ? _tr->min() : 0)) {}
+		_curr((status ? 0 : _tr->min())) {}
 
 	reference	operator*()	const
 	{
@@ -93,12 +93,14 @@ public:
 		return tmp;
 	}
 
-	bool	operator == (const map_iterator_base &x)
+	bool operator == (const map_iterator_base &y)	const
 	{
-		if (!_curr && x._curr)
+		if (_tr && y._tr && (_tr->size() == 0 && y._tr->size() == 0))
 			return true;
-		if (_comp(this->_curr->value, x._curr->value)
-			&& _comp(x._curr->value, this->_curr->value))
+		if (_tr == y._tr && _curr && y._curr &&
+			_comp_eq(_curr->value, y._curr->value))
+			return true;
+		if (_curr == y._curr)
 			return true;
 		return false;
 	}
@@ -110,11 +112,15 @@ public:
 	
 	bool	operator <  (const map_iterator_base &x)
 	{
-		map_iterator_base	tmp(*this);
 		return (_comp(this->_curr->value, x._curr->value));
 	}
 
 private:
+	inline bool	_comp_eq(const T &a, const T &b)	const
+	{
+		return !(_comp(a, b) || _comp(b, a));
+	}
+
 	const tree_map<T, Compare>	*_tr;
 	node<T>		*_curr;
 	Compare		_comp;
@@ -186,17 +192,17 @@ public:
 		return tmp;
 	}
 
-	bool	operator == (const map_iterator &x)
+	bool	operator == (const map_iterator &x)	const
 	{
 		return ((*this)._b == x._b);
 	}
 
-	bool	operator != (const map_iterator &x)
+	bool	operator != (const map_iterator &x)	const
 	{
 		return (!(*this == x));
 	}
 	
-	bool	operator <  (const map_iterator &x)
+	bool	operator <  (const map_iterator &x)	const
 	{
 		return ((*this)._b < x._b);
 	}

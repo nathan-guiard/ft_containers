@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 09:34:41 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/16 19:20:02 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 namespace ft
 {
+#ifndef RB_TREE_MAP_HPP
 enum	colors
 {
 	black = 1,
@@ -38,6 +39,7 @@ struct	node
 	node	*parent;
 	int		color;
 };
+#endif
 
 
 template <typename T, class Comp = std::less<T>, class Alloc = std::allocator<node<T> > >

@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 17:37:51 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 15:55:41 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@
 namespace ft
 {
 
-template <class Key, class T, class Compare = std::less<Key>, class Allocator = std::allocator<ft::pair<const Key, T> > >
+template <class Key,
+	class T,
+	class Compare = std::less<Key>,
+	class Allocator = std::allocator<ft::pair<const Key, T> > >
 class map
 {
 public:
@@ -117,13 +120,12 @@ public:
 	/*	Element acces	*/
 	Key			&at(const Key &key);
 	const Key	&at(const Key &key)	const;
-	T	&operator[](const Key& key)
+
+	mapped_type	&operator[](const Key& key)
 	{
-		iterator	it = lower_bound(key);
-	
-		if (it == end() || key_comp()(key, (*it).first))
-			it = insert(it, value_type(key, mapped_type()));
-		return (*it).second;
+		insert(value_type(key, mapped_type()));
+		
+		return ((*find(key)).second);
 	}
 
 	/*	Iterators	*/
@@ -241,23 +243,23 @@ public:
 
 	iterator		find(const Key &key)
 	{
-		iterator	it;
-		iterator	ite;
+		iterator	it = begin();
+		iterator	ite = end();
 
-		for (it = begin(), ite = end(); it != ite; it++)
+		for (; it != ite; it++)
 		{
 			if ((*it).first == key)
 				return it;
 		}
 		return ite;
 	}
-	
+
 	const_iterator	find(const Key &key)	const
 	{
-		const_iterator	it;
-		const_iterator	ite;
+		const_iterator	it = begin();
+		const_iterator	ite = end();
 
-		for (it = begin(), ite = end(); it != ite; it++)
+		for (; it != ite; it++)
 		{
 			if ((*it).first == key)
 				return it;
@@ -316,20 +318,18 @@ public:
 	{
 		iterator	res = begin();
 
-		if ((*res).first < key)
+		if (_comp((*res).first, key))
 			return res;
-		if (_t.size() != 0 && (*(--end())).first < key)
+		if (_t.size() != 0 && _comp((*(--end())).first, key))
 			return end();
-		while (res != end() && key < (*res).first)
+		while (res != end() && _comp(key, (*res).first)) 
 			res++;
 		return res;
 	}
 	
 	const_iterator	upper_bound(const Key &key)	const
 	{
-		const_iterator	res(&_t);
-		
-		res = begin();
+		const_iterator	res = begin();
 
 		if (_comp((*res).first, key))
 			return res;
@@ -348,50 +348,70 @@ public:
 		return value_compare();
 	};
 
-friend bool	operator ==	(const ft::map<Key, T, Compare, Allocator> &lhs,
-					const ft::map<Key, T, Compare, Allocator> &rhs)
+bool	operator ==	(const ft::map<Key, T, Compare, Allocator> &rhs)	const
 {
-	return (lhs.size() == rhs.size() &&
-		ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	return (this->size() == rhs.size() &&
+		ft::equal(this->begin(), this->end(), rhs.begin()));
 }
 
-friend bool	operator !=	(const ft::map<Key, T, Compare, Allocator> &lhs,
-					const ft::map<Key, T, Compare, Allocator> &rhs)
+bool	operator !=	(const ft::map<Key, T, Compare, Allocator> &rhs)	const
 {
-	return (!(lhs == rhs));
+	return (!(*this == rhs));
 }
 
-friend bool	operator <	(const ft::map<Key, T, Compare, Allocator> &lhs,
-					const ft::map<Key, T, Compare, Allocator> &rhs)
+bool	operator <	(const ft::map<Key, T, Compare, Allocator> &rhs)	const
 {
-	return (ft::lexicographical_compare(lhs.begin(), lhs.end(),
-		rhs.begin(), rhs.end()));	
+	return (ft::lexicographical_compare<const_iterator,
+										const_iterator,
+										_comp_iterators<const_iterator,
+														Compare> >
+		(this->begin(), this->end(), rhs.begin(), rhs.end())
+		);	
 }
 
-friend bool	operator <=	(const ft::map<Key, T, Compare, Allocator> &lhs,
-					const ft::map<Key, T, Compare, Allocator> &rhs)
+bool	operator <=	(const ft::map<Key, T, Compare, Allocator> &rhs)	const
 {
-	return (!(rhs < lhs));	
+	return (!(rhs < *this));	
 }
 
-friend bool	operator >	(const ft::map<Key, T, Compare, Allocator> &lhs,
-					const ft::map<Key, T, Compare, Allocator> &rhs)
+bool	operator >	(const ft::map<Key, T, Compare, Allocator> &rhs)	const
 {
-	return (rhs < lhs);
+	return (rhs < *this);
 }
 
-friend bool	operator >=	(const ft::map<Key, T, Compare, Allocator> &lhs,
-					const ft::map<Key, T, Compare, Allocator> &rhs)
+bool	operator >=	(const ft::map<Key, T, Compare, Allocator> &rhs)	const
 {
-	return (!(lhs < rhs));
+	return (!(*this < rhs));
 }
 
 private:
 	Compare		_comp;
 	Allocator	_alloc;
 	ft::tree_map<value_type, value_compare>		_t;
+
+	template<class it, class _comp>
+	class _comp_iterators
+	{
+	public:
+		_comp_iterators(): _cmp_it(_comp()) {}
+		_comp_iterators(const _comp_iterators &c): _cmp_it(c._cmp_it) {}
+		~_comp_iterators() {}
+	
+		_comp_iterators &operator = (const _comp_iterators &a) {_cmp_it = a._cmp_it;}
+		bool	operator()(const it &a, const it &b)
+		{
+			return _cmp_it((*a).second, (*b).second);
+		}
+	private:
+		_comp	_cmp_it;
+	};
 };
 
 }// fin namespace ft
+
+// void	std::swap(const ft::map &a, const ft::map &b)
+// {
+// 	a.swap(b);
+// }
 
 #endif

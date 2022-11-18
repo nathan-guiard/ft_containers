@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 16:58:19 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 11:51:26 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ public:
 	
 	bool operator == (const reverse_iterator &y)	const
 	{
-		return (_b == y._b);
+		return (this->_b == y._b);
 	}
 	
 	bool operator != (const reverse_iterator &y)	const

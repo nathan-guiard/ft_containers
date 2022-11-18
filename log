@@ -1,92 +1,54 @@
-struct	SetConstIt : public ft::iterator_traits<std::bidirectional_iterator_tag, Key>
-	{
-	public:	
-		SetConstIt(): _curr(), _is_end(false) { _it_tree = 0;};
-		SetConstIt(const tree<Key>	*tr): _curr(tr->min()), _is_end(false) { _it_tree = tr;};
-		
-		reference operator*()	const
-		{
-			Key var = Key();
-			Key &ref = var;
-			if (_curr)
-				return _curr->value;
-			return ref;
-		}
-	
-		pointer operator->()	const	{return _curr;}
+ft puis ft2
+[a] = 2
+[b] = 3
+[c] = 42
+[d] = 5
 
-		SetConstIt &operator++()
-		{
-			if (!_curr || !_it_tree)
-				return *this;
-			_curr = _it_tree->next(_curr);
-			return *this;
-		}
+[a] = 2
+[b] = 3
+[c] = 4
+[d] = 5
+[e] = 6
+[f] = 7
+[h] = 9
 
-		SetConstIt	operator++(int)
-		{
-			SetConstIt tmp;
-			
-			tmp = *this;
-			++*this;
-			return tmp;
-		}
-		
-		SetConstIt	&operator--()
-		{
-			if (!_it_tree)
-				return *this;
-			if (_is_end)
-			{
-				_curr = _it_tree->max();
-				_is_end = false;
-			}
-			else
-				_curr = _it_tree->prev(_curr);
-			return *this;
-		}
+[a] = 2
+[b] = 3
+[c] = 4
+[d] = 5
+[e] = 6
+[f] = 7
+[h] = 9
 
-		SetConstIt	operator--(int)
-		{
-			SetConstIt tmp;
-			
-			tmp = *this;
-			--*this;
-			return tmp;
-		}
+[a] = 2
+[b] = 3
+[c] = 42
+[d] = 5
 
-		iterator	begin()
-		{
-			_curr = _it_tree->min();
-			if (!_curr)
-				_is_end = true;
-		
-			return *this;
-		}
-		
-		iterator	end()
-		{
-			_curr = 0;
-			_is_end = true;
-		
-			return *this;
-		}
+ft2 puis ft
+[a] = 2
+[b] = 3
+[c] = 4
+[d] = 5
+[e] = 6
+[f] = 7
+[h] = 9
 
-		bool	operator == (const SetConstIt &y)	const
-		{
-			if (this->_curr == y._curr)
-				return true;
-			return false;
-		}
-		bool	operator != (const SetConstIt &y)	const
-		{
-			if (this->_curr != y._curr)
-				return true;
-			return false;
-		}
+[a] = 2
+[b] = 3
+[c] = 42
+[d] = 5
 
-	private:
-		const tree<Key>	*_it_tree;
-		node<Key>		*_curr;
-		bool			_is_end;
-	};
+[a] = 2
+[b] = 3
+[c] = 42
+[d] = 5
+
+[a] = 2
+[b] = 3
+[c] = 4
+[d] = 5
+[e] = 6
+[f] = 7
+[h] = 9
+

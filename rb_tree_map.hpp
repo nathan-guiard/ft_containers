@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 17:59:37 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 12:59:03 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 namespace ft
 {
+#ifndef	RB_TREE_SET_HPP
 enum	colors
 {
 	black = 1,
@@ -39,13 +40,14 @@ struct	node
 	node	*parent;
 	int		color;
 };
+#endif
 
 typedef enum e_throw_tree{
 	begin = false,
 	end = true
 }	e_throw;
 
-template <typename T, class Comp = std::less<T>, class Alloc = std::allocator<node<T> > >
+template <typename T, class Comp = std::less<T>, class Alloc = std::allocator<ft::node<T> > >
 class	tree_map
 {
 private:
@@ -61,22 +63,29 @@ public:
 	typedef	rb_cit	const_iterator;
 	typedef	ft::reverse_iterator<rb_it>		reverse_iterator;
 	typedef	ft::reverse_iterator<rb_cit>	const_reverse_iterator;
-	// typedef	rb_crit	const_reverse_iterator;
 
 	tree_map()
 	{
-		_nd_null = _alloc.allocate(1); 
+		std::allocator<T>	alloc_type;
+		T					base;
+	
+		_nd_null = _alloc.allocate(1);
+		alloc_type.construct(&_nd_null->value, base);
 		_nd_null->color = black;
 		_nd_null->left = 0;
 		_nd_null->right = 0;
 		_root = _nd_null;
 		_size = 0;
 	}
-	explicit tree_map(const Comp &comp, const Alloc &alloc = Alloc()) : _comp(Comp())
+	explicit tree_map(const Comp &comp, const Alloc &alloc = Alloc())
 	{
+		std::allocator<T>	alloc_type;
+		T					base;
+
 		_comp = comp;
 		_alloc = alloc;
-		_nd_null = _alloc.allocate(1); 
+		_nd_null = _alloc.allocate(1);
+		alloc_type.construct(&_nd_null->value, base);
 		_nd_null->color = black;
 		_nd_null->left = 0;
 		_nd_null->right = 0;
@@ -85,7 +94,11 @@ public:
 	}
 	tree_map (const tree_map &copy)
 	{
+		std::allocator<T>	alloc_type;
+		T					base;
+
 		_nd_null = _alloc.allocate(1); 
+		_nd_null = _alloc.allocate(1);
 		_nd_null->color = black;
 		_nd_null->left = 0;
 		_nd_null->right = 0;
@@ -96,7 +109,10 @@ public:
 	}
 	~tree_map()
 	{
+		std::allocator<T>	alloc_type;
+
 		_delete_everything(_root);
+		alloc_type.destroy(&_nd_null->value);
 		_alloc.deallocate(_nd_null, 1);
 	};
 
@@ -625,7 +641,7 @@ public:
 	node	*prev(node *ptr)	const
 	{
 		if (!ptr || ptr == _nd_null)
-			return 0;
+			return max(_root);
 		if (ptr == min(_root))
 			throw (begin);
 		if (ptr->left && ptr->left != _nd_null)
