@@ -1,4 +1,3 @@
-// #define	CAN_USE_PRINT 0
 #define	DEBUG
 
 #include "set.hpp"

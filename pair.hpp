@@ -6,14 +6,12 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:00:33 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 16:33:27 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 16:47:55 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PAIR_HPP
 #define	FT_PAIR_HPP
-
-#include <utility> // a enlever
 
 namespace ft
 {
