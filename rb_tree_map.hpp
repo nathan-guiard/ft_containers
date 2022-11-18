@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 16:48:24 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 16:57:15 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,25 +323,6 @@ public:
 	}
 
 	unsigned int	size() const {return _size;}
-
-	#ifdef CAN_USE_PRINT
-	void	print()	const
-	{
-		real_print(_root, 0);
-	}
-
-	void	real_print(node *ptr, int space)	const
-	{
-		if (!ptr || ptr == _nd_null)
-			return;
-		space += 4;
-		real_print(ptr->right, space);
-		std::cout
-			<< (ptr->color == black ? "\033[90m" : "\033[31m") << std::setw(space)
-			<< ptr->value << "\033[0m" << std::endl;
-		real_print(ptr->left, space);
-	}
-	#endif
 
 	node	*min()	const
 	{

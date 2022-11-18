@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 19:20:02 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 17:04:08 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ public:
 	}
 
 	/*	ITERATORS	*/
-	class rb_it : iterator_traits<std::bidirectional_iterator_tag, T>
+class rb_it : iterator_traits<std::bidirectional_iterator_tag, T>
 	{
 	public:
 		rb_it(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
@@ -297,7 +297,7 @@ public:
 		Comp	_comp;
 	};
 
-	class rb_cit : iterator_traits<std::bidirectional_iterator_tag, T>
+class rb_cit : iterator_traits<std::bidirectional_iterator_tag, T>
 	{
 	public:
 		rb_cit(): _tr(), _is_end(false), _has_been_alloc(true), _alloc()
