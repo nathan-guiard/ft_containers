@@ -6,16 +6,14 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 15:55:41 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 16:45:27 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef		FT_MAP_HPP
 #define		FT_MAP_HPP
 
-#include 	<functional> //a surement enlever
 #include	<memory>
-#include	<map>	//a enlever
 #include	"rb_tree_map.hpp"
 #include	"pair.hpp"
 #include	"iterator.hpp"
@@ -118,8 +116,23 @@ public:
 	}
 
 	/*	Element acces	*/
-	Key			&at(const Key &key);
-	const Key	&at(const Key &key)	const;
+	T			&at(const Key &key)
+	{
+		iterator	it(find(key));
+	
+		if (it == end())
+			throw (std::out_of_range("map::at"));
+		return (*it).second;
+	}
+
+	const T		&at(const Key &key)	const
+	{
+		const_iterator	it(find(key));
+	
+		if (it == end())
+			throw (std::out_of_range("map::at"));
+		return (*it).second;
+	}
 
 	mapped_type	&operator[](const Key& key)
 	{
@@ -287,7 +300,6 @@ public:
 		return p;
 	}
 
-	// FAIT EXPRES QUE CA COMPILE PAS
 	iterator	lower_bound(const Key &key)
 	{
 		iterator	res = begin();
@@ -300,7 +312,7 @@ public:
 			res++;
 		return res;
 	}
-	
+
 	const_iterator	lower_bound(const Key &key)	const
 	{
 		const_iterator	res = begin();
@@ -316,26 +328,18 @@ public:
 	
 	iterator	upper_bound(const Key &key)
 	{
-		iterator	res = begin();
-
-		if (_comp((*res).first, key))
-			return res;
-		if (_t.size() != 0 && _comp((*(--end())).first, key))
-			return end();
-		while (res != end() && _comp(key, (*res).first)) 
+		iterator	res = lower_bound(key);
+		
+		if (res == find(key))
 			res++;
 		return res;
 	}
 	
 	const_iterator	upper_bound(const Key &key)	const
 	{
-		const_iterator	res = begin();
-
-		if (_comp((*res).first, key))
-			return res;
-		if (_t.size() != 0 && _comp((*(--end())).first, key))
-			return end();
-		while (res != end() && _comp(key, (*res).first)) 
+		const_iterator	res = lower_bound(key);
+		
+		if (res == find(key))
 			res++;
 		return res;
 	}
@@ -408,10 +412,5 @@ private:
 };
 
 }// fin namespace ft
-
-// void	std::swap(const ft::map &a, const ft::map &b)
-// {
-// 	a.swap(b);
-// }
 
 #endif

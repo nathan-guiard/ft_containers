@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:38:23 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 15:11:46 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 16:35:14 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ public:
 	typedef	value_type &	reference;
 
 	map_iterator_base(): _tr(), _curr(0) {}
-	map_iterator_base(const map_iterator_base &c): _tr(c._tr), _curr(c._curr)	{}
+	map_iterator_base(const map_iterator_base &c): _tr(c._tr), _curr(c._curr) {}
 	
 	/**
 	 * @brief Construct a new map_iterator_base for begin() or end()

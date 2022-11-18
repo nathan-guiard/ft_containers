@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 11:00:33 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 10:11:38 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 16:33:27 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,27 +39,40 @@ public:
 };
 
 template<class A, class B>
-inline bool operator != (const pair<A, B>& p, const pair<A, B>& q)	{return !(q == p);}
+inline bool operator != (const pair<A, B>& p, const pair<A, B>& q)
+{
+	return !(q == p);
+}
 
 template<class A, class B>
 inline bool operator <	 (const pair<A, B>& p, const pair<A, B>& q)
-	{return ((p.first < q.first) ||
-		(!(q.first < p.first) && p.first < q.first));};
+{
+	return ((p.first < q.first) || (!(q.first < p.first) && p.first < q.first));
+}
 
 template<class A, class B>
-inline bool operator <= (const pair<A, B>& p, const pair<A, B>& q)	{return !(q > p);};
+inline bool operator <= (const pair<A, B>& p, const pair<A, B>& q)
+{
+	return !(q > p);
+};
 
 template<class A, class B>
 inline bool operator >	 (const pair<A, B>& p, const pair<A, B>& q)
-	{return ((p.first > q.first) ||
-		(!(q.first > p.first) && p.first > q.first));};
+{
+	return ((p.first > q.first) || (!(q.first > p.first) && p.first > q.first));
+};
 		
 template<class A, class B>
-inline bool operator >= (const pair<A, B>& p, const pair<A, B>& q)	{return !(q < p);};
+inline bool operator >= (const pair<A, B>& p, const pair<A, B>& q)	
+{
+	return !(q < p);
+};
 
 template<class A, class B>
 inline bool operator == (const pair<A, B>& p, const pair<A, B>& q)
-	{return p.first == q.first && p.second == q.second;}
+{
+	return p.first == q.first && p.second == q.second;
+}
 
 template <typename A, typename B>
 inline pair<A, B>	make_pair(const A &a, const B &b)
