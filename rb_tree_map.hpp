@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 16:57:15 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/18 17:25:14 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ public:
 		std::allocator<T>	alloc_type;
 		T					base;
 
-		_nd_null = _alloc.allocate(1); 
 		_nd_null = _alloc.allocate(1);
 		_nd_null->color = black;
 		_nd_null->left = 0;

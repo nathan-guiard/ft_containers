@@ -3,6 +3,7 @@
 #include "set.hpp"
 #include "pair.hpp"
 #include "map.hpp"
+#include "vector.hpp"
 
 #include <string>
 #include <iostream>
@@ -11,47 +12,28 @@
 #include <set>
 #include <map>
 
-typedef ft::set<std::string>::iterator iterator;
-typedef ft::set<std::string>::const_iterator const_iterator;
-typedef ft::set<std::string>::reverse_iterator reverse_iterator;
-
-typedef std::set<std::string>::iterator std_iterator;
-typedef std::set<std::string>::const_iterator std_const_iterator;
-typedef std::set<std::string>::reverse_iterator std_reverse_iterator;
-typedef std::set<std::string>::const_reverse_iterator std_const_reverse_iterator;
-
-
-template<class T>
-void        every_comp(const T &a, const T &b, bool s);
-
-template<class T, class U>
-void	cmp(const T &ft, const T &ft2, const U &std, const U &std2);
 
 int main()
 {
-	ft::map<char, int>			std;
+	std::vector<std::string>			vector;
 
-	std.at('y');
-}
+	vector.push_back("a");
+	vector.push_back("b");
+	vector.push_back("c");
+	vector.push_back("d");
+	vector.push_back("e");
+	vector.push_back("f");
+	vector.push_back("g");
 
-template<class T, class U>
-void	cmp(const T &ft, const T &ft2, const U &std, const U &std2)
-{
-	every_comp(ft, ft2, 1);
-	every_comp(std, std2, 0);
-}
+	std::vector<std::string>::iterator	it = vector.begin();
+	std::vector<std::string>::iterator	ite = vector.end();
 
-template<class T>
-void        every_comp(const T &a, const T &b, bool s)
-{
-	std::string color = (s ? "\033[35m" : "\033[34m");
+	it++;
+	it++;
+	it++;
+	*it = (ite - it);
 
-	std::cout << color << (s ? "FT" : "STD") << std::endl;
-    std::cout << "==: " << ((a == b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << " | ";
-    std::cout << "!=: " << ((a != b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << std::endl;
-    std::cout << "< : " << ((a <  b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << " | ";
-    std::cout << "<=: " << ((a <= b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << std::endl;
-    std::cout << "> : " << ((a >  b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << " | ";
-    std::cout << ">=: " << ((a >= b) ? "\033[1;32mtrue " : "\033[1;31mfalse") << color << std::endl;
-    std::cout << "\033[0m";
+	it = vector.begin();
+	for (;it != ite; it++)
+		std::cout << *it << std::endl;
 }
