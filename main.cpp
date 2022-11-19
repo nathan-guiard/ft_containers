@@ -11,7 +11,7 @@
 #include <vector>
 #include <set>
 #include <map>
-
+#include <list>
 
 int main()
 {
@@ -28,12 +28,94 @@ int main()
 	std::vector<std::string>::iterator	it = vector.begin();
 	std::vector<std::string>::iterator	ite = vector.end();
 
-	it++;
-	it++;
-	it++;
-	*it = (ite - it);
 
-	it = vector.begin();
 	for (;it != ite; it++)
+		std::cout << *it << std::endl;
+
+	std::list<std::string>	l;
+
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+	l.push_back("feur");
+
+	std::list<std::string>::iterator	lit = l.begin();
+	std::list<std::string>::iterator	lite = l.end();
+
+	vector.insert(ite, lit, lite);
+
+	ite = vector.end();
+
+	for (; it != ite; it++)
 		std::cout << *it << std::endl;
 }

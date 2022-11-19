@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/19 12:11:16 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/19 14:21:21 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,15 @@ public:
 		_size(0)
 	{
 		_alloc = alloc;
-		size_type	len = (last - first);
-	
-		_tab = _alloc.allocate(len + 1);
 		for (; first != last; first++)
-			_alloc.construct(_tab + _size++, *first);
-		_alloced_size = _size;
+			push_back(*first); // a changer par insert
 	}
 	vector(const vector &other): _alloc(other._alloc), _size(other._size)
 	{
 		_tab = _alloc.allocate(_size);
 		for (size_type i = 0; i != _size; i++)
 			_alloc.construct(_tab + i, other._tab[i]);
+		_alloced_size = _size;
 	}
 
 	vector &operator = (const vector &other)
@@ -100,16 +97,38 @@ public:
 		return *this;
 	}
 
-	void	assign(size_type count, const T &value);
+	void	assign(size_type count, const T &value)
+	{
+		clear();
+
+		for (size_type i = 0; i != count; i++)
+			push_back(value);// a changer par insert
+	}
 
 	template <class InputIt>
-	void	assign(InputIt first, InputIt last);
+	void	assign(InputIt first, InputIt last)
+	{
+		clear();
+		
+		for (size_type i = 0; first != last; i++, first++)
+			push_back(*first);// a changer par insert
+	}
 	
 	allocator_type	get_allocator()	const;
 	
 	/*	ELEMENT ACCES	*/
-	reference		at(size_type pos);
-	const_reference	at(size_type pos)	const;
+	reference		at(size_type pos)
+	{
+		if (_size < pos)
+			throw (std::out_of_range("vector::at"));
+		return _tab[pos];
+	}
+	const_reference	at(size_type pos)	const
+	{
+		if (_size < pos)
+			throw (std::out_of_range("vector::at"));
+		return _tab[pos];
+	}
 
 	reference		operator[](size_type pos)
 	{
@@ -187,8 +206,12 @@ public:
 
 	iterator	insert(const_iterator pos, const T &value);
 	iterator	insert(const_iterator pos, size_type count, const T &value);
+	
 	template <class It>
 	iterator	insert(const_iterator pos, It first, It last);
+	// {
+		
+	// }
 
 	iterator	erase(iterator pos);
 	iterator	erase(iterator first, iterator last);

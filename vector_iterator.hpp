@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/19 11:31:21 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/19 13:31:21 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,16 @@ public:
 	distance	operator - (const vector_iterator_base &x)
 	{
 		return (_curr - x._curr);
+	}
+
+	distance	operator + (const vector_iterator_base &x)
+	{
+		return (_curr + x._curr);
+	}
+
+	vector_iterator_base	operator + (size_type x)
+	{
+		return (vector_iterator_base(_base, _curr + x));
 	}
 
 	T	&operator[](size_type i)	const
@@ -152,6 +162,16 @@ public:
 		return (_b - x._b);
 	}
 
+	distance	operator + (const vector_iterator &x)
+	{
+		return (_b + x._b);
+	}
+
+	vector_iterator	operator + (size_type x)
+	{
+		return (_b + x);
+	}
+
 	T	&operator[](size_type i)	const
 	{
 		return _b[i];
@@ -228,7 +248,7 @@ public:
 	const_vector_iterator(const vector_iterator<T, size_type> &c): _b(c.base()) {};
 	const_vector_iterator(const const_vector_iterator &c): _b(c._b) {};
 	const_vector_iterator(const vector_iterator_base<const T, size_type> &c): _b(c) {};
-	const_vector_iterator(const T *base, size_type offset): _b(base, offset) {};
+	const_vector_iterator(T *base, size_type offset): _b(base, offset) {};
 	~const_vector_iterator() {}
 
 	const_vector_iterator &operator = (const vector_iterator<T, size_type> &copy)
@@ -240,6 +260,16 @@ public:
 	distance	operator - (const const_vector_iterator &x)
 	{
 		return (_b - x._b);
+	}
+
+	distance	operator + (const const_vector_iterator &x)
+	{
+		return (_b + x._b);
+	}
+
+	const_vector_iterator	operator + (size_type x)
+	{
+		return (_b + x);
 	}
 
 	const T	&operator[](size_type i)	const
@@ -301,7 +331,7 @@ public:
 	}
 
 private:
-	vector_iterator_base<const T, size_type>	_b; // pas sur
+	vector_iterator_base<T, size_type>	_b; // pas sur
 };
 
 }
