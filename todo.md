@@ -1,21 +1,19 @@
 # Dependances importantes
 
-- insert (`enable_if`)
+- insert
 - operateurs de comparaisons des iterateurs
 - operateurs `-` et `+` des iterateurs
 
 ## A faire compiler
 
-- [ ] assign
-  - probleme de type (enable if)
 - [ ] bidirect_it
   - dependance `insert`
 - [ ] erase
   - pas d'operateur `-` entre `it` et `const it`
 - [ ] insert
-  - erreur de linkage
+  - linkage (a coder)
 - [ ] insert2
-  - erreur de linkage
+  - linkage (a coder)
 - [ ] ite
   - manque operateur `int - it` (surement faisable avec enable if)
 - [ ] relational_ope
@@ -29,18 +27,18 @@
 - [ ] rite_eq_ope
   - dependance `rite` et `ite_eq_ope`
 - [ ] size
-  - dependance `enable_if`
-- [ ] swap
-  - dependance `enable_if`
+  - linkage (a coder)
 
 ## Fix SEGV:
 
 
 ## Fix Output:
 
+- [ ] ite_eq_ope
+- [x] assign
 - [x] copy_construct
 - [x] push_pop
-- [ ] ite_eq_ope
 - [x] at_const
 - [x] at
-- [ ] ite_arrow
+- [x] ite_arrow
+- [x] swap

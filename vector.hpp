@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 15:39:13 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 17:47:41 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,13 @@ public:
 	~vector() {clear();}
 
 	template <class InputIt>
-	vector(InputIt first, InputIt last, const Allocator &alloc = Allocator()):
+	vector(InputIt first, InputIt last, const Allocator &alloc = Allocator(),
+		typename enable_if<!is_integral<InputIt>::value, InputIt>::type * = NULL):
 		_size(0)
 	{
 		_allocated = 0;
 		_tab = 0;
 		_alloc = alloc;
-		if (last <= first)
-			return ;
 		for (; first != last; ++first)
 		{
 			push_back(*first); // a changer par insert
@@ -113,7 +112,8 @@ public:
 	}
 
 	template <class InputIt>
-	void	assign(InputIt first, InputIt last)
+	void	assign(InputIt first, InputIt last,
+		typename enable_if<!is_integral<InputIt>::value, InputIt>::type * = NULL)
 	{
 		clear();
 		
@@ -230,7 +230,6 @@ public:
 
 	iterator	insert(const_iterator pos, const T &value);
 	iterator	insert(const_iterator pos, size_type count, const T &value);
-	
 
 	/**
 	 * @brief Insere des elements avant pos grace a une range d'iterateurs.
@@ -245,7 +244,8 @@ public:
 	 * @return iterator premier element ajoute ou pos si rien n'a ete ajoute
 	 */
 	template <class It>
-	iterator	insert(const_iterator pos, It first, It last);
+	iterator	insert(const_iterator pos, It first, It last,
+		typename enable_if<!is_integral<It>::value, It>::type * = NULL);
 	// {
 		
 	// }
@@ -291,6 +291,24 @@ public:
 
 	void	resize(size_type, T  value = T());
 	void	resize(vector &other);
+
+	void	swap(vector &other)
+	{
+		T 			*save_tab = _tab;
+		size_type	save_size = _size;
+		size_type	save_allocated = _allocated;
+		Allocator	save_allocator = _alloc;
+	
+		_tab = other._tab;
+		_size = other._size;
+		_allocated = other._allocated;
+		_alloc = other._alloc;
+	
+		other._tab = save_tab;
+		other._size = save_size;
+		other._allocated = save_allocated;
+		other._alloc = save_allocator;
+	}
 
 	bool	operator == (const vector &x)	const
 	{
