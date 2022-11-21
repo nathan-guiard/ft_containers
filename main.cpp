@@ -1,7 +1,7 @@
 #define	DEBUG
 
+#include "utils"
 #include "set.hpp"
-#include "pair.hpp"
 #include "map.hpp"
 #include "vector.hpp"
 
@@ -15,33 +15,25 @@
 
 int main()
 {
-	std::vector<std::string>			vector;
+	std::vector<int>	v(13);
 
-	vector.push_back("a");
-	vector.push_back("b");
-	vector.push_back("c");
-	vector.push_back("d");
-	vector.push_back("e");
-	vector.push_back("f");
-	vector.push_back("g");
+	for (int i = 0; i < 42; i++)
+	{
+		std::cout << v.size() << ": " << v.capacity() << std::endl;
+		v.push_back(42);
+	}
 
-	std::vector<std::string>::iterator	it = vector.begin();
-	std::vector<std::string>::iterator	ite = vector.end();
+	std::vector<int>::iterator	it = v.begin();
+	std::vector<int>::iterator	ite = v.end();
 
-
-	for (;it != ite; it++)
-		std::cout << *it << std::endl;
-
-	std::list<std::string>	l;
-
-
-	std::list<std::string>::iterator	lit = l.begin();
-	std::list<std::string>::iterator	lite = l.end();
-
-	vector.insert(ite, lit, lite);
-
-	ite = vector.end();
-
+	std::cout << "--------------------" <<std::endl;
 	for (; it != ite; it++)
 		std::cout << *it << std::endl;
+	std::cout << "--------------------" <<std::endl;
+
+	for (; v.size() > 0;)
+	{
+		std::cout << v.size() << ": " << v.capacity() << std::endl;
+		v.pop_back();
+	}
 }

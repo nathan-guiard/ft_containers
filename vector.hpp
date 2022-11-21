@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 09:51:01 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 15:39:13 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #ifndef FT_VECTOR_HPP
 #define FT_VECTOR_HPP
 
+#include	<memory>
 #include	"utils"
 #include	"vector_iterator.hpp"
 
@@ -38,8 +39,10 @@ public:
 	typedef	ft::reverse_iterator<iterator>			reverse_iterator;
 	typedef	ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
-	vector(): _tab(), _alloc(Allocator()), _size(0) {}
-	explicit vector(const Allocator &alloc): _tab(), _alloc(Allocator()), _size(0)
+	vector(): _tab(0), _alloc(Allocator()), _size(0), _allocated(0) {}
+	explicit vector(const Allocator &alloc):
+		_tab(), _alloc(Allocator()),
+		_size(0), _allocated(0)
 	{
 		_alloc = alloc;
 	}
@@ -53,7 +56,7 @@ public:
 		for (; i != count; i++)
 			_alloc.construct(_tab + i, value);
 		_size = count;
-		_alloced_size = _size;
+		_allocated = count;
 	}
 	explicit vector(size_type count): _alloc()
 	{
@@ -64,32 +67,38 @@ public:
 		for (; i != count; i++)
 			_alloc.construct(_tab + i, a);
 		_size = count;
-		_alloced_size = count;
+		_allocated = count;
 	}
-	~vector() {if (_alloced_size) _alloc.deallocate(_tab, _alloced_size);}
+	~vector() {clear();}
 
 	template <class InputIt>
 	vector(InputIt first, InputIt last, const Allocator &alloc = Allocator()):
 		_size(0)
 	{
+		_allocated = 0;
+		_tab = 0;
 		_alloc = alloc;
-		for (; first != last; first++)
+		if (last <= first)
+			return ;
+		for (; first != last; ++first)
+		{
 			push_back(*first); // a changer par insert
+		}
 	}
 	vector(const vector &other): _alloc(other._alloc), _size(other._size)
 	{
-		_tab = _alloc.allocate(_size);
+		_tab = _alloc.allocate(other._allocated);
 		for (size_type i = 0; i != _size; i++)
 			_alloc.construct(_tab + i, other._tab[i]);
-		_alloced_size = _size;
+		_allocated = other._allocated;
 	}
 
 	vector &operator = (const vector &other)
 	{
-		_alloc.deallocate(_tab, _alloced_size);
+		_alloc.deallocate(_tab, _allocated);
 		_size = other._size;
-		_tab = _alloc.allocate(other._size);
-		_alloced_size = other._size;
+		_tab = _alloc.allocate(other._allocated);
+		_allocated = other._allocated;
 		for (size_type i = 0; i != _size; i++)
 			_alloc.construct(_tab + i, other._tab[i]);
 		return *this;
@@ -127,7 +136,6 @@ public:
 			throw (std::out_of_range("vector::at"));
 		return _tab[pos];
 	}
-
 	reference		operator[](size_type pos)
 	{
 		return _tab[pos];
@@ -190,21 +198,52 @@ public:
 	/*	CAPACITY	*/
 	bool		empty()		const	{return (_size == 0 ? true : false);}
 	size_type	size()		const	{return _size;}
-	size_type	max_size()	const	{return _alloc.max_size() / sizeof(T);}
-	void		reserve()	const;
-	size_type	capacity()	const	{return _alloced_size - _size;};
+	size_type	max_size()	const	{return _alloc.max_size();}
+	void		reserve(size_type x)
+	{
+		if (capacity() >= x)
+			return ;
+
+		vector		tmp(*this);
+		size_type	i = 0;
+
+		clear();
+		_tab = _alloc.allocate(x);
+		_allocated = x;
+		for (; i != tmp._size; i++)
+			_alloc.construct(_tab + i, tmp._tab[i]);
+		_size = tmp._size;
+	}
+	size_type	capacity()	const	{return _allocated;};
 
 	/*	MODIFIERS	*/
 	void	clear()
 	{
-		_alloc.deallocate(_tab, _alloced_size);
+		for (size_type i = 0; i != _size; i++)
+			_alloc.destroy(&_tab[i]);
+		if (_tab)
+			_alloc.deallocate(_tab, _allocated);
 		_size = 0;
-		_alloced_size = 0;
+		_allocated = 0;
+		_tab = 0;
 	}
 
 	iterator	insert(const_iterator pos, const T &value);
 	iterator	insert(const_iterator pos, size_type count, const T &value);
 	
+
+	/**
+	 * @brief Insere des elements avant pos grace a une range d'iterateurs.
+	 * Si la size finale est plus grande que capacity(), invalide tous les
+	 * iterateurs
+	 * 
+	 * @tparam It 		iterateurs pour la range
+	 * @param pos 		iterateur "curseur" qui indique la position de
+	 * 						l'insertion
+	 * @param first 	debut de la range
+	 * @param last 		fin de la range
+	 * @return iterator premier element ajoute ou pos si rien n'a ete ajoute
+	 */
 	template <class It>
 	iterator	insert(const_iterator pos, It first, It last);
 	// {
@@ -216,20 +255,39 @@ public:
 
 	void	push_back(const T &value)
 	{
-		T *ptr;
-	
-		ptr = _alloc.allocate(++_size);
-	
-		for (size_type i = 0; i != _size - 1; i++)
+		if (_size == 0)
 		{
-			_alloc.construct(ptr + i, _tab[i]);
-			_alloc.destroy(_tab + i);
+			_tab = _alloc.allocate(1);
+			_alloc.construct(_tab, value);
+			_size = 1;
+			_allocated = 1;
 		}
-		_alloc.construct(ptr + _size - 1, value);
-		_alloc.deallocate(_tab, _size - 1);
-		_tab = ptr;
+		else if (_allocated < _size + 1)
+		{
+			vector		tmp(*this);
+			size_type	i = 0;
+
+			clear();
+			_tab = _alloc.allocate(tmp._size * 2);
+			_allocated = tmp._size * 2;
+			for (; i != tmp._size; i++)
+				_alloc.construct(_tab + i, tmp._tab[i]);
+			_alloc.construct(_tab + i, value);
+			_size = tmp._size + 1;
+		}
+		else
+		{
+			_alloc.construct(_tab + _size, value);
+			_size++;
+		}
 	}
-	void	pop_back();
+
+	void	pop_back()
+	{
+			if (_size && _tab)
+				_alloc.destroy(&_tab[_size - 1]);
+			_size--;
+	}
 
 	void	resize(size_type, T  value = T());
 	void	resize(vector &other);
@@ -268,7 +326,18 @@ private:
 	T			*_tab;
 	Allocator	_alloc;
 	size_type	_size;
-	size_type	_alloced_size;
+	size_type	_allocated;
+
+	size_type	_next_pow(size_type x)
+	{
+		size_type	i = 1;
+
+		if (x == 0)
+			return 0;
+		while (i < x)
+			i *= 2;
+		return i;
+	}
 };
 
 }

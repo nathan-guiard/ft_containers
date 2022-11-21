@@ -1,6 +1,6 @@
 # Dependances importantes
 
-- insert
+- insert (`enable_if`)
 - operateurs de comparaisons des iterateurs
 - operateurs `-` et `+` des iterateurs
 
@@ -17,13 +17,9 @@
 - [ ] insert2
   - erreur de linkage
 - [ ] ite
-  - manque des operateurs
-- [ ] ite_eq_ope
-  - manque des operateurs
-- [ ] push_pop
-  - linkage -> pas code `pop_back`
+  - manque operateur `int - it` (surement faisable avec enable if)
 - [ ] relational_ope
-  - linkage -> pas code `risize`
+  - linkage -> pas code `resize`
 - [ ] rite2
   - manque des operateurs
 - [ ] rite_arrow
@@ -33,16 +29,18 @@
 - [ ] rite_eq_ope
   - dependance `rite` et `ite_eq_ope`
 - [ ] size
-  - `reserve()` pas codee et avec le mauvais prototype
+  - dependance `enable_if`
 - [ ] swap
   - dependance `enable_if`
-  
+
 ## Fix SEGV:
 
-- [ ] copy_construct
 
 ## Fix Output:
 
-- [ ] at_const
-- [ ] at
+- [x] copy_construct
+- [x] push_pop
+- [ ] ite_eq_ope
+- [x] at_const
+- [x] at
 - [ ] ite_arrow

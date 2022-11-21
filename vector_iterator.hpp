@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 10:38:40 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 11:28:30 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,9 +133,22 @@ public:
 			if (_curr < y._curr)
 				return true;
 		}
-		// if (_base < y._base)
-		// 	return true; bizarre
 		return false;
+	}
+
+	bool	operator<=(const vector_iterator_base &y)	const
+	{
+		return (*this == y || *this < y);
+	}
+
+	bool	operator>(const vector_iterator_base &y)	const
+	{
+		return (!(y <= *this));
+	}
+
+	bool	operator>=(const vector_iterator_base &y)	const
+	{
+		return (!(y < *this));
 	}
 	
 private:
@@ -146,13 +159,15 @@ private:
 template <class T, typename size_type>
 class vector_iterator
 {
+private:
+	typedef const_vector_iterator<T, size_type>	const_it;
 
 public:
-	typedef std::bidirectional_iterator_tag	Category;
-	typedef T								value_type;
-	typedef	std::ptrdiff_t					distance;
-	typedef	T &								reference;
-	typedef	T *								pointer;
+	typedef std::bidirectional_iterator_tag		Category;
+	typedef T									value_type;
+	typedef	std::ptrdiff_t						distance;
+	typedef	T &									reference;
+	typedef	T *									pointer;
 
 	vector_iterator(): _b() {};
 	vector_iterator(const vector_iterator &c): _b(c._b) {};
@@ -179,6 +194,12 @@ public:
 		return (_b - x);
 	}
 
+	vector_iterator	operator -= (size_type x)
+	{
+		*this = *this - x;
+		return *this;
+	}
+
 	distance	operator + (const vector_iterator &x)
 	{
 		return (_b + x._b);
@@ -187,6 +208,12 @@ public:
 	vector_iterator	operator + (size_type x)
 	{
 		return (_b + x);
+	}
+
+	vector_iterator	operator += (size_type x)
+	{
+		*this = *this + x;
+		return *this;
 	}
 
 	T	&operator[](size_type i)	const
@@ -237,12 +264,17 @@ public:
 		return (_b == y._b);
 	}
 
+	bool	operator==(const const_it &y)	const
+	{
+		return (_b == y.base());
+	}
+
 	bool	operator!=(const vector_iterator &y)	const
 	{
 		return (_b != y._b);
 	}
 
-	bool	operator!=(const const_vector_iterator<T, size_type> &y)	const
+	bool	operator!=(const const_it &y)	const
 	{
 		return (_b != y.base());
 	}	
@@ -252,13 +284,53 @@ public:
 		return (_b < y._b);
 	}
 
+	bool	operator<(const const_it &y)	const
+	{
+		return (_b < y.base());
+	}
+
+	bool	operator<=(const vector_iterator &y)	const
+	{
+		return (_b == y._b || _b < y._b);
+	}
+
+	bool	operator> (const vector_iterator &y)	const
+	{
+		return (!(y._b <= _b));
+	}
+
+	bool	operator>=(const vector_iterator &y)	const
+	{
+		return (!(y._b < _b));
+	}
+
+	/*	OP pour la comparaison avec les iterateurs constants	*/
+
+	bool	operator<=(const const_it &y)	const
+	{
+		return (_b == y.base() || _b < y.base());
+	}
+
+	bool	operator> (const const_it &y)	const
+	{
+		return (!(y.base() <= _b));
+	}
+
+	bool	operator>=(const const_it &y)	const
+	{
+		return (!(y.base() < _b));
+	}
 private:
 	vector_iterator_base<T, size_type>	_b;
 };
 
+
+
 template <class T, typename size_type>
 class const_vector_iterator
 {
+private:
+	typedef vector_iterator<T, size_type>	normal_it;
 
 public:
 	typedef std::bidirectional_iterator_tag	Category;
@@ -271,6 +343,7 @@ public:
 	const_vector_iterator(const vector_iterator<T, size_type> &c): _b(c.base()) {};
 	const_vector_iterator(const const_vector_iterator &c): _b(c._b) {};
 	const_vector_iterator(const vector_iterator_base<const T, size_type> &c): _b(c) {};
+	const_vector_iterator(const vector_iterator_base<T, size_type> &c): _b(c) {};
 	const_vector_iterator(T *base, size_type offset): _b(base, offset) {};
 	~const_vector_iterator() {}
 
@@ -287,6 +360,17 @@ public:
 		return (_b - x._b);
 	}
 
+	const_vector_iterator	operator - (size_type x)
+	{
+		return (_b - x);
+	}
+	
+	const_vector_iterator	operator -= (size_type x)
+	{
+		*this = *this - x;
+		return *this;
+	}
+
 	distance	operator + (const const_vector_iterator &x)
 	{
 		return (_b + x._b);
@@ -295,6 +379,12 @@ public:
 	const_vector_iterator	operator + (size_type x)
 	{
 		return (_b + x);
+	}
+
+	const_vector_iterator	operator += (size_type x)
+	{
+		*this = *this + x;
+		return *this;
 	}
 
 	const T	&operator[](size_type i)	const
@@ -353,6 +443,52 @@ public:
 	bool	operator<(const const_vector_iterator &y)	const
 	{
 		return (_b < y._b);
+	}
+
+	bool	operator<=(const const_vector_iterator &y)	const
+	{
+		return (_b == y._b || _b < y._b);
+	}
+
+	bool	operator> (const const_vector_iterator &y)	const
+	{
+		return (!(y._b <= _b));
+	}
+
+	bool	operator>=(const const_vector_iterator &y)	const
+	{
+		return (!(y._b < _b));
+	}
+
+	/*	OP pour la comparaison avec les iterateurs normaux*/
+	// bool	operator==(const normal_it &y)	const
+	// {
+	// 	return (_b == y.base());
+	// }
+
+	// bool	operator!=(const normal_it &y)	const
+	// {
+	// 	return (_b != y.base());
+	// }
+
+	// bool	operator<(const normal_it &y)	const
+	// {
+	// 	return (_b < y.base());
+	// }
+
+	bool	operator<=(const normal_it &y)	const
+	{
+		return (_b == y.base() || _b < y.base());
+	}
+
+	bool	operator> (const normal_it &y)	const
+	{
+		return (!(y.base() <= _b));
+	}
+
+	bool	operator>=(const normal_it &y)	const
+	{
+		return (!(y.base() < _b));
 	}
 
 private:
