@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 16:45:27 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 09:51:49 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,8 @@
 #define		FT_MAP_HPP
 
 #include	<memory>
+#include	"utils"
 #include	"rb_tree_map.hpp"
-#include	"pair.hpp"
-#include	"iterator.hpp"
-#include	"lexicographical_compare.hpp"
-#include	"equal.hpp"
-#include	"reverse_iterator.hpp"
 #include	"map_iterator.hpp"
 
 namespace ft

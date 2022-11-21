@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 17:25:14 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 09:54:58 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@
 #include <iomanip>
 #include <memory>
 #include <cstring>
-#include "iterator.hpp"
-#include "equal.hpp"
-#include "reverse_iterator.hpp"
-
+#include "utils"
 
 namespace ft
 {

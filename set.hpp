@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/15 17:00:57 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 09:54:37 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,8 @@
 #define		FT_SET_HPP
 
 #include	<memory>
+#include	"utils"
 #include	"rb_tree_set.hpp"
-#include	"pair.hpp"
-#include	"iterator.hpp"
-#include	"lexicographical_compare.hpp"
-#include	"equal.hpp"
 
 namespace ft
 {

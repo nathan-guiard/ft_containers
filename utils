@@ -1,27 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   enable_if.hpp                                      :+:      :+:    :+:   */
+/*   utils                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/21 18:26:53 by nguiard           #+#    #+#             */
-/*   Updated: 2022/10/21 18:32:28 by nguiard          ###   ########.fr       */
+/*   Created: 2022/11/21 09:48:36 by nguiard           #+#    #+#             */
+/*   Updated: 2022/11/21 09:58:42 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_ENABLE_IF_HPP
-#define FT_ENABLE_IF_HPP
+#ifndef	FT_CONTAINERS_UTILS
+#define	FT_CONTAINERS_UTILS
 
-#include <type_traits>
-
-template <bool, typename T = void>
-struct enable_if {};
-
-template <typename T>
-struct enable_if<true, T>
-{
-	typedef T	type;
-};
+#include "utils_header/enable_if.hpp"
+#include "utils_header/equal.hpp"
+#include "utils_header/is_integral.hpp"
+#include "utils_header/iterator.hpp"
+#include "utils_header/lexicographical_compare.hpp"
+#include "utils_header/pair.hpp"
+#include "utils_header/reverse_iterator.hpp"
 
 #endif
