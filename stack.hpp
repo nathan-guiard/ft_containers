@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack.hpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/11/21 09:13:32 by nguiard           #+#    #+#             */
+/*   Updated: 2022/11/21 09:33:08 by nguiard          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef FT_STACK_HPP
 #define FT_STACK_HPP
@@ -13,50 +24,69 @@ class stack
 {
 public:
 	typedef	Container							container_type;
-	typedef	typename Container::size_type		size_type;
 	typedef	typename Container::value_type		value_type;
+	typedef	typename Container::size_type		size_type;
 	typedef	typename Container::reference		reference;
 	typedef	typename Container::const_reference	const_reference;
 
-	explicit stack(const Container &c = Container()) {}
-	stack(const stack &other) {}
+	explicit stack(const Container &c = Container()) {this->c = c;}
+	stack(const stack &other) {*this = other;}
 	~stack() {}
 
-	stack	&operator = (const stack &other) {}
+	stack	&operator = (const stack &other) {this->c = other.c; return *this;}
 
 	/*	ELEMENT ACCES	*/
-	reference top();
-	const_reference	top()	const;
+	reference top()					{return c.back();}
+	const_reference	top()	const	{return c.back();}
 
 	/*	CAPACITY		*/
-	bool		empty()	const;
-	size_type	size()	const;
+	bool		empty()	const		{return c.empty();}
+	size_type	size()	const		{return c.size();}
 
 	/*	MODIFIERS		*/
-	void	push(const value_type &value);
-	void	pop();
+	void	push(const value_type &value)	{c.push_back(value);}
+	void	pop()							{c.pop_back();};
+
+	bool operator == (const stack &b)	const
+	{
+		return (c == b.c);
+	}
+
+
+	bool operator != (const stack &b)	const
+	{
+		return (c != b.c);
+	}
+
+
+	bool operator <  (const stack &b)	const
+	{
+		return (c < b.c);
+	}
+
+
+	bool operator <= (const stack &b)	const
+	{
+		return (c <= b.c);
+	}
+
+
+	bool operator >  (const stack &b)	const
+	{
+		return (c > b.c);
+	}
+
+
+	bool operator >= (const stack &b)	const
+	{
+		return (c >= b.c);
+	}
 
 protected:
 	Container	c;
 }; // fin de la class stack
 
-template<class T, class Container>
-bool operator == (const stack<T, Container> &a, const stack<T, Container> &b);
 
-template<class T, class Container>
-bool operator != (const stack<T, Container> &a, const stack<T, Container> &b);
-
-template<class T, class Container>
-bool operator <  (const stack<T, Container> &a, const stack<T, Container> &b);
-
-template<class T, class Container>
-bool operator <= (const stack<T, Container> &a, const stack<T, Container> &b);
-
-template<class T, class Container>
-bool operator >  (const stack<T, Container> &a, const stack<T, Container> &b);
-
-template<class T, class Container>
-bool operator <= (const stack<T, Container> &a, const stack<T, Container> &b);
 
 } //fin de lu namespace ft
 
