@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 18:34:29 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 21:56:19 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,7 @@ public:
 	bool		empty()		const	{return (_size == 0 ? true : false);}
 	size_type	size()		const	{return _size;}
 	size_type	max_size()	const	{return _alloc.max_size();}
+
 	void		reserve(size_type x)
 	{
 		if (capacity() >= x)
@@ -232,7 +233,9 @@ public:
 	{
 		vector		before((const_iterator)begin(), pos);
 		vector		after(pos, (const_iterator)end());
-		size_type	new_size = before.size() + after.size() + 1;
+		size_type	bf_size = before.size();
+		size_type	af_size = after.size();
+		size_type	new_size = bf_size + af_size + 1;
 
 		if (new_size > _allocated)
 		{
@@ -242,11 +245,11 @@ public:
 			_tab = _alloc.allocate(new_size);
 			_size = new_size;
 			_allocated = new_size;
-			for(;i < before.size(); i++)
+			for(;i < bf_size; i++)
 				_alloc.construct(&_tab[i], before[i]);
 			_alloc.construct(&_tab[i], value);
-			for(;i < after.size(); i++)
-				_alloc.construct(&_tab[i], after[i]);
+			for(;i < new_size; i++)
+				_alloc.construct(&_tab[i], after[i - bf_size - 1]);
 		}
 		else
 		{
@@ -254,22 +257,25 @@ public:
 		
 			for(; i >= 0; i--)
 				_alloc.destroy(&_tab[i]);
-			for(;i < before.size(); i++)
+			for(;i < bf_size; i++)
 				_alloc.construct(&_tab[i], before[i]);
 			_alloc.construct(&_tab[i], value);
-			for(;i < after.size(); i++)
+			for(;i < af_size; i++)
 				_alloc.construct(&_tab[i], after[i]);
 		}
-		return iterator(_tab, before.size());
+		return iterator(_tab, bf_size);
 	}
 	iterator	insert(const_iterator pos, size_type count, const T &value)
 	{
 		vector		before((const_iterator)begin(), pos);
 		vector		between(count, value);
 		vector		after(pos, (const_iterator)end());
+		size_type	bf_size = before.size();
+		size_type	bw_size = between.size();
+		size_type	af_size = after.size();
 		size_type	new_size = before.size() + between.size() + after.size();
 
-		if (between.size() == 0)
+		if (!bw_size)
 			return iterator(pos.base());
 
 		if (new_size > _allocated)
@@ -280,12 +286,12 @@ public:
 			_tab = _alloc.allocate(new_size);
 			_size = new_size;
 			_allocated = new_size;
-			for(;i < before.size(); i++)
+			for(;i < bf_size; i++)
 				_alloc.construct(&_tab[i], before[i]);
-			for(;i < between.size(); i++)
-				_alloc.construct(&_tab[i], between[i]);
-			for(;i < after.size(); i++)
-				_alloc.construct(&_tab[i], after[i]);
+			for(;i < new_size - af_size; i++)
+				_alloc.construct(&_tab[i], between[i - bf_size]);
+			for(;i < new_size; i++)
+				_alloc.construct(&_tab[i], after[i - bf_size - bw_size]);
 		}
 		else
 		{
@@ -293,14 +299,14 @@ public:
 		
 			for(; i >= 0; i--)
 				_alloc.destroy(&_tab[i]);
-			for(;i < before.size(); i++)
+			for(;i < bf_size; i++)
 				_alloc.construct(&_tab[i], before[i]);
-			for(;i < between.size(); i++)
-				_alloc.construct(&_tab[i], between[i]);
-			for(;i < after.size(); i++)
-				_alloc.construct(&_tab[i], after[i]);
+			for(;i < new_size - af_size; i++)
+				_alloc.construct(&_tab[i], between[i - bf_size]);
+			for(;i < new_size; i++)
+				_alloc.construct(&_tab[i], after[i - bf_size - bw_size]);
 		}
-		return iterator(_tab, before.size());
+		return iterator(_tab, bf_size);
 	}
 
 	/**
@@ -322,6 +328,9 @@ public:
 		vector		before((const_iterator)begin(), pos);
 		vector		between(first, last);
 		vector		after(pos, (const_iterator)end());
+		size_type	bf_size = before.size();
+		size_type	bw_size = between.size();
+		size_type	af_size = after.size();
 		size_type	new_size = before.size() + between.size() + after.size();
 
 		if (first == last)
@@ -335,12 +344,12 @@ public:
 			_tab = _alloc.allocate(new_size);
 			_size = new_size;
 			_allocated = new_size;
-			for(;i < before.size(); i++)
+			for(;i < bf_size; i++)
 				_alloc.construct(&_tab[i], before[i]);
-			for(;i < between.size(); i++)
-				_alloc.construct(&_tab[i], between[i]);
-			for(;i < after.size(); i++)
-				_alloc.construct(&_tab[i], after[i]);
+			for(;i < new_size - af_size; i++)
+				_alloc.construct(&_tab[i], between[i - bf_size]);
+			for(;i < new_size; i++)
+				_alloc.construct(&_tab[i], after[i - bf_size - bw_size]);
 		}
 		else
 		{
@@ -348,12 +357,12 @@ public:
 		
 			for(; i >= 0; i--)
 				_alloc.destroy(&_tab[i]);
-			for(;i < before.size(); i++)
+			for(;i < bf_size; i++)
 				_alloc.construct(&_tab[i], before[i]);
-			for(;i < between.size(); i++)
-				_alloc.construct(&_tab[i], between[i]);
-			for(;i < after.size(); i++)
-				_alloc.construct(&_tab[i], after[i]);
+			for(;i < new_size - af_size; i++)
+				_alloc.construct(&_tab[i], between[i - bf_size]);
+			for(;i < new_size; i++)
+				_alloc.construct(&_tab[i], after[i - bf_size - bw_size]);
 		}
 		return iterator(_tab, before.size());
 	}

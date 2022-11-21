@@ -10,10 +10,6 @@
   - dependance `insert`
 - [ ] erase
   - pas d'operateur `-` entre `it` et `const it`
-- [ ] insert
-  - linkage (a coder)
-- [ ] insert2
-  - linkage (a coder)
 - [ ] ite
   - manque operateur `int - it` (surement faisable avec enable if)
 - [ ] relational_ope
@@ -31,6 +27,8 @@
 
 ## Fix SEGV:
 
+- [ ] insert
+- [ ] insert2
 
 ## Fix Output:
 
