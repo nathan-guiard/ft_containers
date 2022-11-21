@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/19 13:31:21 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 10:38:40 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@
 
 namespace ft
 {
+
+template <class T, typename size_type>
+class vector_iterator;
+
+template <class T, typename size_type>
+class const_vector_iterator;
 
 template <class T, typename size_type>
 class vector_iterator_base
@@ -55,6 +61,11 @@ public:
 	vector_iterator_base	operator + (size_type x)
 	{
 		return (vector_iterator_base(_base, _curr + x));
+	}
+
+	vector_iterator_base	operator - (size_type x)
+	{
+		return (vector_iterator_base(_base, _curr - x));
 	}
 
 	T	&operator[](size_type i)	const
@@ -145,6 +156,7 @@ public:
 
 	vector_iterator(): _b() {};
 	vector_iterator(const vector_iterator &c): _b(c._b) {};
+	// vector_iterator(const const_vector_iterator<T, size_type> &c): _b(c.base()) {};
 	vector_iterator(const vector_iterator_base<T, size_type> &c): _b(c) {};
 	vector_iterator(T *base, size_type offset): _b(base, offset) {};
 	~vector_iterator() {}
@@ -160,6 +172,11 @@ public:
 	distance	operator - (const vector_iterator &x)
 	{
 		return (_b - x._b);
+	}
+
+	vector_iterator	operator - (size_type x)
+	{
+		return (_b - x);
 	}
 
 	distance	operator + (const vector_iterator &x)
@@ -225,6 +242,11 @@ public:
 		return (_b != y._b);
 	}
 
+	bool	operator!=(const const_vector_iterator<T, size_type> &y)	const
+	{
+		return (_b != y.base());
+	}	
+
 	bool	operator<(const vector_iterator &y)	const
 	{
 		return (_b < y._b);
@@ -244,6 +266,7 @@ public:
 	typedef	std::ptrdiff_t					distance;
 	typedef	const T &						reference;
 	typedef	const T *						pointer;
+
 	const_vector_iterator(): _b() {};
 	const_vector_iterator(const vector_iterator<T, size_type> &c): _b(c.base()) {};
 	const_vector_iterator(const const_vector_iterator &c): _b(c._b) {};
@@ -251,9 +274,11 @@ public:
 	const_vector_iterator(T *base, size_type offset): _b(base, offset) {};
 	~const_vector_iterator() {}
 
+	vector_iterator_base<T, size_type>	base()	const	{return _b;}
+
 	const_vector_iterator &operator = (const vector_iterator<T, size_type> &copy)
 	{
-		_b = copy._b;
+		_b = copy.base();
 		return *this;
 	}
 
