@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 17:47:41 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/21 18:34:29 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,8 +228,80 @@ public:
 		_tab = 0;
 	}
 
-	iterator	insert(const_iterator pos, const T &value);
-	iterator	insert(const_iterator pos, size_type count, const T &value);
+	iterator	insert(const_iterator pos, const T &value)
+	{
+		vector		before((const_iterator)begin(), pos);
+		vector		after(pos, (const_iterator)end());
+		size_type	new_size = before.size() + after.size() + 1;
+
+		if (new_size > _allocated)
+		{
+			size_type	i = 0;
+			
+			clear();
+			_tab = _alloc.allocate(new_size);
+			_size = new_size;
+			_allocated = new_size;
+			for(;i < before.size(); i++)
+				_alloc.construct(&_tab[i], before[i]);
+			_alloc.construct(&_tab[i], value);
+			for(;i < after.size(); i++)
+				_alloc.construct(&_tab[i], after[i]);
+		}
+		else
+		{
+			size_type	i = _size;
+		
+			for(; i >= 0; i--)
+				_alloc.destroy(&_tab[i]);
+			for(;i < before.size(); i++)
+				_alloc.construct(&_tab[i], before[i]);
+			_alloc.construct(&_tab[i], value);
+			for(;i < after.size(); i++)
+				_alloc.construct(&_tab[i], after[i]);
+		}
+		return iterator(_tab, before.size());
+	}
+	iterator	insert(const_iterator pos, size_type count, const T &value)
+	{
+		vector		before((const_iterator)begin(), pos);
+		vector		between(count, value);
+		vector		after(pos, (const_iterator)end());
+		size_type	new_size = before.size() + between.size() + after.size();
+
+		if (between.size() == 0)
+			return iterator(pos.base());
+
+		if (new_size > _allocated)
+		{
+			size_type	i = 0;
+			
+			clear();
+			_tab = _alloc.allocate(new_size);
+			_size = new_size;
+			_allocated = new_size;
+			for(;i < before.size(); i++)
+				_alloc.construct(&_tab[i], before[i]);
+			for(;i < between.size(); i++)
+				_alloc.construct(&_tab[i], between[i]);
+			for(;i < after.size(); i++)
+				_alloc.construct(&_tab[i], after[i]);
+		}
+		else
+		{
+			size_type	i = _size;
+		
+			for(; i >= 0; i--)
+				_alloc.destroy(&_tab[i]);
+			for(;i < before.size(); i++)
+				_alloc.construct(&_tab[i], before[i]);
+			for(;i < between.size(); i++)
+				_alloc.construct(&_tab[i], between[i]);
+			for(;i < after.size(); i++)
+				_alloc.construct(&_tab[i], after[i]);
+		}
+		return iterator(_tab, before.size());
+	}
 
 	/**
 	 * @brief Insere des elements avant pos grace a une range d'iterateurs.
@@ -245,10 +317,46 @@ public:
 	 */
 	template <class It>
 	iterator	insert(const_iterator pos, It first, It last,
-		typename enable_if<!is_integral<It>::value, It>::type * = NULL);
-	// {
+		typename enable_if<!is_integral<It>::value, It>::type * = NULL)
+	{
+		vector		before((const_iterator)begin(), pos);
+		vector		between(first, last);
+		vector		after(pos, (const_iterator)end());
+		size_type	new_size = before.size() + between.size() + after.size();
+
+		if (first == last)
+			return iterator(pos.base());
+
+		if (new_size > _allocated)
+		{
+			size_type	i = 0;
+			
+			clear();
+			_tab = _alloc.allocate(new_size);
+			_size = new_size;
+			_allocated = new_size;
+			for(;i < before.size(); i++)
+				_alloc.construct(&_tab[i], before[i]);
+			for(;i < between.size(); i++)
+				_alloc.construct(&_tab[i], between[i]);
+			for(;i < after.size(); i++)
+				_alloc.construct(&_tab[i], after[i]);
+		}
+		else
+		{
+			size_type	i = _size;
 		
-	// }
+			for(; i >= 0; i--)
+				_alloc.destroy(&_tab[i]);
+			for(;i < before.size(); i++)
+				_alloc.construct(&_tab[i], before[i]);
+			for(;i < between.size(); i++)
+				_alloc.construct(&_tab[i], between[i]);
+			for(;i < after.size(); i++)
+				_alloc.construct(&_tab[i], after[i]);
+		}
+		return iterator(_tab, before.size());
+	}
 
 	iterator	erase(iterator pos);
 	iterator	erase(iterator first, iterator last);
@@ -289,8 +397,25 @@ public:
 			_size--;
 	}
 
-	void	resize(size_type, T  value = T());
-	void	resize(vector &other);
+	void	resize(size_type count, T value = T())
+	{
+		if (_size > count)
+		{
+			for (; _size != count;)
+				_alloc.destroy(&_tab[_size--]);
+		}
+		else if (count <= _allocated)
+		{
+			for (; count != _size;)
+				_alloc.construct(&_tab[count++], value);
+		}
+		else
+		{
+			vector tmp(*this);
+			insert(begin(), tmp.begin(), tmp.end());
+			insert(end(), count - _size, value);
+		}
+	}
 
 	void	swap(vector &other)
 	{
