@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 13:35:03 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 17:07:44 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -482,7 +482,7 @@ public:
 
 	bool	operator == (const vector &x)	const
 	{
-		return ft::equal(begin(), end(), x.begin());
+		return ft::equal(begin(), end(), x.begin()) && _size == x._size;
 	}
 
 	bool	operator != (const vector &x)	const
@@ -492,12 +492,15 @@ public:
 
 	bool	operator <  (const vector &x)	const
 	{
-		return ft::lexicographical_compare(begin(), end(), x.begin(), x.end());
+		return ft::lexicographical_compare<const_iterator,
+											const_iterator,
+											_compare>
+		(begin(), end(), x.begin(), x.end());
 	}
 
 	bool	operator <= (const vector &x)	const
 	{
-		return !(x < *this);
+		return (*this < x || *this == x);
 	}
 
 	bool	operator >  (const vector &x)	const
@@ -507,7 +510,7 @@ public:
 
 	bool	operator >= (const vector &x)	const
 	{
-		return !(*this < x);
+		return(x < *this || *this == x);
 	}
 //A REMMETRE APRES
 private:
@@ -526,6 +529,16 @@ private:
 			i *= 2;
 		return i;
 	}
+	
+	struct	_compare
+	{
+		_compare() {}
+		~_compare() {}
+		bool operator()(const_iterator a, const_iterator b)
+		{
+			return (*a < *b);
+		}
+	};
 
 };
 
