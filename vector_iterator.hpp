@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 13:28:26 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 15:33:04 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,9 +159,6 @@ private:
 template <class T, typename size_type>
 class vector_iterator
 {
-private:
-	typedef const_vector_iterator<T, size_type>	const_it;
-
 public:
 	typedef std::bidirectional_iterator_tag		Category;
 	typedef T									value_type;
@@ -264,30 +261,17 @@ public:
 		return (_b == y._b);
 	}
 
-	bool	operator==(const const_it &y)	const
-	{
-		return (_b == y.base());
-	}
 
 	bool	operator!=(const vector_iterator &y)	const
 	{
 		return (_b != y._b);
 	}
 
-	bool	operator!=(const const_it &y)	const
-	{
-		return (_b != y.base());
-	}	
-
 	bool	operator<(const vector_iterator &y)	const
 	{
 		return (_b < y._b);
 	}
 
-	bool	operator<(const const_it &y)	const
-	{
-		return (_b < y.base());
-	}
 
 	bool	operator<=(const vector_iterator &y)	const
 	{
@@ -305,21 +289,6 @@ public:
 	}
 
 	/*	OP pour la comparaison avec les iterateurs constants	*/
-
-	bool	operator<=(const const_it &y)	const
-	{
-		return (_b == y.base() || _b < y.base());
-	}
-
-	bool	operator> (const const_it &y)	const
-	{
-		return (!(y.base() <= _b));
-	}
-
-	bool	operator>=(const const_it &y)	const
-	{
-		return (!(y.base() < _b));
-	}
 private:
 	vector_iterator_base<T, size_type>	_b;
 };
@@ -329,9 +298,6 @@ private:
 template <class T, typename size_type>
 class const_vector_iterator
 {
-private:
-	typedef vector_iterator<T, size_type>	normal_it;
-
 public:
 	typedef std::bidirectional_iterator_tag	Category;
 	typedef const T							value_type;
@@ -460,22 +426,6 @@ public:
 		return (!(y._b < _b));
 	}
 
-	/*	OP pour la comparaison avec les iterateurs normaux*/
-	bool	operator<=(const normal_it &y)	const
-	{
-		return (_b == y.base() || _b < y.base());
-	}
-
-	bool	operator> (const normal_it &y)	const
-	{
-		return (!(y.base() <= _b));
-	}
-
-	bool	operator>=(const normal_it &y)	const
-	{
-		return (!(y.base() < _b));
-	}
-
 private:
 	vector_iterator_base<T, size_type>	_b;
 };
@@ -506,6 +456,42 @@ const_vector_iterator<T, size_type> operator - (int i,
 	const const_vector_iterator<T, size_type> b)
 {
 	return b.base() - i;
+}
+
+template <class it, class it2>
+bool	operator == (const it &a, const it2 &b)
+{
+	return (a.base() == b.base());
+}
+
+template <class it, class it2>
+bool	operator != (const it &a, const it2 &b)
+{
+	return (a.base() != b.base());
+}
+
+template <class it, class it2>
+bool	operator < (const it &a, const it2 &b)
+{
+	return (a.base() < b.base());
+}
+
+template <class it, class it2>
+bool	operator > (const it &a, const it2 &b)
+{
+	return (a.base() > b.base());
+}
+
+template <class it, class it2>
+bool	operator >= (const it &a, const it2 &b)
+{
+	return (a.base() >= b.base());
+}
+
+template <class it, class it2>
+bool	operator <= (const it &a, const it2 &b)
+{
+	return (a.base() <= b.base());
 }
 
 }
