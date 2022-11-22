@@ -6,21 +6,24 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 16:38:08 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 13:52:18 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_REVERSE_ITERATOR_HPP
 #define FT_REVERSE_ITERATOR_HPP
 
+#include "../vector_iterator.hpp"
+
 namespace ft
 {
 
-template <class Iterator>
+template <class Iterator, typename size_type>
 class reverse_iterator
 {
 public:
 	typedef	typename Iterator::value_type	value_type;
+	typedef	typename Iterator::distance		distance;
 
 	reverse_iterator(): _b() {};
 	reverse_iterator(const reverse_iterator &c): _b(c.base()) {}
@@ -106,9 +109,50 @@ public:
 		return (_b < y._b);
 	}
 
+	reverse_iterator	operator - (size_type x)	const
+	{
+		return (reverse_iterator(_b + x));
+	}
+
+	reverse_iterator	operator + (size_type x)	const
+	{
+		return (reverse_iterator(_b - x));
+	}
+
+	reverse_iterator	operator -= (size_type x)
+	{
+		_b += x;
+		return *this;
+	}
+
+	reverse_iterator	operator += (size_type x)
+	{
+		_b -= x;
+		return *this;
+	}
+	
+	value_type	&operator[](size_type x)
+	{
+		return _b[x];
+	}
+
 private:
 	Iterator	_b;
 };
+
+template <class iterator, typename size_type>
+reverse_iterator<iterator, size_type> operator + (int i,
+	const reverse_iterator<iterator, size_type> b)
+{
+	return b.base() - i;
+}
+
+template <class iterator, typename size_type>
+reverse_iterator<iterator, size_type> operator - (int i,
+	const reverse_iterator<iterator, size_type> b)
+{
+	return b.base() + i;
+}
 
 }
 
