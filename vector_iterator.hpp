@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 12:12:15 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 13:28:26 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -461,21 +461,6 @@ public:
 	}
 
 	/*	OP pour la comparaison avec les iterateurs normaux*/
-	// bool	operator==(const normal_it &y)	const
-	// {
-	// 	return (_b == y.base());
-	// }
-
-	// bool	operator!=(const normal_it &y)	const
-	// {
-	// 	return (_b != y.base());
-	// }
-
-	// bool	operator<(const normal_it &y)	const
-	// {
-	// 	return (_b < y.base());
-	// }
-
 	bool	operator<=(const normal_it &y)	const
 	{
 		return (_b == y.base() || _b < y.base());
@@ -492,8 +477,36 @@ public:
 	}
 
 private:
-	vector_iterator_base<T, size_type>	_b; // pas sur
+	vector_iterator_base<T, size_type>	_b;
 };
+
+template <class T, typename size_type>
+vector_iterator<T, size_type> operator + (int i,
+	const vector_iterator<T, size_type> b)
+{
+	return b.base() + i;
+}
+
+template <class T, typename size_type>
+vector_iterator<T, size_type> operator - (int i,
+	const vector_iterator<T, size_type> b)
+{
+	return b.base() - i;
+}
+
+template <class T, typename size_type>
+const_vector_iterator<T, size_type> operator + (int i,
+	const const_vector_iterator<T, size_type> b)
+{
+	return b.base() + i;
+}
+
+template <class T, typename size_type>
+const_vector_iterator<T, size_type> operator - (int i,
+	const const_vector_iterator<T, size_type> b)
+{
+	return b.base() - i;
+}
 
 }
 
