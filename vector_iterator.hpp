@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 15:33:04 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 16:36:19 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,27 +128,30 @@ public:
 
 	bool	operator<(const vector_iterator_base &y)	const
 	{
-		if (_base == y._base)
-		{
-			if (_curr < y._curr)
-				return true;
-		}
+		if (_curr < y._curr)
+			return true;
 		return false;
 	}
 
 	bool	operator<=(const vector_iterator_base &y)	const
 	{
-		return (*this == y || *this < y);
+		if (_curr < y._curr || _curr == y._curr)
+			return true;
+		return false;
 	}
 
 	bool	operator>(const vector_iterator_base &y)	const
 	{
-		return (!(y <= *this));
+		if (_curr > y._curr)
+			return true;
+		return false;
 	}
 
 	bool	operator>=(const vector_iterator_base &y)	const
 	{
-		return (!(y < *this));
+		if (_curr > y._curr || _curr == y._curr)
+			return true;
+		return false;
 	}
 	
 private:
@@ -168,7 +171,6 @@ public:
 
 	vector_iterator(): _b() {};
 	vector_iterator(const vector_iterator &c): _b(c._b) {};
-	// vector_iterator(const const_vector_iterator<T, size_type> &c): _b(c.base()) {};
 	vector_iterator(const vector_iterator_base<T, size_type> &c): _b(c) {};
 	vector_iterator(T *base, size_type offset): _b(base, offset) {};
 	~vector_iterator() {}
@@ -261,7 +263,6 @@ public:
 		return (_b == y._b);
 	}
 
-
 	bool	operator!=(const vector_iterator &y)	const
 	{
 		return (_b != y._b);
@@ -272,20 +273,19 @@ public:
 		return (_b < y._b);
 	}
 
-
 	bool	operator<=(const vector_iterator &y)	const
 	{
-		return (_b == y._b || _b < y._b);
+		return (_b <= y._b);
 	}
 
 	bool	operator> (const vector_iterator &y)	const
 	{
-		return (!(y._b <= _b));
+		return (_b > y._b);
 	}
 
 	bool	operator>=(const vector_iterator &y)	const
 	{
-		return (!(y._b < _b));
+		return (_b >= y._b);
 	}
 
 	/*	OP pour la comparaison avec les iterateurs constants	*/
@@ -413,17 +413,17 @@ public:
 
 	bool	operator<=(const const_vector_iterator &y)	const
 	{
-		return (_b == y._b || _b < y._b);
+		return (_b <= y._b);
 	}
 
 	bool	operator> (const const_vector_iterator &y)	const
 	{
-		return (!(y._b <= _b));
+		return (_b > y._b);
 	}
 
 	bool	operator>=(const const_vector_iterator &y)	const
 	{
-		return (!(y._b < _b));
+		return (_b >= y._b);
 	}
 
 private:
