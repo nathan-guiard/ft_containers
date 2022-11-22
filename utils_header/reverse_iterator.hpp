@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 14:16:15 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 15:18:48 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,33 @@ public:
 	{
 		return (!(*this == y));
 	}
+
+	bool operator != (const const_vector_iterator<value_type, size_type> &y)	const
+	{
+		return (!(*this->_b == y));
+	}
+
+	bool operator != (const vector_iterator<value_type, size_type> &y)	const
+	{
+		return (!(*this->_b == y));
+	}
 	
 	bool operator <  (const reverse_iterator &y)	const
+	{
+		return (_b >= y._b);
+	}
+	
+	bool operator > (const reverse_iterator &y)		const
+	{
+		return (_b <= y._b);
+	}
+
+	bool operator >= (const reverse_iterator &y)		const
+	{
+		return (_b < y._b);
+	}
+
+	bool operator <= (const reverse_iterator &y)		const
 	{
 		return (_b < y._b);
 	}

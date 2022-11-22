@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 09:54:58 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 14:40:43 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ public:
 
 	typedef	rb_it	iterator;
 	typedef	rb_cit	const_iterator;
-	typedef	ft::reverse_iterator<rb_it>		reverse_iterator;
-	typedef	ft::reverse_iterator<rb_cit>	const_reverse_iterator;
 
 	tree_map()
 	{

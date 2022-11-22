@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:38:23 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 16:35:14 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 14:42:47 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ public:
     typedef Category		iterator_category;
     typedef T				value_type;
     typedef std::ptrdiff_t	difference_type;
+    typedef std::ptrdiff_t	distance;
 	typedef	value_type *	pointer;
 	typedef	value_type &	reference;
 
@@ -135,6 +136,7 @@ public:
     typedef Category		iterator_category;
     typedef T				value_type;
     typedef std::ptrdiff_t	difference_type;
+    typedef std::ptrdiff_t	distance;
 	typedef	value_type *	pointer;
 	typedef	value_type &	reference;
 
@@ -219,6 +221,7 @@ public:
     typedef Category		iterator_category;
     typedef const T			value_type;
     typedef std::ptrdiff_t	difference_type;
+    typedef std::ptrdiff_t	distance;
 	typedef	value_type *	pointer;
 	typedef	value_type &	reference;
 

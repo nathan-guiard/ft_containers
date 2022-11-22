@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 09:51:49 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 14:40:39 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ public:
 	typedef	typename ft::const_map_iterator<value_type,
 		std::bidirectional_iterator_tag, value_compare>	const_iterator;
 
-	typedef	typename ft::reverse_iterator<iterator>			reverse_iterator;
-	typedef	typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+	typedef	typename ft::reverse_iterator<iterator, size_type>			reverse_iterator;
+	typedef	typename ft::reverse_iterator<const_iterator, size_type>	const_reverse_iterator;
 
 	class value_compare
 	{

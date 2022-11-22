@@ -1,0 +1,6 @@
+'ft::reverse_iterator<
+	ft::vector_iterator<foo<int>, unsigned long>, unsigned long>::
+
+reverse_iterator<
+	ft::reverse_iterator<
+		ft::const_vector_iterator<foo<int>, unsigned long>, unsigned long> >
