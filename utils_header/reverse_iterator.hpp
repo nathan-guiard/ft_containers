@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 15:18:48 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 17:20:32 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,22 +116,22 @@ public:
 	
 	bool operator <  (const reverse_iterator &y)	const
 	{
-		return (_b >= y._b);
+		return (_b < y._b);
 	}
 	
 	bool operator > (const reverse_iterator &y)		const
 	{
-		return (_b <= y._b);
+		return (_b > y._b);
 	}
 
 	bool operator >= (const reverse_iterator &y)		const
 	{
-		return (_b < y._b);
+		return (_b >= y._b);
 	}
 
 	bool operator <= (const reverse_iterator &y)		const
 	{
-		return (_b < y._b);
+		return (_b <= y._b);
 	}
 
 	reverse_iterator	operator - (size_type x)	const
