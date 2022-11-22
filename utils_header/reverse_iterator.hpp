@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 13:52:18 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 14:16:15 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,19 @@ public:
 		return (reverse_iterator(_b + x));
 	}
 
+	distance	operator - (const reverse_iterator &x)	const
+	{
+		return (x.base() - _b);
+	}
+
 	reverse_iterator	operator + (size_type x)	const
 	{
 		return (reverse_iterator(_b - x));
+	}
+
+	distance	operator + (const reverse_iterator &x)	const
+	{
+		return (x.base() + _b);
 	}
 
 	reverse_iterator	operator -= (size_type x)
