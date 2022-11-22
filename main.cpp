@@ -29,4 +29,15 @@ int main()
 	{
 		std::cout << *it << std::endl;
 	}
+
+	v.erase(++v.begin(), v.end());
+
+	std::cout << "---" << std::endl;
+	it = v.begin();
+	ite = v.end();
+
+	for (;it != ite; it++)
+	{
+		std::cout << *it << std::endl;
+	}
 }

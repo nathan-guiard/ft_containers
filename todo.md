@@ -1,15 +1,5 @@
-# Dependances importantes
-
-- insert
-- operateurs de comparaisons des iterateurs
-- operateurs `-` et `+` des iterateurs
-
 ## A faire compiler
 
-- [ ] bidirect_it
-  - dependance `insert`
-- [ ] erase
-  - pas d'operateur `-` entre `it` et `const it`
 - [ ] ite
   - manque operateur `int - it` (surement faisable avec enable if)
 - [ ] rite2
@@ -28,6 +18,8 @@
 
 - [ ] relational_ope
 - [ ] ite_eq_ope
+- [x] bidirect_it
+- [x] erase
 - [x] size
 - [x] insert
 - [x] insert2

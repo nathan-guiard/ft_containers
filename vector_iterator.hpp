@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 11:28:30 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 12:12:15 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,22 +48,22 @@ public:
 		return *this;
 	}
 	
-	distance	operator - (const vector_iterator_base &x)
+	distance	operator - (const vector_iterator_base &x)	const
 	{
 		return (_curr - x._curr);
 	}
 
-	distance	operator + (const vector_iterator_base &x)
+	distance	operator + (const vector_iterator_base &x)	const
 	{
 		return (_curr + x._curr);
 	}
 
-	vector_iterator_base	operator + (size_type x)
+	vector_iterator_base	operator + (size_type x)	const
 	{
 		return (vector_iterator_base(_base, _curr + x));
 	}
 
-	vector_iterator_base	operator - (size_type x)
+	vector_iterator_base	operator - (size_type x)	const
 	{
 		return (vector_iterator_base(_base, _curr - x));
 	}
@@ -184,12 +184,12 @@ public:
 		return *this;
 	}
 
-	distance	operator - (const vector_iterator &x)
+	distance	operator - (const vector_iterator &x)	const
 	{
 		return (_b - x._b);
 	}
 
-	vector_iterator	operator - (size_type x)
+	vector_iterator	operator - (size_type x)	const
 	{
 		return (_b - x);
 	}
@@ -200,12 +200,12 @@ public:
 		return *this;
 	}
 
-	distance	operator + (const vector_iterator &x)
+	distance	operator + (const vector_iterator &x)	const
 	{
 		return (_b + x._b);
 	}
 
-	vector_iterator	operator + (size_type x)
+	vector_iterator	operator + (size_type x)			const
 	{
 		return (_b + x);
 	}
@@ -355,12 +355,12 @@ public:
 		return *this;
 	}
 
-	distance	operator - (const const_vector_iterator &x)
+	distance	operator - (const const_vector_iterator &x)	const
 	{
 		return (_b - x._b);
 	}
 
-	const_vector_iterator	operator - (size_type x)
+	const_vector_iterator	operator - (size_type x)		const
 	{
 		return (_b - x);
 	}
@@ -371,12 +371,12 @@ public:
 		return *this;
 	}
 
-	distance	operator + (const const_vector_iterator &x)
+	distance	operator + (const const_vector_iterator &x)	const
 	{
 		return (_b + x._b);
 	}
 
-	const_vector_iterator	operator + (size_type x)
+	const_vector_iterator	operator + (size_type x)		const
 	{
 		return (_b + x);
 	}

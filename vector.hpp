@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 12:00:03 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 13:18:15 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -369,8 +369,41 @@ public:
 		return iterator(_tab, before.size());
 	}
 
-	iterator	erase(iterator pos);
-	iterator	erase(iterator first, iterator last);
+	iterator	erase(iterator pos)
+	{
+		vector before(begin(), pos);
+		vector after(++pos, end());
+
+		size_type i = before.size();
+		iterator save = begin() + i;
+		_alloc.destroy(&_tab[i]);
+		for (; i < _size - 1; i++)
+		{
+			_alloc.construct(&_tab[i], _tab[i + 1]);
+			_alloc.destroy(&_tab[i + 1]);
+		}
+		_size--;
+		return save;
+	}
+	iterator	erase(iterator first, iterator last)
+	{
+		if (first == last)
+			return last;
+		vector before(begin(), first);
+		vector after(last, end());
+
+		size_type i = before.size();
+		size_type diff = _size - i - after.size();
+		iterator save = begin() + i;
+		_alloc.destroy(&_tab[i]);
+		for (; i < _size - diff; i++)
+		{
+			_alloc.construct(&_tab[i], _tab[i + diff]);
+			_alloc.destroy(&_tab[i + diff]);
+		}
+		_size-= diff;
+		return save;
+	}
 
 	void	push_back(const T &value)
 	{
@@ -410,12 +443,12 @@ public:
 
 	void	resize(size_type count, T value = T())
 	{
-		if (_size > count) // si size est polus grand que count de destroy les elements en trop
+		if (_size > count)
 		{
 			for (; _size != count;)
 				_alloc.destroy(&_tab[_size--]);
 		}
-		else if (count <= _allocated) // si count est dans la range de allocated on est bien
+		else if (count <= _allocated)
 		{
 			for (; count != _size;)
 				_alloc.construct(&_tab[count++], value);
