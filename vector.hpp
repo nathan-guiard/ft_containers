@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 21:56:19 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/22 12:00:03 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,7 @@ public:
 			for(;i < bf_size; i++)
 				_alloc.construct(&_tab[i], before[i]);
 			_alloc.construct(&_tab[i], value);
+			i++;
 			for(;i < new_size; i++)
 				_alloc.construct(&_tab[i], after[i - bf_size - 1]);
 		}
@@ -260,8 +261,9 @@ public:
 			for(;i < bf_size; i++)
 				_alloc.construct(&_tab[i], before[i]);
 			_alloc.construct(&_tab[i], value);
+			i++;
 			for(;i < af_size; i++)
-				_alloc.construct(&_tab[i], after[i]);
+				_alloc.construct(&_tab[i], after[i - bf_size - 1]);
 		}
 		return iterator(_tab, bf_size);
 	}
@@ -408,12 +410,12 @@ public:
 
 	void	resize(size_type count, T value = T())
 	{
-		if (_size > count)
+		if (_size > count) // si size est polus grand que count de destroy les elements en trop
 		{
 			for (; _size != count;)
 				_alloc.destroy(&_tab[_size--]);
 		}
-		else if (count <= _allocated)
+		else if (count <= _allocated) // si count est dans la range de allocated on est bien
 		{
 			for (; count != _size;)
 				_alloc.construct(&_tab[count++], value);
@@ -421,6 +423,7 @@ public:
 		else
 		{
 			vector tmp(*this);
+			clear();
 			insert(begin(), tmp.begin(), tmp.end());
 			insert(end(), count - _size, value);
 		}
