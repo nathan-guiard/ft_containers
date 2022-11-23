@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 09:13:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 15:19:43 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 11:47:10 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #define FT_STACK_HPP
 
 #include <cstddef>
-#include <deque>
+#include "vector.hpp"
 
 namespace ft
 {
 
-template <class T, class Container = std::deque<T> > // a changer par vector
+template <class T, class Container = ft::vector<T> > // a changer par vector
 class stack
 {
 public:

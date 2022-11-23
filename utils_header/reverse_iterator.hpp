@@ -6,14 +6,12 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 11:22:46 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 11:44:12 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_REVERSE_ITERATOR_HPP
 #define FT_REVERSE_ITERATOR_HPP
-
-#include "../vector_iterator.hpp"
 
 namespace ft
 {
@@ -102,16 +100,6 @@ public:
 	bool operator != (const reverse_iterator &y)	const
 	{
 		return (!(*this == y));
-	}
-
-	bool operator != (const const_vector_iterator<value_type, size_type> &y)	const
-	{
-		return (!(*this->_b == y));
-	}
-
-	bool operator != (const vector_iterator<value_type, size_type> &y)	const
-	{
-		return (!(*this->_b == y));
 	}
 	
 	bool operator <  (const reverse_iterator &y)	const

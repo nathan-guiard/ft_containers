@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 09:40:57 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 11:54:34 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,11 @@
 #define FT_VECTOR_HPP
 
 #include	<memory>
-#include	"utils"
-#include	"vector_iterator.hpp"
+#include	"utils_header/reverse_iterator.hpp"
+#include	"utils_header/lexicographical_compare.hpp"
+#include	"utils_header/equal.hpp"
+#include	"utils_header/enable_if.hpp"
+#include	"utils_header/vector_iterator.hpp"
 
 namespace ft
 {
