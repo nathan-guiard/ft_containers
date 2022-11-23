@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 10:42:27 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 11:22:46 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,22 +116,22 @@ public:
 	
 	bool operator <  (const reverse_iterator &y)	const
 	{
-		return (_b < y._b);
+		return (y._b < _b);
 	}
 	
 	bool operator > (const reverse_iterator &y)		const
 	{
-		return (_b > y._b);
+		return (y._b > _b);
 	}
 
 	bool operator >= (const reverse_iterator &y)		const
 	{
-		return (_b >= y._b);
+		return (y._b >= _b);
 	}
 
 	bool operator <= (const reverse_iterator &y)		const
 	{
-		return (_b <= y._b);
+		return (y._b <= _b);
 	}
 
 	reverse_iterator	operator - (size_type x)	const
@@ -203,7 +203,6 @@ typename reverse_iterator<ita>::distance	operator + (const reverse_iterator<ita>
 	return (b.base() + a.base());
 }
 
-
 }
-
+// random access tag
 #endif
