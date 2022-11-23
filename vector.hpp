@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 11:54:34 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:07:52 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ public:
 
 	vector &operator = (const vector &other)
 	{
-		_alloc.deallocate(_tab, _allocated);
+		clear();
 		_size = other._size;
 		_tab = _alloc.allocate(other._allocated);
 		_allocated = other._allocated;
@@ -485,7 +485,7 @@ public:
 
 	bool	operator == (const vector &x)	const
 	{
-		return ft::equal(begin(), end(), x.begin()) && _size == x._size;
+		return ft::equal(begin(), end(), x.begin(), x.end()) && _size == x._size;
 	}
 
 	bool	operator != (const vector &x)	const

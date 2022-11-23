@@ -6,19 +6,20 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/21 09:55:42 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:01:57 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_SET_HPP
 #define RB_TREE_SET_HPP
 
-#include <iostream>
-#include <unistd.h>
-#include <iomanip>
 #include <memory>
-#include <cstring>
-#include "utils"
+#include <functional>
+#include "iterator.hpp"
+#include "pair.hpp"
+#include "equal.hpp"
+#include "lexicographical_compare.hpp"
+
 
 namespace ft
 {
@@ -849,25 +850,6 @@ class rb_cit : iterator_traits<std::bidirectional_iterator_tag, T>
 	}
 
 	unsigned int	size() const {return _size;}
-
-	#ifdef CAN_USE_PRINT
-	void	print()	const
-	{
-		real_print(_root, 0);
-	}
-
-	void	real_print(node *ptr, int space)	const
-	{
-		if (!ptr || ptr == _nd_null)
-			return;
-		space += 4;
-		real_print(ptr->right, space);
-		std::cout
-			<< (ptr->color == black ? "\033[90m" : "\033[31m") << std::setw(space)
-			<< ptr->value << "\033[0m" << std::endl;
-		real_print(ptr->left, space);
-	}
-	#endif
 
 	node	*min()	const
 	{

@@ -1,9 +1,8 @@
-#define	DEBUG
 
-#include "utils"
 #include "set.hpp"
 #include "map.hpp"
 #include "vector.hpp"
+#include "stack.hpp"
 
 #include <string>
 #include <iostream>
@@ -13,10 +12,17 @@
 #include <map>
 #include <list>
 
-#define TESTED_NAMESPACE ft
 
 int		main(void)
 {
-	ft::map<int, char>	m;
+	ft::vector<int>	a;
+
+	a.push_back(5);
+
+	ft::stack<int>	s(a);
+
+	ft::vector<int> b;
+
+	b = a;
 
 }

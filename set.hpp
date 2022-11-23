@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 11:55:22 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:05:55 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ public:
 friend bool	operator ==	(const ft::set<Key, Compare, Allocator> &lhs,
 					const ft::set<Key, Compare, Allocator> &rhs)
 {
-	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 }
 
 friend bool	operator !=	(const ft::set<Key, Compare, Allocator> &lhs,

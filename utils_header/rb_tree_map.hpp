@@ -6,18 +6,19 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 14:40:43 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:02:09 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RB_TREE_MAP_HPP
 #define RB_TREE_MAP_HPP
 
-#include <iostream>
-#include <iomanip>
 #include <memory>
-#include <cstring>
-#include "utils"
+#include <functional>
+#include "iterator.hpp"
+#include "pair.hpp"
+#include "equal.hpp"
+#include "lexicographical_compare.hpp"
 
 namespace ft
 {

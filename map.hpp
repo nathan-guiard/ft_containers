@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 11:55:11 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:05:37 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 #define		FT_MAP_HPP
 
 #include	<memory>
+#include	<stdexcept>
 #include	"utils_header/lexicographical_compare.hpp"
 #include	"utils_header/equal.hpp"
 #include	"utils_header/rb_tree_map.hpp"
 #include	"utils_header/map_iterator.hpp"
+#include	"utils_header/reverse_iterator.hpp"
 
 namespace ft
 {
@@ -352,7 +354,7 @@ public:
 bool	operator ==	(const ft::map<Key, T, Compare, Allocator> &rhs)	const
 {
 	return (this->size() == rhs.size() &&
-		ft::equal(this->begin(), this->end(), rhs.begin()));
+		ft::equal(this->begin(), this->end(), rhs.begin(), rhs.end()));
 }
 
 bool	operator !=	(const ft::map<Key, T, Compare, Allocator> &rhs)	const
