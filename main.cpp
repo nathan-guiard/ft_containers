@@ -19,7 +19,7 @@ int		main(void)
 
 	a.push_back(5);
 
-	ft::stack<int>	s(a);
+	ft::stack<int>	s;
 
 	ft::vector<int> b;
 

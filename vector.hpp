@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 14:07:52 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:16:22 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ public:
 		size_type	i = 0;
 
 		_alloc = alloc;
-		_tab = _alloc.allocate(count);
+		if (count)
+			_tab = _alloc.allocate(count);
 		for (; i != count; i++)
 			_alloc.construct(_tab + i, value);
 		_size = count;
@@ -89,7 +90,8 @@ public:
 	}
 	vector(const vector &other): _alloc(other._alloc), _size(other._size)
 	{
-		_tab = _alloc.allocate(other._allocated);
+		if (other._allocated)
+			_tab = _alloc.allocate(other._allocated);
 		for (size_type i = 0; i != _size; i++)
 			_alloc.construct(_tab + i, other._tab[i]);
 		_allocated = other._allocated;
@@ -99,7 +101,8 @@ public:
 	{
 		clear();
 		_size = other._size;
-		_tab = _alloc.allocate(other._allocated);
+		if (other._allocated)
+			_tab = _alloc.allocate(other._allocated);
 		_allocated = other._allocated;
 		for (size_type i = 0; i != _size; i++)
 			_alloc.construct(_tab + i, other._tab[i]);
@@ -212,7 +215,8 @@ public:
 		size_type	i = 0;
 
 		clear();
-		_tab = _alloc.allocate(x);
+		if (x)
+			_tab = _alloc.allocate(x);
 		_allocated = x;
 		for (; i != tmp._size; i++)
 			_alloc.construct(_tab + i, tmp._tab[i]);
@@ -225,7 +229,7 @@ public:
 	{
 		for (size_type i = 0; i != _size; i++)
 			_alloc.destroy(&_tab[i]);
-		if (_tab)
+		if (_tab && _allocated)
 			_alloc.deallocate(_tab, _allocated);
 		_size = 0;
 		_allocated = 0;
