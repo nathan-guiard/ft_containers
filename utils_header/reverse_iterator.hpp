@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 17:20:32 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 10:42:27 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 namespace ft
 {
 
-template <class Iterator, typename size_type>
+template <class Iterator, typename size_type = std::ptrdiff_t>
 class reverse_iterator
 {
 public:
@@ -43,7 +43,7 @@ public:
 	value_type	&operator*()	const
 	{
 		Iterator	tmp(_b);
-		tmp--;
+		--tmp;
 		return *tmp;
 	}
 	
@@ -54,7 +54,7 @@ public:
 
 	reverse_iterator	&operator++()
 	{
-		_b--;
+		--_b;
 		return *this;
 	}
 
@@ -69,7 +69,7 @@ public:
 
 	reverse_iterator	&operator--()
 	{
-		_b++;
+		++_b;
 		return *this;
 	}
 
@@ -141,7 +141,7 @@ public:
 
 	distance	operator - (const reverse_iterator &x)	const
 	{
-		return (x.base() - _b);
+		return (_b - x.base());
 	}
 
 	reverse_iterator	operator + (size_type x)	const
@@ -151,7 +151,7 @@ public:
 
 	distance	operator + (const reverse_iterator &x)	const
 	{
-		return (x.base() + _b);
+		return (_b + x.base());
 	}
 
 	reverse_iterator	operator -= (size_type x)
@@ -168,7 +168,7 @@ public:
 	
 	value_type	&operator[](size_type x)
 	{
-		return _b[x];
+		return *(*this + x);
 	}
 
 private:
@@ -188,6 +188,21 @@ reverse_iterator<iterator, size_type> operator - (int i,
 {
 	return b.base() + i;
 }
+
+template <class ita, class itb>
+typename reverse_iterator<ita>::distance	operator - (const reverse_iterator<ita> &a,
+											const reverse_iterator<itb> &b)
+{
+	return (b.base() - a.base());
+}
+
+template <class ita, class itb>
+typename reverse_iterator<ita>::distance	operator + (const reverse_iterator<ita> &a,
+											const reverse_iterator<itb> &b)
+{
+	return (b.base() + a.base());
+}
+
 
 }
 

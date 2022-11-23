@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 16:36:19 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 10:45:46 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,11 @@ public:
 		return *this;
 	}
 
+	distance	operator - (const const_vector_iterator<T, size_type> &x)	const
+	{
+		return (_b - x.base());
+	}
+
 	distance	operator - (const vector_iterator &x)	const
 	{
 		return (_b - x._b);
@@ -202,6 +207,11 @@ public:
 	distance	operator + (const vector_iterator &x)	const
 	{
 		return (_b + x._b);
+	}
+
+	distance	operator + (const const_vector_iterator<T, size_type> &x)	const
+	{
+		return (_b + x.base());
 	}
 
 	vector_iterator	operator + (size_type x)			const

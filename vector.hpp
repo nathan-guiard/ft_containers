@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/22 17:07:44 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 09:40:57 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ public:
 	typedef	typename Allocator::pointer			pointer;
 	typedef	typename Allocator::const_pointer	const_pointer;
 
-	typedef	ft::vector_iterator<T, size_type>				iterator;
-	typedef	ft::const_vector_iterator<T, size_type>			const_iterator;
-	typedef	ft::reverse_iterator<iterator, size_type>		reverse_iterator;
-	typedef	ft::reverse_iterator<const_iterator, size_type>	const_reverse_iterator;
+	typedef	ft::vector_iterator<T, difference_type>					iterator;
+	typedef	ft::const_vector_iterator<T, difference_type>			const_iterator;
+	typedef	ft::reverse_iterator<iterator, difference_type>			reverse_iterator;
+	typedef	ft::reverse_iterator<const_iterator, difference_type>	const_reverse_iterator;
 
 	vector(): _tab(0), _alloc(Allocator()), _size(0), _allocated(0) {}
 	explicit vector(const Allocator &alloc):
