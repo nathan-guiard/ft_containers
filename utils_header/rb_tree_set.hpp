@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 12:45:20 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 14:01:57 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:20:58 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -691,7 +691,6 @@ class rb_cit : iterator_traits<std::bidirectional_iterator_tag, T>
 		nv = _alloc.allocate(1);
 		alloc_type.construct(&nv->value, val);
 		nv->parent = 0;
-		// nv->value = val;
 		nv->left = _nd_null;
 		nv->right = _nd_null;
 		nv->color = red;
@@ -741,9 +740,9 @@ class rb_cit : iterator_traits<std::bidirectional_iterator_tag, T>
 
 		og_color = to_del->color;
 		y = to_del;
-		if (!to_del->left || to_del->left == _nd_null)	// si on delete une node avec qu'un seul subtree_set
-		{												// alors on a que a delete la node et mettre l'unique
-			to_fix = to_del->right;						// subtree_set a la place
+		if (!to_del->left || to_del->left == _nd_null)
+		{
+			to_fix = to_del->right;
 			_replace(to_del, to_del->right);
 		}
 		else if (!to_del->right || to_del->right == _nd_null)

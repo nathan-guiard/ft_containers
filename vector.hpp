@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:58:41 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 14:16:22 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:20:15 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ public:
 		_alloc = alloc;
 		for (; first != last; ++first)
 		{
-			push_back(*first); // a changer par insert
+			push_back(*first); 
 		}
 	}
 	vector(const vector &other): _alloc(other._alloc), _size(other._size)
@@ -114,7 +114,7 @@ public:
 		clear();
 
 		for (size_type i = 0; i != count; i++)
-			push_back(value);// a changer par insert
+			push_back(value);
 	}
 
 	template <class InputIt>
@@ -124,7 +124,7 @@ public:
 		clear();
 		
 		for (size_type i = 0; first != last; i++, first++)
-			push_back(*first);// a changer par insert
+			push_back(*first);
 	}
 	
 	allocator_type	get_allocator()	const;
@@ -519,7 +519,7 @@ public:
 	{
 		return(x < *this || *this == x);
 	}
-//A REMMETRE APRES
+
 private:
 	T			*_tab;
 	Allocator	_alloc;

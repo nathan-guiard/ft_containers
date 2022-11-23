@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 17:09:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 13:47:59 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:21:52 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ template <class T, typename size_type>
 class vector_iterator_base
 {
 public:
-	typedef std::bidirectional_iterator_tag	Category;
+	typedef std::random_access_iterator_tag	Category;
 	typedef T								value_type;
 	typedef	std::ptrdiff_t					distance;
 	typedef	T &								reference;
@@ -163,7 +163,7 @@ template <class T, typename size_type>
 class vector_iterator
 {
 public:
-	typedef std::bidirectional_iterator_tag		Category;
+	typedef std::random_access_iterator_tag		Category;
 	typedef T									value_type;
 	typedef	std::ptrdiff_t						distance;
 	typedef	T &									reference;
@@ -309,7 +309,7 @@ template <class T, typename size_type>
 class const_vector_iterator
 {
 public:
-	typedef std::bidirectional_iterator_tag	Category;
+	typedef std::random_access_iterator_tag	Category;
 	typedef const T							value_type;
 	typedef	std::ptrdiff_t					distance;
 	typedef	const T &						reference;

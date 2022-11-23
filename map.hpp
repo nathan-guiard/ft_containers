@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 10:15:13 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 14:05:37 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:19:38 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ public:
 			_t.add(*first);
 	}
 
-	iterator	insert(iterator pos, const value_type &value) // a revoir
+	iterator	insert(iterator pos, const value_type &value)
 	{
 		(void)pos;
 		_t.add(value);
@@ -410,6 +410,6 @@ private:
 	};
 };
 
-}// fin namespace ft
+}/* fin namespace ft */
 
 #endif

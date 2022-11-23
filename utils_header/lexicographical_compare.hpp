@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 11:11:55 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/18 15:52:51 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:20:32 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,6 @@ inline bool lexicographical_compare(ita f1, ita e1, itb f2, itb e2)
 	return (f1 == e1 && f2 != e2);
 }
 
-}//fin du namespace ft
+}/* fin du namespace ft */
 
 #endif

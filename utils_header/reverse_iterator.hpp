@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:28:00 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 13:49:43 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:21:06 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,5 +220,5 @@ bool	operator >= (const reverse_iterator<ita> &a,
 }
 
 }
-// random access tag
+
 #endif

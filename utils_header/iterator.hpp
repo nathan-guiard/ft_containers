@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 18:22:55 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/16 11:10:03 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:20:25 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ public:
 	typedef Distance	difference_type;
 	typedef Pointer		pointer;
 	typedef Reference	reference;
-}; // fin de la struct iterator
+}; /* fin de la struct iterator */
 
-} // fin namespace ft
+} /* fin namespace ft */
 
 #endif

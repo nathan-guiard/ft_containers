@@ -6,7 +6,7 @@
 /*   By: nguiard <nguiard@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 09:13:32 by nguiard           #+#    #+#             */
-/*   Updated: 2022/11/23 14:17:39 by nguiard          ###   ########.fr       */
+/*   Updated: 2022/11/23 14:21:02 by nguiard          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 namespace ft
 {
 
-template <class T, class Container = ft::vector<T> > // a changer par vector
+template <class T, class Container = ft::vector<T> >
 class stack
 {
 public:
@@ -84,10 +84,10 @@ public:
 
 protected:
 	Container	c;
-}; // fin de la class stack
+}; /* fin de la class stack */
 
 
 
-} //fin de lu namespace ft
+} /* fin du namespace ft */
 
 #endif
